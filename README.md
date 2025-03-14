@@ -1,2 +1,3 @@
 # Pondiverse
-explore+create across all of max+lu's worlds
+
+explore+create across the pondiverse
