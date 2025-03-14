@@ -1,0 +1,483 @@
+/* GRAVEYARD CSS */
+/* The tadi css is dead. Long live the tadi css! */
+
+:root {
+  --green: rgb(70, 255, 129);
+  --cyan: rgb(70, 204, 255);
+  --blue: rgb(70, 128, 255);
+  --purple: rgb(128, 67, 255);
+  --pink: rgb(255, 128, 222);
+  --coral: rgb(255, 128, 128);
+  --red: rgb(255, 67, 70);
+  --orange: rgb(255, 128, 70);
+  --yellow: rgb(255, 255, 70);
+  --calm-yellow: rgb(255, 225, 70);
+
+  --light-blue: rgb(80, 140, 255);
+
+  --shade-0: rgb(6, 7, 10);
+  --shade-1: rgb(14, 16, 22);
+  --shade-2: rgb(24, 29, 39);
+  --shade-3: rgb(33, 39, 53);
+  --shade-4: rgb(47, 56, 75);
+  --shade-5: rgb(55, 67, 98);
+  --shade-6: rgb(87, 101, 147);
+  --shade-7: rgb(135, 146, 171);
+  --shade-8: rgb(159, 174, 204);
+  --shade-9: rgb(224, 224, 224);
+  --shade-10: rgb(255, 255, 255);
+
+  --best-colour: #9faeee;
+  --best-colour-faded: rgb(172, 139, 255);
+
+  --void: var(--shade-0);
+  --black: var(--shade-2);
+  --dark-grey: var(--shade-3);
+  --grey: var(--shade-5);
+  --light-grey: var(--shade-6);
+  --silver: var(--shade-8);
+  --white: var(--shade-10);
+
+  --rainbow-1: var(--green);
+  --rainbow-2: var(--cyan);
+  --rainbow-3: var(--blue);
+  --rainbow-4: var(--purple);
+  --rainbow-5: var(--pink);
+  --rainbow-6: var(--coral);
+  --rainbow-7: var(--red);
+  --rainbow-8: var(--orange);
+  --rainbow-9: var(--yellow);
+
+  --background: rgb(31, 39, 54);
+
+  --rainbow-gradient: linear-gradient(
+    /* slanted */ 135deg,
+    var(--green),
+    var(--cyan),
+    var(--light-blue),
+    var(--purple),
+    var(--pink),
+    var(--coral),
+    var(--red),
+    var(--orange),
+    var(--yellow),
+    var(--green),
+    var(--cyan),
+    var(--light-blue),
+    var(--purple),
+    var(--pink),
+    var(--coral),
+    var(--red),
+    var(--orange),
+    var(--yellow)
+  );
+
+  --glow: 0 0px 5px var(--best-colour), 0 0px 10px var(--best-colour);
+}
+
+code {
+  background-color: var(--grey);
+  font-size: 16px;
+  padding: 0px 2px;
+  margin: 0px;
+}
+
+* {
+  accent-color: #4680ff;
+  box-sizing: border-box;
+}
+
+body {
+  color: white;
+  background-color: rgb(31, 39, 54);
+  font-family: sans-serif;
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 30px 10px;
+  font-size: 1.1em;
+}
+
+audio,
+video {
+  width: 100%;
+}
+
+a {
+  color: #46ff80;
+}
+
+:target {
+  outline: 2px solid #4680ff;
+  outline-offset: 2px;
+}
+
+a.footnote:target {
+  outline-offset: 0px;
+}
+
+a.footnote::before {
+  content: "[";
+}
+
+a.footnote::after {
+  content: "]";
+}
+
+label {
+  user-select: none;
+}
+
+a:hover {
+  color: black;
+  background-color: #46ff80;
+  outline: 2px solid #46ff80;
+}
+
+figcaption {
+  text-align: center;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+figure {
+  width: 100%;
+  text-align: center;
+  margin: 0px;
+  padding: 20px;
+}
+
+ul {
+  padding-inline-start: 20px;
+
+  /* line-height: 1.2; */
+}
+
+*::selection {
+  background-color: rgb(87, 101, 147);
+  /* outline: 2px solid white; */
+  /* color: black; */
+  /* color: white; */
+}
+
+ul > li {
+  list-style: " — ";
+  /* margin-left: 0px; */
+}
+
+a.secondary {
+  color: #4699ff;
+}
+
+a.secondary:hover {
+  color: black;
+  background-color: #4699ff;
+  outline: 2px solid #4699ff;
+}
+
+a.black {
+  color: black;
+}
+
+a.black:hover {
+  color: white;
+  background-color: black;
+  outline: 2px solid black;
+}
+
+a.danger {
+  color: #ff4346;
+}
+
+a.danger:hover {
+  color: black;
+  background-color: #ff4346;
+  outline: 2px solid #ff4346;
+}
+
+a.warning {
+  color: #ffff46;
+}
+
+a.warning:hover {
+  color: black;
+  background-color: #ffff46;
+  outline: 2px solid #ffff46;
+}
+
+a.tertiary {
+  color: #9faeee;
+}
+
+a.tertiary:hover {
+  color: black;
+  background-color: #9faeee;
+  outline: 2px solid #9faeee;
+}
+
+a.warning {
+  color: #ffff46;
+}
+
+a.warning:hover {
+  color: black;
+  background-color: #ffff46;
+  outline: 2px solid #ffff46;
+}
+
+summary.button {
+  background-color: var(--shade-5);
+  /* line-height: 2.3; */
+}
+
+summary.button:hover {
+  /* transform-origin: left; */
+  /* transform: scale(1.1); */
+}
+
+dialog h2 {
+  margin: 0px;
+}
+
+dialog input[type="password"],
+dialog input[type="text"],
+dialog textarea {
+  max-width: 100%;
+  background-color: #9faeee;
+  border: 1px solid black;
+  color: black;
+  /* padding: 5px; */
+  width: 100%;
+  font-family: sans-serif;
+  /* font-size: 1em; */
+}
+
+dialog::selection,
+dialog p::selection,
+dialog h2::selection {
+  background-color: #46ff80;
+}
+
+dialog input[type="password"]::selection,
+dialog input[type="text"]::selection,
+dialog textarea::selection {
+  background-color: #46ff80;
+}
+
+dialog input[type="password"]:disabled,
+dialog input[type="text"]:disabled,
+dialog textarea:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+label.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+a.button {
+  border: 3px solid #46ff80;
+  padding: 4px 5px;
+  text-decoration: none;
+  line-height: 2.3;
+}
+
+a.button:hover {
+  outline: none;
+}
+
+a.button.secondary {
+  border-color: #4699ff;
+}
+
+a.button.danger {
+  border-color: #ff4346;
+}
+
+a.button.tertiary {
+  border-color: var(--best-colour);
+}
+
+a.button.warning {
+  border-color: #ffff46;
+}
+
+label.secondary,
+span.secondary,
+p.secondary {
+  color: #9faeee;
+}
+
+label.danger,
+span.danger,
+p.danger {
+  color: #ff7275;
+}
+
+label.warning,
+span.warning,
+p.warning {
+  color: #ffff46;
+}
+
+label.positive,
+span.positive,
+p.positive {
+  color: var(--green);
+}
+
+blockquote {
+  color: #9faeee;
+  margin: 0px;
+  padding-left: 23px;
+  border-left: 1px #9faeee solid;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: white;
+}
+
+hr.secondary {
+  background-color: #9faeee;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  width: 100%;
+}
+
+h2 {
+  border-bottom: white 1px solid;
+  padding-bottom: 19px;
+  padding-top: 19px;
+}
+
+img {
+  max-width: 100%;
+}
+
+summary {
+  user-select: none;
+  cursor: pointer;
+  /* looks like a button */
+  padding: 5px;
+  border: 1px solid #9faeee;
+  background-color: #374362;
+  /* color: #9faeee; */
+  width: fit-content;
+}
+
+details[open] summary {
+  /* margin-bottom: 10px; */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+textarea {
+  background-color: #374362;
+  border: 1px solid #9faeee;
+  color: white;
+  padding: 5px;
+  width: 100%;
+  font-size: 1em;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="search"]::placeholder,
+input[type="url"]::placeholder,
+textarea::placeholder {
+  color: #9faeee;
+}
+
+/* input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+  } */
+
+:focus {
+  outline-color: 2px solid #4680ff;
+  border-radius: 0%;
+}
+
+input[type="file"] {
+  font-size: 1em;
+}
+
+button,
+input[type="file"]::file-selector-button {
+  background-color: var(--shade-10);
+  color: black;
+  padding: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  user-select: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button.danger {
+  background-color: #ff4346;
+  color: white;
+}
+
+button.primary {
+  background-color: #4680ff;
+  color: white;
+}
+
+button.warning {
+  background-color: #ffff46;
+  color: black;
+}
+
+pre {
+  background-color: #374362;
+  /*color: white;*/
+  padding: 11px;
+  overflow-x: auto;
+}
+
+pre.changelog {
+  color: #9faeee;
+}
+
+pre.changelog mark {
+  color: white;
+}
+
+pre mark {
+  color: #46ff80;
+  background: none;
+}
+
+input[type="checkbox"] {
+  /* width: 29px; */
+}
+
+select {
+  background-color: #374362;
+  border: 1px solid #9faeee;
+  color: white;
+  padding: 5px;
+  font-size: 1em;
+}
+
+button.selected {
+  background-color: #46ff80;
+  color: black;
+}
