@@ -50,11 +50,18 @@
       return `
         <div class="creation">
           <h2>${creation.title}, ${creation.type}</h2>
-          <img src="${creation.image}" alt="${creation.title}" />
+          <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
         </div>
       `;
     });
     main.innerHTML = creationElements.join("");
+
+    for (const creation of creations) {
+      const img = document.getElementById(`c${creation.id}`);
+      img.onerror = () => {
+        img.src = creation.image;
+      };
+    }
 
     console.log(creations);
   }
