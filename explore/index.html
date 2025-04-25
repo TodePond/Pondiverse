@@ -55,10 +55,16 @@
     const areThereMorePages = creations.length > (page + 1) * limit;
     creations = creations.slice(page * limit, (page + 1) * limit);
 
+    const typesToClients = {
+      "screenpond": "https://screenpond.cool/",
+      "chaoskit": "https://evolved.systems/chaoskit/",
+      "pNMRsimJS": "https://mags.omg.lol/simulator.php",
+    };
+    
     const creationElements = creations.map((creation) => {
       return `
         <div class="creation">
-          <h2>${creation.title}, ${creation.type}</h2>
+          <h2>${creation.title}, <a href=${typesToClients[creation.type]}>${creation.type}</a></h2>
           <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
         </div>
       `;
