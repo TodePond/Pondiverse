@@ -20,7 +20,7 @@
   <p>Here are all the creations.</p>
 </header>
 
-<main><p class="secondary">Loading...</p></main>
+<main><p class="secondary loading">Loading...</p></main>
 
 <script type="module">
   import { fetchCreations } from "/script/pondiverse.js";
@@ -34,19 +34,28 @@
     } catch (e) {
       main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
     }
-    renderCreations(creations);
+    renderCreations(creations, { page: 0, limit: 5 });
   }
 
-  function renderCreations(creations) {
-    if (creations.length === 0) {
+  function renderCreations(originalCreations, { page = 0, limit = 5 }) {
+    if (originalCreations.length === 0) {
       main.innerHTML = `<p class="secondary">No creations yet.</p>`;
     }
 
-    const sortedCreations = creations.sort((a, b) => {
+    let creations = originalCreations;
+
+    const loading = main.querySelector(".loading");
+    if (loading) {
+      loading.remove();
+    }
+
+    creations = creations.sort((a, b) => {
       return new Date(b.time) - new Date(a.time);
     });
+    const areThereMorePages = creations.length > (page + 1) * limit;
+    creations = creations.slice(page * limit, (page + 1) * limit);
 
-    const creationElements = sortedCreations.map((creation) => {
+    const creationElements = creations.map((creation) => {
       return `
         <div class="creation">
           <h2>${creation.title}, ${creation.type}</h2>
@@ -54,7 +63,7 @@
         </div>
       `;
     });
-    main.innerHTML = creationElements.join("");
+    main.innerHTML += creationElements.join("");
 
     for (const creation of creations) {
       const img = document.getElementById(`c${creation.id}`);
@@ -63,7 +72,18 @@
       };
     }
 
-    console.log(creations);
+    if (areThereMorePages) {
+      const button = document.createElement("button");
+      const br = document.createElement("br");
+      button.innerText = "Load more";
+      button.onclick = () => {
+        button.remove();
+        br.remove();
+        renderCreations(originalCreations, { page: page + 1, limit });
+      };
+      main.appendChild(br);
+      main.appendChild(button);
+    }
   }
 
   pullCreations();
