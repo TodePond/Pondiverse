@@ -20,10 +20,28 @@
   <p>Here are all the creations.</p>
 </header>
 
-<main></main>
+<main><p class="secondary">Loading...</p></main>
 
 <script type="module">
   import { fetchCreations } from "/script/pondiverse.js";
 
-  const creations = fetchCreations();
+  const main = document.querySelector("main");
+
+  async function pullCreations() {
+    let creations;
+    try {
+      creations = await fetchCreations();
+    } catch (e) {
+      main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
+    }
+    renderCreations(creations);
+  }
+
+  function renderCreations(creations) {
+    if (creations.length === 0) {
+      main.innerHTML = `<p class="secondary">No creations yet.</p>`;
+    }
+  }
+
+  pullCreations();
 </script>
