@@ -41,6 +41,22 @@
     if (creations.length === 0) {
       main.innerHTML = `<p class="secondary">No creations yet.</p>`;
     }
+
+    const sortedCreations = creations.sort((a, b) => {
+      return new Date(b.time) - new Date(a.time);
+    });
+
+    const creationElements = sortedCreations.map((creation) => {
+      return `
+        <div class="creation">
+          <h2>${creation.title}, ${creation.type}</h2>
+          <img src="${creation.image}" alt="${creation.title}" />
+        </div>
+      `;
+    });
+    main.innerHTML = creationElements.join("");
+
+    console.log(creations);
   }
 
   pullCreations();
