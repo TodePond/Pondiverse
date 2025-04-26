@@ -21,11 +21,19 @@
     To create something for the pondiverse, go make something in one of these
     tools.
   </p>
+  <p>
+    To see how to add your own tool to the Pondiverse, see <a href="/create/guide.html">the guide</a>.
+    </p>
 </header>
 
 <main>
-  <!-- <a href="https://cellpond.cool" class="button secondary">Cellpond</a> -->
-  <a href="https://screenpond.cool" class="button secondary">Screenpond</a>
-  <a href="https://evolved.systems/chaoskit/" class="button secondary">Chaoskit</a>
-  <a href="https://mags.omg.lol/simulator.php" class="button secondary">pNMRsimJS</a>
+  <script type="module">
+    import { participants } from "/participants.js";      
+
+    const main = document.querySelector("main");
+
+    for (var tool in participants) {
+        main.innerHTML += ` <a href=${participants[tool].url} class="button secondary">${participants[tool].name}</a> `;
+    }
+  </script>
 </main>
