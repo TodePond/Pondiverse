@@ -60,7 +60,7 @@
       if (participants[creation.type]) {
       return `
         <div class="creation">
-          <h2>${creation.title}, <a href=${participants[creation.type].url}>${participants[creation.type].name}</a></h2>
+          <h2>${creation.title}, <a href=${participants[creation.type].url}>${creation.type}</a></h2>
           <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
         </div>
       `;
