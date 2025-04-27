@@ -4,6 +4,7 @@ const participants = {
   pnmrsimjs: { url: "https://mags.omg.lol/simulator.php" },
   codepond: { url: "https://codepond.elouan.xyz/" },
   cherry: { url: "https://cherry.cthulahoops.org/" },
+  collapse: { url: "https://collapse.cthulahoops.org/" },
   bitart: { url: "https://iliazeus.lol/bitart/" },
 };
 
