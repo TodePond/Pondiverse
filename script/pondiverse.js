@@ -1,10 +1,13 @@
-export async function fetchCreations() {
+export async function fetchCreations(page = 0) {
+  console.log("Fetching creations from page", page);
   const response = await fetch(
-    "https://todepond--8d30672821b811f0b0cd569c3dd06744.web.val.run"
+    `https://todepond--8d30672821b811f0b0cd569c3dd06744.web.val.run/?page=${page}`
   );
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to fetch creations");
-  return json.rows;
+  const rows = json.rows;
+  console.log(rows);
+  return rows;
 }
 
 export async function updateDatabase() {

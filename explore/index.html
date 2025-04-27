@@ -28,17 +28,17 @@
 
   const main = document.querySelector("main");
 
-  async function pullCreations() {
+  async function pullCreations(page = 0) {
     let creations;
     try {
-      creations = await fetchCreations();
+      creations = await fetchCreations(page);
     } catch (e) {
       main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
     }
-    renderCreations(creations, { page: 0, limit: 5 });
+    renderMoreCreations(creations, page);
   }
 
-  function renderCreations(originalCreations, { page = 0, limit = 5 }) {
+  function renderMoreCreations(originalCreations, page = 0) {
     if (originalCreations.length === 0) {
       main.innerHTML = `<p class="secondary">No creations yet.</p>`;
     }
@@ -53,8 +53,8 @@
     creations = creations.sort((a, b) => {
       return new Date(b.time) - new Date(a.time);
     });
-    const areThereMorePages = creations.length > (page + 1) * limit;
-    creations = creations.slice(page * limit, (page + 1) * limit);
+    const areThereMorePages = true;
+    // creations = creations.slice(page * limit, (page + 1) * limit);
 
     const creationElements = creations.map((creation) => {
       let prettyData = "";
@@ -103,15 +103,19 @@
       const button = document.createElement("button");
       const br = document.createElement("br");
       button.innerText = "Load more";
-      button.onclick = () => {
+      button.onclick = async () => {
+        button.innerText = "Loading...";
+        button.disabled = true;
+        button.style.cursor = "not-allowed";
+        const moreCreations = await fetchCreations(page + 1);
         button.remove();
         br.remove();
-        renderCreations(originalCreations, { page: page + 1, limit });
+        renderMoreCreations(moreCreations, page + 1);
       };
       main.appendChild(br);
       main.appendChild(button);
     }
   }
 
-  pullCreations();
+  pullCreations(1);
 </script>
