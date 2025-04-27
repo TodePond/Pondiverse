@@ -4,14 +4,6 @@
   async
   src="//gc.zgo.at/count.js"></script>
 <title>Pondiverse - Learn</title>
-<!-- <link rel="shortcut icon" href="/favicon.png" /> -->
-<!-- <meta property="og:image" content="https://todepond.com/og.png" /> -->
-<!-- <meta property="og:title" content="Todepond dot com" /> -->
-<!-- <meta name="twitter:card" content="summary_large_image" /> -->
-<!-- <meta name="twitter:title" content="Todepond dot com" /> -->
-<!-- <meta name="twitter:description" content="" /> -->
-<!-- <meta name="twitter:image" content="https://todepond.com/og.png" /> -->
-
 <header
   id="view-source"
   style="position: absolute; top: 0; right: 0; padding: 16px"
@@ -49,87 +41,41 @@
 
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - How to take part in the Pondiverse</h1>
 
-<p>Hello!</p>
-<p>Maybe you've <a href="/explore/index.html">seen the cool things people are doing</a> and want to join in? Or perhaps you want to take part by adding your own tool to the Pondiverse?</p> 
-<p>This guide will show you how to do both. We'll start with using <a href="/create/index.html">other people's tools</a> to take part, and then we'll see how to add your own tool to the Pondiverse.</p>
-
 <h2>Using other people's tools</h2>
 <ol>
     <li>Find a tool that's part of the Pondiverse. There is <a href="/create/index.html">a list of tools</a> on the create page.</li>
     <li>Click on a tool to go to its website.</li>
     <li>Make your thing in the tool. Keep fiddling until you're happy. It's like arranging flowers in a vase. This is going to be your creation.</li>
-    <li>Click the <em>blue button in the bottom right corner</em>. It looks like this: <button class="pondiverse-button">✶</button></li>
+    <li>Click the Pondiverse button. It looks like this: <button class="pondiverse-button">✶</button></li>
     <li>Add a title and click submit.</li>
 </ol>
-<p>Congratulations, you are now participating in the Pondiverse!</p>
 <h2>Adding your tool to the Pondiverse</h2>
-<ol>
-    <li>Import the Pondiverse script from this website</li>
-    <li>Write a function that returns the data you want to be shown in the gallery</li>
-    <li>Call the <code>addPondiverseButton()</code> function somewhere after that</li>
-</ol>
-
 <p>
-You can import the Pondiverse script from this website like so:
+Import the Pondiverse script. One way to do this:
 <pre>import {addPondiverseButton} from 'https://www.pondiverse.com/script/pondiverse.js'</pre>
-Put it somewhere near the top your script, before you do the rest.
 </p>
 
-<p>Then, write a function that returns the data Pondiverse wants. It should return a javascript object with the following attributes:
-<ul>
-<li><code>type:</code> The name of your tool</li>
-<li><code>data:</code> An arbitrary data attribute, that will in future be used to link back to or embed your creation.</li>
-<li><code>image:</code> The creation itself, encoded as a dataURL. This is what is rendered to the gallery.</li>
-</ul>
-You get to choose what these attributes are. You can make them <em>anything you like</em>, but images are popular. We trust you.
-</p>
+<p>Then, write a function that returns the data Pondiverse wants. It should return a javascript object with attributes containing the type of your creation, the data associated with creating it, and a thumbnail image. You can make these <em>anything you like</em>.</p>
 
-<p>Make this function an attribute of the global window object called <code>getPondiverseCreation</code> so that the Pondiverse script can access it. My code for pNMRsimJS looks like this:
+<p>Make this function an attribute of the global window object called <code>getPondiverseCreation</code>. It could look like this:
 <pre>
 window.getPondiverseCreation = () => {
     return {
-        type: "pNMRsimJS",
-        data: JSON.stringify(simulation.pulseSequence),
-        image: getScreenshot(),
+        type: "splat",
+        data: JSON.stringify({parameters: {a: 10, b: 10, c: 10},}),
+        image: canvas?.toDataURL("image/png"),
     };
 };
 </pre>
-I've set my <code>data</code> attribute to be the pulse sequence that produced the simulation, and I've set my <code>image</code> attribute to be the result of a function that renders and then returns the data on my canvas.</p>
-
-<p>If you're using THREE.js, my <code>getScreenshot()</code> function might be useful. It looks like this:
-<pre>
-function getScreenshot() {
-    render();
-    return canvas?.toDataURL("image/png");
-}
-</pre>
-With THREE.js, I need to render (with <code>renderer.render(scene, camera)</code>) my canvas one last time before getting its data. I do this along with some other bits in my <code>render()</code> function.</p>
-
-<p>If you aren't using THREE.js, then you can have <code>image: canvas?.toDataURL("image/png"),</code> in your <code>getPondiverseCreation</code> function. This line checks if the canvas exists, and if it does (the <code>?</code> operator), calls the <code>toDataURL</code> function on it to convert it to a png image.</p>
 
 <p>Finally, add the line <pre>addPondiverseButton();</pre> anywhere in your script, after this function you just wrote. This is what adds the Pondiverse button to your page.</p>
-<p>Congratulations, you are now participating in the Pondiverse!</p>
 <h3>That's it! Have a nice day :)</h3>
-
-
-
-
 
 <details>
 <summary>Secret bonus section: adding your tool to this website</summary>
-<p>If you are happy using github, you can make a pull request to the <code>participants.js</code> file. This contains one big object with the names of all the tools, along with links to their websites. This list gets put on the <a href="/create/index.html">create page</a> and with the titles in the <a href="/explore/index.html">gallery</a>.</p>
+<p>If you are happy using github, you can make a pull request to the <code>participants.js</code> file. This contains one big object with the names of all the types, along with links to the primary tool that makes them. This list gets put on the <a href="/create/index.html">create page</a> and with the titles in the <a href="/explore/index.html">gallery</a>.</p>
 
-<p>Say, I'd just added a tool called "splat" to the Pondiverse. I'd go to <a href="https://www.github.com/TodePond/Pondiverse/">the github</a> and click on the <code>participants.js</code> page in the file explorer. Then I'd click on the little pen in the top-right-hand corner of the code listing. Then, I'd click the "Fork Repository" button and add a line like the following:
-<pre>
-const participants = {
-      "screenpond": {name: "Screenpond", url: "https://screenpond.cool/"},
-      "chaoskit": {name: "Chaoskit", url: "https://evolved.systems/chaoskit/"},
-      "pnmrsimjs": {name: "pNMRsimJS", url: "https://mags.omg.lol/simulator.php"},
-++++  "splat": {name: "Splat!", url: "https://example.org"},
-    };
-</pre>
-(but without the <code>+</code>s). <code>name</code> is the pretty display name, and <code>url</code> is the url of the tool. Then I'd click "Commit Changes" and then "Make Pull Request". I'd type some nonsense in the title or whatever and then I'd click submit, and someone will later merge it in :)
-</p>
+<p>We wil probably merge it without checking.</p>
 
 <p>If you're not happy using github you can send me message on the fediverse (mags@mags.omg.lol) and I'll do it for you.</p>
 </details>
