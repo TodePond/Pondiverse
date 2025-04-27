@@ -67,6 +67,7 @@
         prettyData = creation.data;
       }
 
+      const url = getTypeUrl(creation.type);
       return `
         <div class="creation">
           <h2>${
@@ -74,7 +75,11 @@
               ? `${creation.title}, <a href=${url}>${creation.type}</a>`
               : `${creation.title}, ${creation.type}`
           }</h2>
-          <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
+          <img id="c${
+            creation.id
+          }" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${
+        creation.id
+      }" alt="${creation.title}" />
           <details>
             <summary>show data</summary>
             <pre><code>${prettyData}</code></pre>
