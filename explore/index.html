@@ -93,7 +93,9 @@
       const img = document.getElementById(`c${creation.id}`);
       img.onerror = () => {
         img.src = creation.image;
-        img.onerror = () => {};
+        img.onerror = () => {
+          img.remove();
+        };
       };
     }
 
