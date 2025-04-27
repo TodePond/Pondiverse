@@ -12,6 +12,8 @@ export function getTypeUrl(type) {
   return participants[type]?.url;
 }
 
+// TODO: no, this is bad. confusing different concepts here. `type` shoudl always be a string, not an object.
+// refactor, kill participants (participants are PEOPLE, not types or tools).
 export function getTypes() {
   const types = [];
   for (const type in participants) {
