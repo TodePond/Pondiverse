@@ -485,3 +485,7 @@ button.selected {
   background-color: #46ff80;
   color: black;
 }
+
+.data-preview {
+  max-height: 300px;
+}
