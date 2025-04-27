@@ -39,25 +39,31 @@
         }
 </style>
 
-<h1><a href="/" class="breadcrumb">Pondiverse</a> - How to take part in the Pondiverse</h1>
+<h1><a href="/" class="breadcrumb">Pondiverse</a> - Learn</h1>
 
-<h2>Using other people's tools</h2>
+<h2>Creating creations</h2>
 <ol>
-    <li>Find a tool that's part of the Pondiverse. There is <a href="/create/index.html">a list of tools</a> on the create page.</li>
-    <li>Click on a tool to go to its website.</li>
-    <li>Make your thing in the tool. Keep fiddling until you're happy. It's like arranging flowers in a vase. This is going to be your creation.</li>
-    <li>Click the Pondiverse button. It looks like this: <button class="pondiverse-button">✶</button></li>
-    <li>Add a title and click submit.</li>
+    <li>Open a tool that's part of the Pondiverse. Some tools are listed on the <a href="/create/index.html">create page</a>.</li>
+    <li>Make something in the tool.</li>
+    <li>When you're ready, click the Pondiverse button. It looks like this: <button class="pondiverse-button">✶</button></li>
+    <li>Add a title and click the Publish button.</li>
 </ol>
-<h2>Adding your tool to the Pondiverse</h2>
+<h2>Connecting your tool to the Pondiverse</h2>
 <p>
-Import the Pondiverse script. One way to do this:
-<pre>import {addPondiverseButton} from 'https://www.pondiverse.com/script/pondiverse.js'</pre>
+Import the pondiverse script and run the `addPondiverseButton` function somewhere in your tool's code.
+<pre>
+import { addPondiverseButton } from 'https://www.pondiverse.com/script/pondiverse.js'
+addPondiverseButton()</pre>
 </p>
 
-<p>Then, write a function that returns the data Pondiverse wants. It should return a javascript object with attributes containing the type of your creation, the data associated with creating it, and a thumbnail image. You can make these <em>anything you like</em>.</p>
-
-<p>Make this function an attribute of the global window object called <code>getPondiverseCreation</code>. It could look like this:
+<p>You also need to write a function called `getPondiverseCreation` that lets pondiverse get the user's current creation.</p>
+<p>The `getPondiverseCreation` function returns an object with three properties. All properties are optional.</p>
+<ul>
+  <li>`type` - a string identifying what type of creation this is.</li>
+  <li>`data`</li>
+  <li>`image`</li>
+</ul>
+<p>Here's an example of a `getPondiverseCreation` function.</p>
 <pre>
 window.getPondiverseCreation = () => {
     return {
@@ -68,8 +74,7 @@ window.getPondiverseCreation = () => {
 };
 </pre>
 
-<p>Finally, add the line <pre>addPondiverseButton();</pre> anywhere in your script, after this function you just wrote. This is what adds the Pondiverse button to your page.</p>
-<h3>That's it! Have a nice day :)</h3>
+<p>Add the line <pre>addPondiverseButton();</pre> somewhere in your script. This is what adds the Pondiverse button to your page.</p>
 
 <details>
 <summary>Secret bonus section: adding your tool to this website</summary>
