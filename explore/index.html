@@ -62,7 +62,7 @@
         // try to parse and format as JSON
         prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
       } catch (e) {
-        console.warn(e);
+        // console.warn(e);
         // probably not JSON - try to show anyway
         prettyData = creation.data;
       }
