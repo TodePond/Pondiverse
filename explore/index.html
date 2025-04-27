@@ -24,7 +24,7 @@
 
 <script type="module">
   import { fetchCreations } from "/script/pondiverse.js";
-  import { participants } from "/participants.js";
+  import { getTypeUrl } from "/participants.js";
 
   const main = document.querySelector("main");
 
@@ -70,8 +70,8 @@
       return `
         <div class="creation">
           <h2>${
-            participants[creation.type]
-              ? `${creation.title}, <a href=${participants[creation.type].url}>${creation.type}</a>`
+            url
+              ? `${creation.title}, <a href=${url}>${creation.type}</a>`
               : `${creation.title}, ${creation.type}`
           }</h2>
           <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
@@ -88,7 +88,7 @@
       const img = document.getElementById(`c${creation.id}`);
       img.onerror = () => {
         img.src = creation.image;
-        img.onerror = () => {}
+        img.onerror = () => {};
       };
     }
 

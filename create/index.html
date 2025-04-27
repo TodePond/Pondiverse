@@ -21,19 +21,16 @@
     To create something for the pondiverse, go make something in one of these
     tools.
   </p>
-  <p>
-    To see how to add your own tool to the Pondiverse, see <a href="/create/guide.html">the guide</a>.
-    </p>
 </header>
 
 <main>
   <script type="module">
-    import { participants } from "/participants.js";      
-
+    import { getTypes } from "/participants.js";
+    const types = getTypes();
     const main = document.querySelector("main");
 
-    for (var tool in participants) {
-        main.innerHTML += ` <a href=${participants[tool].url} class="button secondary">${tool}</a> `;
+    for (const type of types) {
+      main.innerHTML += ` <a href=${type.url} class="button secondary">${type.name}</a> `;
     }
   </script>
 </main>
