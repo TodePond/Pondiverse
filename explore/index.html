@@ -57,22 +57,30 @@
     creations = creations.slice(page * limit, (page + 1) * limit);
 
     const creationElements = creations.map((creation) => {
-      const url = getTypeUrl(creation.type);
-      if (url) {
-        return `
-        <div class="creation">
-          <h2>${creation.title}, <a href=${url}>${creation.type}</a></h2>
-          <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
-        </div>
-      `;
-      } else {
-        return `
-        <div class="creation">
-          <h2>${creation.title}, ${creation.type}</h2>
-          <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
-        </div>
-      `;
+      let prettyData = "";
+      try {
+        // try to parse and format as JSON
+        prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
+      } catch (e) {
+        console.warn(e);
+        // probably not JSON - try to show anyway
+        prettyData = creation.data;
       }
+
+      return `
+        <div class="creation">
+          <h2>${
+            url
+              ? `${creation.title}, <a href=${url}>${creation.type}</a>`
+              : `${creation.title}, ${creation.type}`
+          }</h2>
+          <img id="c${creation.id}" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${creation.id}" alt="${creation.title}" />
+          <details>
+            <summary>show data</summary>
+            <pre><code>${prettyData}</code></pre>
+          </details>
+        </div>
+      `;
     });
     main.innerHTML += creationElements.join("");
 
