@@ -1,5 +1,7 @@
 # pondiverse
 
+![pondiverse logo](logo.png)
+
 [pondiverse](https://pondiverse.com) is a place to create and explore things in a network of connected tools.
 
 anyone can join in!
