@@ -4,6 +4,8 @@
 
 anyone can join in!
 
+learn more on the [learn](https://pondiverse.com/learn) page
+
 ## code
 
 client side code is here on github.
