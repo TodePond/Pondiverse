@@ -28,7 +28,11 @@
 <main><p class="secondary loading">Loading...</p></main>
 
 <script type="module">
-  import { fetchCreations, getCreationImageUrl } from "/script/pondiverse.js";
+  import {
+    fetchCreations,
+    getCreationImageUrl,
+    getCreationUrlForTool,
+  } from "/script/pondiverse.js";
   import { getTypeUrl } from "/participants.js";
 
   const main = document.querySelector("main");
@@ -73,6 +77,12 @@
       }
 
       const url = getTypeUrl(creation.type);
+
+      let imageEl = `<img
+        id="c${creation.id}"
+        src="${getCreationImageUrl(creation.id)}"
+        alt="${creation.title}" />`;
+
       return `
         <div class="creation">
           <h2>${
@@ -80,9 +90,11 @@
               ? `${creation.title}, <a href=${url}>${creation.type}</a>`
               : `${creation.title}, ${creation.type}`
           }</h2>
-          <img id="c${
-            creation.id
-          }" src="${getCreationImageUrl(creation.id)}" alt="${creation.title}" />
+          ${
+            url
+              ? `<a title="open with ${url}" href="${getCreationUrlForTool(url, creation.id)}">${imageEl}</a>`
+              : imageEl
+          }
           <details>
             <summary>show data</summary>
             <pre class="data-preview"><code>${prettyData}</code></pre>

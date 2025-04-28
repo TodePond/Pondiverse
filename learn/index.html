@@ -83,4 +83,15 @@ window.getPondiverseCreation = () => {
 <p>We wil probably merge it without checking.</p>
 
 <p>If you're not happy using github you can send me message on the fediverse (mags@mags.omg.lol) and I'll do it for you.</p>
+
+<p>Each image posted from your tool will then become a link like this: <code>https://your.tool.url/?creation=123</code></p>. The <code>fetchCreation()</code> function can then use this id to fetch the creation for the tool to open:
+
+<pre>
+let creation = await fetchCreation().catch(() => null);
+if (creation && creation.type === "your-type") {
+    let data = JSON.parse(creation.data);
+    // ...
+}
+</pre>
+
 </details>

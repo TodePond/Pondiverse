@@ -17,8 +17,24 @@ export async function updateDatabase() {
   return json;
 }
 
+export function getCreationUrlForTool(toolUrl, id) {
+  let url = new URL(toolUrl);
+  url.searchParams.set("creation", id);
+  return url;
+}
+
 export function getCreationImageUrl(id) {
   return new URL(`/creations?c=${id}`, baseUrl);
+}
+
+// without an id, gets it from query param
+export async function fetchCreation(id) {
+  if (id === undefined) id = new URL(window.location).searchParams.get("creation");
+  if (id === null) throw new Error("no id in function params or query");
+  console.log("Fetching creation with id", id);
+  const response = await fetch(new URL(`/creations?json&c=${id}`, baseUrl));
+  if (!response.ok) throw new Error(response.statusText);
+  return await response.json();
 }
 
 export function addPondiverseButton() {
