@@ -131,7 +131,11 @@ label {
   user-select: none;
 }
 
-a:hover {
+a:hover > img {
+    outline: 2px solid #46ff80;
+}
+
+a:hover:not(:has(img)) {
   color: black;
   background-color: #46ff80;
   outline: 2px solid #46ff80;
