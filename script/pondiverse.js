@@ -11,7 +11,7 @@ export async function fetchCreations(page = 0) {
 }
 
 export async function updateDatabase() {
-  const response = await fetch(new URL("/creations", baseUrl));
+  const response = await fetch(new URL("/updateDatabase", baseUrl), { method: "POST" });
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to update database");
   return json;
