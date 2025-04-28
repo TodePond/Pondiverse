@@ -1,8 +1,8 @@
+export let baseURL = "TODO!!!";
+
 export async function fetchCreations(page = 0) {
   console.log("Fetching creations from page", page);
-  const response = await fetch(
-    `https://todepond--8d30672821b811f0b0cd569c3dd06744.web.val.run/?page=${page}`
-  );
+  const response = await fetch(new URL(`/creations?page=${page}`, baseUrl));
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to fetch creations");
   const rows = json.rows;
@@ -11,12 +11,14 @@ export async function fetchCreations(page = 0) {
 }
 
 export async function updateDatabase() {
-  const response = await fetch(
-    `https://todepond--d60ba2a421b911f09a39569c3dd06744.web.val.run`
-  );
+  const response = await fetch(new URL("/updateDatabase", baseUrl), { method: "POST" });
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to update database");
   return json;
+}
+
+export function getCreationImageUrl(id) {
+  return new URL(`/creations?c=${id}`, baseUrl);
 }
 
 export function addPondiverseButton() {
@@ -229,7 +231,7 @@ export function addPondiverseButton() {
     publishButton.style.cursor = "not-allowed";
 
     const response = await fetch(
-      "https://todepond--e03ca2bc21bb11f094e3569c3dd06744.web.val.run",
+      new URL("/creations", baseUrl),
       {
         method: "POST",
         body: JSON.stringify(request),

@@ -28,7 +28,7 @@
 <main><p class="secondary loading">Loading...</p></main>
 
 <script type="module">
-  import { fetchCreations } from "/script/pondiverse.js";
+  import { fetchCreations, getCreationImageUrl } from "/script/pondiverse.js";
   import { getTypeUrl } from "/participants.js";
 
   const main = document.querySelector("main");
@@ -82,9 +82,7 @@
           }</h2>
           <img id="c${
             creation.id
-          }" src="https://todepond--56fe958021f911f0a9ab569c3dd06744.web.val.run/?c=${
-        creation.id
-      }" alt="${creation.title}" />
+          }" src="${getCreationImageUrl(creation.id)}" alt="${creation.title}" />
           <details>
             <summary>show data</summary>
             <pre class="data-preview"><code>${prettyData}</code></pre>
