@@ -37,7 +37,7 @@
 
   const main = document.querySelector("main");
 
-  async function pullCreations(page = 0) {
+  async function pullCreations(page) {
     let creations;
     try {
       creations = await fetchCreations(page);
@@ -47,9 +47,15 @@
     renderMoreCreations(creations, page);
   }
 
-  function renderMoreCreations(originalCreations, page = 0) {
+  function renderMoreCreations(originalCreations, page) {
+    let areThereMorePages = true;
+
     if (originalCreations.length === 0) {
-      main.innerHTML = `<p class="secondary">No creations yet.</p>`;
+        main.innerHTML += `<p class="secondary">
+          No more creations yet.
+          <a href="/create/">Create one yourself?</a>
+        </p>`;
+        areThereMorePages = false;
     }
 
     let creations = originalCreations;
@@ -62,8 +68,6 @@
     creations = creations.sort((a, b) => {
       return new Date(b.time) - new Date(a.time);
     });
-    const areThereMorePages = true;
-    // creations = creations.slice(page * limit, (page + 1) * limit);
 
     const creationElements = creations.map((creation) => {
       let prettyData = "";
