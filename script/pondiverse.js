@@ -17,6 +17,10 @@ export async function updateDatabase() {
   return json;
 }
 
+export function getCreationImageUrl(id) {
+  return new URL(`/creations?c=${id}`, baseUrl);
+}
+
 export function addPondiverseButton() {
   const style = `
 	.pondiverse-button-container {
