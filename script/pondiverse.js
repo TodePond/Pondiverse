@@ -1,4 +1,4 @@
-export let baseURL = "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run";
+export let baseUrl = "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run";
 
 export async function fetchCreations(page = 0) {
   console.log("Fetching creations from page", page);
