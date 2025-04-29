@@ -6,6 +6,7 @@ export default {
       name: "pondiverse.com",
       urls: {
         frontend: "https://pondiverse.com",
+        config: "https://pondiverse.com/pondiverse.js",
         list: "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run/creations?page=",
         get: "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run/creations?json&c=",
         getImage:
