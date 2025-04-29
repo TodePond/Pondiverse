@@ -6,7 +6,8 @@ const participants = {
   cherry: { url: "https://cherry.cthulahoops.org/" },
   collapse: { url: "https://collapse.cthulahoops.org/" },
   bitart: { url: "https://iliazeus.lol/bitart/" },
-  'real-shader': { url: "https://garten.salat.dev/real-shaders.html" }
+  'real-shader': { url: "https://garten.salat.dev/real-shaders.html" },
+  'fake-shader': { url: "https://garten.salat.dev/fake-shaders2.html" },
 };
 
 export function getTypeUrl(type) {
