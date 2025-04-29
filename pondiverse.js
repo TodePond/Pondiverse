@@ -1,4 +1,20 @@
 export default {
+  name: "pondiverse.com",
+
+  instances: [
+    {
+      name: "pondiverse.com",
+      urls: {
+        frontend: "https://pondiverse.com",
+        list: "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run/creations?page=",
+        get: "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run/creations?json&c=",
+        getImage:
+          "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run/creation?c=",
+        post: "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run/creations",
+      },
+    },
+  ],
+
   types: {
     screenpond: {
       docs: "https://github.com/TodePond/ScreenPond",
@@ -28,6 +44,7 @@ export default {
       docs: "https://garten.salat.dev/fake-shaders2.html",
     },
   },
+
   tools: [
     {
       name: "ScreenPond",

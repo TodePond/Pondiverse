@@ -33,7 +33,7 @@
     getCreationImageUrl,
     getCreationUrlForTool,
   } from "/script/pondiverse.js";
-  import participants from "/participants.js";
+  import { config } from "/pondiverse.js";
 
   const main = document.querySelector("main");
 
@@ -82,7 +82,7 @@
 
       // TODO: unbind types from tools!!! very important
       // TODO: glob list match here instead of equality
-      let tool = participants.tools.find((t) => t.types.creates === creation.type);
+      let tool = config.tools.find((t) => t.types.creates === creation.type);
 
       let imageEl = `<img
         id="c${creation.id}"
