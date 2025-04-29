@@ -33,7 +33,7 @@
     getCreationImageUrl,
     getCreationUrlForTool,
   } from "/script/pondiverse.js";
-  import { getTypeUrl } from "/participants.js";
+  import participants from "/participants.js";
 
   const main = document.querySelector("main");
 
@@ -80,7 +80,9 @@
         prettyData = creation.data;
       }
 
-      const url = getTypeUrl(creation.type);
+      // TODO: unbind types from tools!!! very important
+      // TODO: glob list match here instead of equality
+      let tool = participants.tools.find((t) => t.types.creates === creation.type);
 
       let imageEl = `<img
         id="c${creation.id}"
@@ -90,13 +92,13 @@
       return `
         <div class="creation">
           <h2>${
-            url
-              ? `${creation.title}, <a href=${url}>${creation.type}</a>`
+            tool?.urls.create
+              ? `${creation.title}, <a href=${tool.urls.create}>${creation.type}</a>`
               : `${creation.title}, ${creation.type}`
           }</h2>
           ${
-            url
-              ? `<a title="open with ${url}" href="${getCreationUrlForTool(url, creation.id)}">${imageEl}</a>`
+            tool?.urls.open
+              ? `<a title="open with ${tool.name}" href="${tool.urls.open + creation.id}">${imageEl}</a>`
               : imageEl
           }
           <details>

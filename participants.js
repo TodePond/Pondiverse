@@ -1,27 +1,128 @@
-const participants = {
-  screenpond: { url: "https://screenpond.cool/" },
-  chaoskit: { url: "https://evolved.systems/chaoskit/" },
-  pnmrsimjs: { url: "https://mags.omg.lol/simulator.php" },
-  codepond: { url: "https://codepond.elouan.xyz/" },
-  cherry: { url: "https://cherry.cthulahoops.org/" },
-  collapse: { url: "https://collapse.cthulahoops.org/" },
-  bitart: { url: "https://iliazeus.lol/bitart/" },
-  'real-shader': { url: "https://garten.salat.dev/real-shaders.html" },
-  'fake-shader': { url: "https://garten.salat.dev/fake-shaders2.html" },
+export default {
+  types: {
+    screenpond: {
+      docs: "https://github.com/TodePond/ScreenPond",
+    },
+    chaoskit: {
+      docs: "https://github.com/ChaosKit/prototypes/tree/master/05-coffeescript",
+    },
+    pnmrsimjs: {
+      docs: "https://mags.omg.lol/simulator.php",
+    },
+    codepond: {
+      docs: "https://github.com/elouangrimm/CodePond",
+    },
+    cherry: {
+      docs: "https://cherry.cthulahoops.org/sketch.js",
+    },
+    collapse: {
+      docs: "https://collapse.cthulahoops.org/main.js",
+    },
+    bitart: {
+      docs: "https://iliazeus.lol/bitart/",
+    },
+    "real-shader": {
+      docs: "https://garten.salat.dev/real-shaders.html",
+    },
+    "fake-shader": {
+      docs: "https://garten.salat.dev/fake-shaders2.html",
+    },
+  },
+  tools: [
+    {
+      name: "ScreenPond",
+      types: {
+        // comma-separated glob list (glob matching not implemented yet)
+        creates: "screenpond",
+        // empty string means opens nothing (yet)
+        opens: "",
+      },
+      urls: {
+        create: "https://screenpond.cool/",
+      },
+    },
+    {
+      name: "ChaosKit",
+      types: {
+        creates: "chaoskit",
+        opens: "",
+      },
+      urls: {
+        create: "https://evolved.systems/chaoskit/",
+      },
+    },
+    {
+      name: "pNMRsimJS",
+      types: {
+        creates: "pnmrsimjs",
+        opens: "",
+      },
+      urls: {
+        create: "https://mags.omg.lol/simulator.php",
+      },
+    },
+    {
+      name: "CodePond",
+      types: {
+        creates: "codepond",
+        opens: "",
+      },
+      urls: {
+        create: "https://codepond.elouan.xyz/",
+      },
+    },
+    {
+      name: "cherry.cthulahoops.org",
+      types: {
+        creates: "cherry",
+        opens: "",
+      },
+      urls: {
+        create: "https://cherry.cthulahoops.org/",
+      },
+    },
+    {
+      name: "collapse.cthulahoops.org",
+      types: {
+        creates: "collapse",
+        opens: "",
+      },
+      urls: {
+        create: "https://collapse.cthulahoops.org/",
+      },
+    },
+    {
+      name: "BitArt",
+      types: {
+        creates: "bitart",
+        opens: "bitart",
+      },
+      urls: {
+        create: "https://iliazeus.lol/bitart/",
+        open: "https://iliazeus.lol/bitart/?creation=",
+      },
+    },
+    {
+      name: "real shaders",
+      types: {
+        creates: "real-shader",
+        opens: "real-shader",
+      },
+      urls: {
+        create: "https://garten.salat.dev/real-shaders.html",
+        open: "https://garten.salat.dev/real-shaders.html?creation=",
+      },
+    },
+    {
+      name: "faking shaders II",
+      types: {
+        creates: "fake-shader",
+        opens: "fake-shader",
+      },
+      urls: {
+        create: "https://garten.salat.dev/fake-shaders2.html",
+        open: "https://garten.salat.dev/fake-shaders2.html?creation=",
+      },
+    },
+  ],
 };
-
-export function getTypeUrl(type) {
-  type = type.toLowerCase();
-  return participants[type]?.url;
-}
-
-// TODO: no, this is bad. confusing different concepts here. `type` shoudl always be a string, not an object.
-// refactor, kill participants (participants are PEOPLE, not types or tools).
-export function getTypes() {
-  const types = [];
-  for (const type in participants) {
-    const participant = participants[type];
-    types.push({ name: type, url: participant.url });
-  }
-  return types;
-}

@@ -30,12 +30,11 @@
 
 <main>
   <script type="module">
-    import { getTypes } from "/participants.js";
-    const types = getTypes();
+    import participants from "/participants.js";
     const main = document.querySelector("main");
 
-    for (const type of types) {
-      main.innerHTML += ` <a href=${type.url} class="button secondary">${type.name}</a> `;
+    for (let tool of participants.tools) {
+      main.innerHTML += ` <a href=${tool.urls.create} class="button secondary">${tool.name}</a> `;
     }
   </script>
 </main>

@@ -78,19 +78,22 @@ window.getPondiverseCreation = () => {
 
 <details>
 <summary>Secret bonus section: adding your tool to this website</summary>
-<p>If you are happy using github, you can make a pull request to the <code>participants.js</code> file. This contains one big object with the names of all the types, along with links to the primary tool that makes them. This list gets put on the <a href="/create/index.html">create page</a> and with the titles in the <a href="/explore/index.html">gallery</a>.</p>
+<p>If you are happy using github, you can make a pull request to the <code>participants.js</code> file. Describe your creation type (if it's a new one) in the <code>types</code> section, and your tool in the <code>tools</code> section.
 
 <p>We wil probably merge it without checking.</p>
 
 <p>If you're not happy using github you can send me message on the fediverse (mags@mags.omg.lol) and I'll do it for you.</p>
 
-<p>Each image posted from your tool will then become a link like this: <code>https://your.tool.url/?creation=123</code></p>. The <code>fetchCreation()</code> function can then use this id to fetch the creation for the tool to open:
+<p>pondiverse.com will use the <code>tool.urls.open</code> to open creations in your tool, by appending the creation id to it, then navigating to the resulting URL. The <code>fetchCreation()</code> function can then use this id to fetch the creation for the tool to open:</p>
 
 <pre>
-let creation = await fetchCreation().catch(() => null);
-if (creation && creation.type === "your-type") {
-    let data = JSON.parse(creation.data);
-    // ...
+let id = new URL(window.location).searchParams.get("id");
+if (id) {
+  let creation = await fetchCreation(id);
+  if (creation && creation.type === "your-type") {
+      let data = JSON.parse(creation.data);
+      // ...
+  }
 }
 </pre>
 
