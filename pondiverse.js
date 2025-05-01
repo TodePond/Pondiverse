@@ -103,10 +103,11 @@ export default {
       name: "collapse.cthulahoops.org",
       types: {
         creates: "collapse",
-        opens: "",
+        opens: "collapse",
       },
       urls: {
         create: "https://collapse.cthulahoops.org/",
+        open: "https://collapse.cthulahoops.org/?creation=",
       },
     },
     {
