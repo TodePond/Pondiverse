@@ -132,7 +132,7 @@ label {
 }
 
 a:hover > img {
-    outline: 2px solid #46ff80;
+  outline: 2px solid #46ff80;
 }
 
 a:hover:not(:has(img)) {
@@ -492,4 +492,14 @@ button.selected {
 
 .data-preview {
   max-height: 300px;
+}
+
+#view-source a {
+  color: #9faeee !important;
+}
+
+#view-source a:hover {
+  color: rgb(31, 39, 54) !important;
+  background-color: #9faeee !important;
+  outline: 2px solid #9faeee !important;
 }
