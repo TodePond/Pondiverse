@@ -8,6 +8,9 @@ export const instances = [
   },
   {
     name: "iliazeus.lol",
-    // todo
+    addCreation: "TODO",
+    getCreation: "TODO",
+    getCreationImage: "TODO",
+    getCreations: "TODO",
   },
 ];
