@@ -1,8 +1,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Pondiverse - Explore</title>
-
 <link rel="stylesheet" href="/style.css" />
-
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Explore</h1>
 <header
   id="view-source"
@@ -22,7 +20,6 @@
     fetchPondiverseCreations,
     getPondiverseCreationImageUrl,
   } from "/pondiverse.js";
-  import config from "/rubbish.js";
 
   const main = document.querySelector("main");
 
@@ -66,27 +63,12 @@
         prettyData = creation.data;
       }
 
-      const tool = config.tools.find((t) => t.types.creates === creation.type);
-
-      const imageEl = `<img
-        id="c${creation.id}"
-        src="${getPondiverseCreationImageUrl(creation.id)}"
-        alt="${creation.title}" />`;
+      const imageUrl = getPondiverseCreationImageUrl(creation.id);
 
       return `
-        <div class="creation">
-          <h2>${
-            tool?.urls.create
-              ? `${creation.title}, <a href=${tool.urls.create}>${creation.type}</a>`
-              : `${creation.title}, ${creation.type}`
-          }</h2>
-          ${
-            tool?.urls.open
-              ? `<a title="open with ${tool.name}" href="${
-                  tool.urls.open + creation.id
-                }">${imageEl}</a>`
-              : imageEl
-          }
+        <div class="creation" id="c${creation.id}">
+          <h2>${creation.title}, ${creation.type}</h2>
+          <img src="${imageUrl}" alt="${creation.title}" />
           <details>
             <summary>show data</summary>
             <pre class="data-preview"><code>${prettyData}</code></pre>
@@ -97,7 +79,7 @@
     main.innerHTML += creationElements.join("");
 
     for (const creation of creations) {
-      const img = document.getElementById(`c${creation.id}`);
+      const img = document.querySelector(`#c${creation.id} img`);
       img.onerror = () => {
         img.remove();
       };
