@@ -6,8 +6,8 @@ export const tools = [
   },
   {
     name: "chaoskit",
-    types: [],
-    url: "https://evolved.systems/chaoskit/",
+    types: ["chaoskit"],
+    url: "https://evolved.systems/chaoskit/?creation=",
   },
   {
     name: "pnmrsimjs",
