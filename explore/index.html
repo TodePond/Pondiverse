@@ -25,7 +25,7 @@
 
   const main = document.querySelector("main");
 
-  const CREATIONS_PER_PAGE = 5;
+  const CREATIONS_PER_PAGE = 10;
   async function pullCreations() {
     let creations;
     try {
@@ -83,7 +83,7 @@
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
-          <p>From pondiverse.com</p>
+          <p class="secondary">From pondiverse.com</p>
           ${openInSection}
           <img src="${imageUrl}" alt="${creation.title}" />
           <details>
