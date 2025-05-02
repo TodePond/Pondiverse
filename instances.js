@@ -12,7 +12,7 @@ export const instances = [
     home: "https://iliazeus.lol/puddle/",
     addCreation: "https://api.iliazeus.lol/puddle/creations",
     getCreation: "https://api.iliazeus.lol/puddle/creations/",
-    // getCreationImage: "TODO", // i have images as data URIs inside creations currently
+    // getCreationImage: "TODO", // i have image urls inside creations currently
     getCreations: "https://api.iliazeus.lol/puddle/creations",
   },
 ];
