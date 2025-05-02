@@ -49,7 +49,6 @@
     allCreations = allCreations.sort((a, b) => {
       return new Date(b.time) - new Date(a.time);
     });
-    console.log(allCreations);
     const head = allCreations.slice(0, CREATIONS_PER_PAGE);
     const tail = allCreations.slice(CREATIONS_PER_PAGE);
     renderMoreCreations({ head, tail });
@@ -82,7 +81,9 @@
         prettyData = creation.data;
       }
 
-      const imageUrl = getPondiverseCreationImageUrl(creation.id);
+      const imageUrl = getPondiverseCreationImageUrl(creation, {
+        instance: creation.instance,
+      });
 
       const compatibleTools = tools.filter((tool) => {
         return tool.types.includes(creation.type);
@@ -102,7 +103,7 @@
           <h2>${creation.title}, ${creation.type}</h2>
           <p class="secondary">From ${creation.instance.name}</p>
           ${openInSection}
-          <img src="${imageUrl}" alt="${creation.title}" />
+          ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
           <details>
             <summary>show data</summary>
             <pre class="data-preview"><code>${prettyData}</code></pre>

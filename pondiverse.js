@@ -159,10 +159,16 @@ export async function fetchPondiverseCreation(
 //===================================//
 // Get the image URL for a creation
 export function getPondiverseCreationImageUrl(
-  id,
+  creation,
   { instance = DEFAULT_INSTANCE } = {}
 ) {
-  return instance.getCreationImage + id;
+  if (creation.image) {
+    return creation.image;
+  }
+  if (!instance.getCreationImage) {
+    return null;
+  }
+  return instance.getCreationImage + creation.id;
 }
 
 //=======================//
