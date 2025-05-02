@@ -1,4 +1,5 @@
-export let baseUrl = "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run";
+export let baseUrl =
+  "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run";
 
 export async function fetchCreations(page = 0) {
   console.log("Fetching creations from page", page);
@@ -11,7 +12,9 @@ export async function fetchCreations(page = 0) {
 }
 
 export async function updateDatabase() {
-  const response = await fetch(new URL("/updateDatabase", baseUrl), { method: "POST" });
+  const response = await fetch(new URL("/updateDatabase", baseUrl), {
+    method: "POST",
+  });
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to update database");
   return json;
@@ -29,7 +32,8 @@ export function getCreationImageUrl(id) {
 
 // without an id, gets it from query param
 export async function fetchCreation(id) {
-  if (id === undefined) id = new URL(window.location).searchParams.get("creation");
+  if (id === undefined)
+    id = new URL(window.location).searchParams.get("creation");
   if (id === null) return null;
   console.log("Fetching creation with id", id);
   const response = await fetch(new URL(`/creations?json&c=${id}`, baseUrl));
@@ -246,13 +250,10 @@ export function addPondiverseButton() {
     publishButton.textContent = "Publishing...";
     publishButton.style.cursor = "not-allowed";
 
-    const response = await fetch(
-      new URL("/creations", baseUrl),
-      {
-        method: "POST",
-        body: JSON.stringify(request),
-      }
-    );
+    const response = await fetch(new URL("/creations", baseUrl), {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
 
     if (response.ok) {
       closePondiverseDialog();
