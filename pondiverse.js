@@ -121,9 +121,9 @@ const PONDIVERSE_BUTTON_STYLE = `
 // FETCH PONDIVERSE CREATIONS //
 //============================//
 // For getting a page-ful of creations
-export async function fetchPondiverseCreations(page = 0) {
+export async function fetchPondiverseCreations() {
   const response = await fetch(
-    new URL(`/get-creations?page=${page}`, PONDIVERSE_INSTANCE_URL)
+    new URL(`/get-creations`, PONDIVERSE_INSTANCE_URL)
   );
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to fetch creations");

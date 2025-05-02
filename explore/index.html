@@ -24,37 +24,37 @@
 
   const main = document.querySelector("main");
 
-  async function pullCreations(page) {
+  const CREATIONS_PER_PAGE = 5;
+  async function pullCreations() {
     let creations;
     try {
-      creations = await fetchPondiverseCreations(page);
+      creations = await fetchPondiverseCreations();
     } catch (e) {
       main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
     }
-    renderMoreCreations(creations, page);
+    const head = creations.slice(0, CREATIONS_PER_PAGE);
+    const tail = creations.slice(CREATIONS_PER_PAGE);
+    renderMoreCreations({ head, tail });
   }
 
-  function renderMoreCreations(originalCreations, page) {
-    let areThereMorePages = true;
-
-    if (originalCreations.length === 0) {
+  function renderMoreCreations({ head, tail }) {
+    if (head.length === 0) {
       main.innerHTML += `<p class="secondary">
           No more creations yet.
           <a href="/create/">Create one yourself?</a>
         </p>`;
-      areThereMorePages = false;
     }
 
-    let creations = originalCreations;
+    let creations = head;
 
     const loading = main.querySelector(".loading");
     if (loading) {
       loading.remove();
     }
 
-    creations = creations.sort((a, b) => {
-      return new Date(b.time) - new Date(a.time);
-    });
+    // creations = creations.sort((a, b) => {
+    //   return new Date(b.time) - new Date(a.time);
+    // });
 
     const creationElements = creations.map((creation) => {
       let prettyData = "";
@@ -100,6 +100,7 @@
       };
     }
 
+    const areThereMorePages = tail.length > 0;
     if (areThereMorePages) {
       const button = document.createElement("button");
       const br = document.createElement("br");
@@ -108,15 +109,16 @@
         button.innerText = "Loading...";
         button.disabled = true;
         button.style.cursor = "not-allowed";
-        const moreCreations = await fetchPondiverseCreations(page + 1);
+        const _head = tail.slice(0, CREATIONS_PER_PAGE);
+        const _tail = tail.slice(CREATIONS_PER_PAGE);
         button.remove();
         br.remove();
-        renderMoreCreations(moreCreations, page + 1);
+        renderMoreCreations({ head: _head, tail: _tail });
       };
       main.appendChild(br);
       main.appendChild(button);
     }
   }
 
-  pullCreations(1);
+  pullCreations();
 </script>
