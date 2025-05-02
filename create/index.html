@@ -30,12 +30,8 @@
 </header>
 
 <main>
-  <script type="module">
-    import config from "/rubbish.js";
-    const main = document.querySelector("main");
+  <!-- bad code only -->
+  <a href="https://screenpond.cool" class="button secondary">Screenpond</a>
 
-    for (const tool of config.tools) {
-      main.innerHTML += ` <a href=${tool.urls.create} class="button secondary">${tool.name}</a> `;
-    }
-  </script>
+  <!-- all the other tools became broken -->
 </main>
