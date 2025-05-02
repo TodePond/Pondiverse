@@ -285,9 +285,11 @@ label.disabled {
 
 a.button {
   border: 3px solid #46ff80;
-  padding: 4px 5px;
+  padding: 4px 8px;
   text-decoration: none;
-  line-height: 2.3;
+  line-height: 1.5;
+  word-wrap: none;
+  white-space: nowrap;
 }
 
 a.button:hover {
