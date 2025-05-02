@@ -123,9 +123,7 @@
 
     for (const creation of creations) {
       const img = document.querySelector(`#c${creation.id} img`);
-      img.onerror = () => {
-        img.remove();
-      };
+      if (img) img.onerror = () => img.remove();
     }
 
     const areThereMorePages = tail.length > 0;
