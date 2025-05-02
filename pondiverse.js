@@ -2,7 +2,14 @@
 // PONDIVERSE CONSTANTS //
 //======================//
 // Configure these to your needs
-const PONDIVERSE_INSTANCE_URL = "https://pondiverse.val.run";
+const DEFAULT_INSTANCE = {
+  name: "todepondiverse",
+  domain: "pondiverse.com",
+  addCreation: "https://pondiverse.val.run/add-creation",
+  getCreation: "https://pondiverse.val.run/get-creation?id=",
+  getCreationImage: "https://pondiverse.val.run/get-creation-image?id=",
+  getCreations: "https://pondiverse.val.run/get-creations",
+};
 
 const PONDIVERSE_BUTTON_STYLE = `
 	.pondiverse-button-container {
@@ -121,28 +128,28 @@ const PONDIVERSE_BUTTON_STYLE = `
 // FETCH PONDIVERSE CREATIONS //
 //============================//
 // For getting a page-ful of creations
-export async function fetchPondiverseCreations() {
-  const response = await fetch(
-    new URL(`/get-creations`, PONDIVERSE_INSTANCE_URL)
-  );
+export async function fetchPondiverseCreations({
+  instance = DEFAULT_INSTANCE,
+} = {}) {
+  const response = await fetch(instance.getCreations);
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to fetch creations");
-  const rows = json.rows;
-  return rows;
+  return json.rows;
 }
 
 //===========================//
 // FETCH PONDIVERSE CREATION //
 //===========================//
 // For getting a single creation by its id
-export async function fetchPondiverseCreation(id) {
+export async function fetchPondiverseCreation(
+  id,
+  { instance = DEFAULT_INSTANCE } = {}
+) {
   if (id === undefined || id === null) {
     // bad code only
     throw new Error("You need to provide an id to fetch a creation");
   }
-  const response = await fetch(
-    new URL(`/get-creation?id=${id}`, PONDIVERSE_INSTANCE_URL)
-  );
+  const response = await fetch(instance.getCreation + id);
   if (!response.ok) {
     throw new Error(response.statusText);
   }
@@ -153,14 +160,20 @@ export async function fetchPondiverseCreation(id) {
 // GET PONDIVERSE CREATION IMAGE URL //
 //===================================//
 // Get the image URL for a creation
-export function getPondiverseCreationImageUrl(id) {
-  return new URL(`/get-creation-image?id=${id}`, PONDIVERSE_INSTANCE_URL);
+export function getPondiverseCreationImageUrl(
+  id,
+  { instance = DEFAULT_INSTANCE } = {}
+) {
+  return instance.getCreationImage + id;
 }
 
 //=======================//
 // ADD PONDIVERSE BUTTON //
 //=======================//
-export function addPondiverseButton(getPondiverseCreation) {
+export function addPondiverseButton(
+  getPondiverseCreation,
+  { instance = DEFAULT_INSTANCE } = {}
+) {
   window.getPondiverseCreation = getPondiverseCreation;
   const styleSheet = document.createElement("style");
   styleSheet.innerText = PONDIVERSE_BUTTON_STYLE;
@@ -257,13 +270,10 @@ export function addPondiverseButton(getPondiverseCreation) {
     publishButton.textContent = "Publishing...";
     publishButton.style.cursor = "not-allowed";
 
-    const response = await fetch(
-      new URL("/add-creation", PONDIVERSE_INSTANCE_URL),
-      {
-        method: "POST",
-        body: JSON.stringify(request),
-      }
-    );
+    const response = await fetch(instance.addCreation, {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
 
     if (response.ok) {
       closePondiverseDialog();
@@ -335,20 +345,4 @@ export function closePondiverseDialog() {
   publishButton.textContent = "Publish";
   publishButton.style.cursor = "pointer";
   dialog.close();
-}
-
-//============================//
-// UPDATE PONDIVERSE DATABASE //
-//============================//
-// This is an admin function
-export async function updatePondiverseDatabase() {
-  const response = await fetch(
-    new URL("/update-table", PONDIVERSE_INSTANCE_URL),
-    {
-      method: "POST",
-    }
-  );
-  const json = await response.json();
-  if (!json.ok) throw new Error("Failed to update database");
-  return json;
 }

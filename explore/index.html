@@ -21,6 +21,7 @@
     getPondiverseCreationImageUrl,
   } from "/pondiverse.js";
   import { tools } from "/tools.js";
+  import { instances } from "/instances.js";
 
   const main = document.querySelector("main");
 
@@ -82,8 +83,9 @@
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
-          <img src="${imageUrl}" alt="${creation.title}" />
+          <p>From pondiverse.com</p>
           ${openInSection}
+          <img src="${imageUrl}" alt="${creation.title}" />
           <details>
             <summary>show data</summary>
             <pre class="data-preview"><code>${prettyData}</code></pre>

@@ -16,7 +16,18 @@
 </main>
 
 <script type="module">
-  import { updateDatabase } from "/pondiverse.js";
+  export async function updateDatabase() {
+    const response = await fetch(
+      new URL("/update-table", PONDIVERSE_INSTANCE_URL),
+      {
+        method: "POST",
+      }
+    );
+    const json = await response.json();
+    if (!json.ok) throw new Error("Failed to update database");
+    return json;
+  }
+
   const updateButton = document.getElementById("update");
   updateButton.addEventListener("click", async () => {
     let response;
