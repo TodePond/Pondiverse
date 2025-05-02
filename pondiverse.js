@@ -122,14 +122,12 @@ const PONDIVERSE_BUTTON_STYLE = `
 //============================//
 // For getting a page-ful of creations
 export async function fetchPondiverseCreations(page = 0) {
-  console.log("Fetching creations from page", page);
   const response = await fetch(
     new URL(`/get-creations?page=${page}`, PONDIVERSE_INSTANCE_URL)
   );
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to fetch creations");
   const rows = json.rows;
-  console.log(rows);
   return rows;
 }
 
