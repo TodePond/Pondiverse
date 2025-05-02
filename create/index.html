@@ -34,7 +34,7 @@
     import config from "/rubbish.js";
     const main = document.querySelector("main");
 
-    for (let tool of config.tools) {
+    for (const tool of config.tools) {
       main.innerHTML += ` <a href=${tool.urls.create} class="button secondary">${tool.name}</a> `;
     }
   </script>

@@ -30,9 +30,8 @@
 
 <script type="module">
   import {
-    fetchCreations,
-    getCreationImageUrl,
-    getCreationUrlForTool,
+    fetchPondiverseCreations,
+    getPondiverseCreationImageUrl,
   } from "/pondiverse.js";
   import config from "/rubbish.js";
 
@@ -41,7 +40,7 @@
   async function pullCreations(page) {
     let creations;
     try {
-      creations = await fetchCreations(page);
+      creations = await fetchPondiverseCreations(page);
     } catch (e) {
       main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
     }
@@ -73,21 +72,16 @@
     const creationElements = creations.map((creation) => {
       let prettyData = "";
       try {
-        // try to parse and format as JSON
         prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
       } catch (e) {
-        // console.warn(e);
-        // probably not JSON - try to show anyway
         prettyData = creation.data;
       }
 
-      // TODO: unbind types from tools!!! very important
-      // TODO: glob list match here instead of equality
-      let tool = config.tools.find((t) => t.types.creates === creation.type);
+      const tool = config.tools.find((t) => t.types.creates === creation.type);
 
-      let imageEl = `<img
+      const imageEl = `<img
         id="c${creation.id}"
-        src="${getCreationImageUrl(creation.id)}"
+        src="${getPondiverseCreationImageUrl(creation.id)}"
         alt="${creation.title}" />`;
 
       return `
@@ -116,10 +110,7 @@
     for (const creation of creations) {
       const img = document.getElementById(`c${creation.id}`);
       img.onerror = () => {
-        img.src = creation.image;
-        img.onerror = () => {
-          img.remove();
-        };
+        img.remove();
       };
     }
 

@@ -87,14 +87,14 @@ window.getPondiverseCreation = () => {
 <p>pondiverse.com will use the <code>tool.urls.open</code> to open creations in your tool, by appending the creation id to it, then navigating to the resulting URL. The <code>fetchCreation()</code> function can then use this id to fetch the creation for the tool to open:</p>
 
 <pre>
-let id = new URL(window.location).searchParams.get("id");
-if (id) {
-  let creation = await fetchCreation(id);
-  if (creation && creation.type === "your-type") {
-      let data = JSON.parse(creation.data);
-      // ...
-  }
-}
+// Get the id from the URL somehow
+const id = new URL(window.location).searchParams.get("id");
+
+// Fetch the creation from the pondiverse API
+const creation = await fetchCreation(id);
+
+// Do whatever you want with the data
+alert(creation.data);
 </pre>
 
 </details>
