@@ -10,7 +10,7 @@ export const instances = [
     name: "iliazeus.lol/puddle",
     addCreation: "https://iliazeus-puddle.web.val.run/creations/",
     getCreation: "https://iliazeus-puddle.web.val.run/creations/",
-    getCreationImage: "TODO", // i have images as data URIs inside creations currently
+    // getCreationImage: "TODO", // i have images as data URIs inside creations currently
     getCreations: "https://iliazeus-puddle.web.val.run/creations/",
   },
 ];
