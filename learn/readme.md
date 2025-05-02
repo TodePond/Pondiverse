@@ -16,6 +16,7 @@ Import the pondiverse script and run the `addPondiverseButton` function somewher
 
 ```js
 import { addPondiverseButton } from "https://www.pondiverse.com/pondiverse.js";
+
 addPondiverseButton(() => {
   return {
     type: "example",
@@ -25,7 +26,7 @@ addPondiverseButton(() => {
 });
 ```
 
-The function should return an object with these three properties. All properties are optional.
+It takes one function as an argument. The function should return an object with the following three properties. All properties are optional.
 
 - `type` - A string identifying what type of creation this is. This can be anything.
 - `data` - A string containing the data for the creation. This can be anything.
