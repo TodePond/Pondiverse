@@ -1,7 +1,7 @@
 export const instances = [
   {
     name: "todepondiverse",
-    homepage: "https://pondiverse.com",
+    home: "https://pondiverse.com",
     addCreation: "https://pondiverse.val.run/add-creation",
     getCreation: "https://pondiverse.val.run/get-creation?id=",
     getCreationImage: "https://pondiverse.val.run/get-creation-image?id=",
@@ -9,7 +9,7 @@ export const instances = [
   },
   {
     name: "puddle",
-    homepage: "https://iliazeus.lol/puddle/",
+    home: "https://iliazeus.lol/puddle/",
     addCreation: "https://iliazeus-puddle.web.val.run/creations/",
     getCreation: "https://iliazeus-puddle.web.val.run/creations/",
     // getCreationImage: "TODO", // i have images as data URIs inside creations currently
