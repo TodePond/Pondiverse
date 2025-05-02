@@ -44,4 +44,9 @@ export const tools = [
     types: ["fake-shader"],
     url: "https://garten.salat.dev/fake-shaders2.html?creation=",
   },
+  {
+    name: "cellpond",
+    types: ["cellpond"],
+    url: "https://cellpond.cool?creation=",
+  },
 ];
