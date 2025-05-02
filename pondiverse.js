@@ -132,8 +132,7 @@ export async function fetchPondiverseCreations({
 } = {}) {
   const response = await fetch(instance.getCreations);
   const json = await response.json();
-  if (!json.ok) throw new Error("Failed to fetch creations");
-  return json.rows;
+  return json.rows ?? json.items;
 }
 
 //===========================//

@@ -27,14 +27,31 @@
 
   const CREATIONS_PER_PAGE = 10;
   async function pullCreations() {
-    let creations;
-    try {
-      creations = await fetchPondiverseCreations();
-    } catch (e) {
-      main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
+    let allCreations = [];
+
+    for (const instance of instances) {
+      let creations;
+      try {
+        creations = await fetchPondiverseCreations({ instance });
+      } catch (e) {
+        main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
+        throw e;
+      }
+      allCreations.push(
+        ...creations.map((creation) => {
+          return {
+            ...creation,
+            instance,
+          };
+        })
+      );
     }
-    const head = creations.slice(0, CREATIONS_PER_PAGE);
-    const tail = creations.slice(CREATIONS_PER_PAGE);
+    allCreations = allCreations.sort((a, b) => {
+      return new Date(b.time) - new Date(a.time);
+    });
+    console.log(allCreations);
+    const head = allCreations.slice(0, CREATIONS_PER_PAGE);
+    const tail = allCreations.slice(CREATIONS_PER_PAGE);
     renderMoreCreations({ head, tail });
   }
 
@@ -83,7 +100,7 @@
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
-          <p class="secondary">From pondiverse.com</p>
+          <p class="secondary">From ${creation.instance.name}</p>
           ${openInSection}
           <img src="${imageUrl}" alt="${creation.title}" />
           <details>

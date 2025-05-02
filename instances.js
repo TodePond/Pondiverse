@@ -11,6 +11,6 @@ export const instances = [
     addCreation: "https://iliazeus-puddle.web.val.run/creations/",
     getCreation: "https://iliazeus-puddle.web.val.run/creations/",
     // getCreationImage: "TODO", // i have images as data URIs inside creations currently
-    getCreations: "https://iliazeus-puddle.web.val.run/creations/",
+    getCreations: "https://iliazeus-puddle.web.val.run/creations",
   },
 ];
