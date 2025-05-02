@@ -93,7 +93,7 @@
         button.innerText = "Loading...";
         button.disabled = true;
         button.style.cursor = "not-allowed";
-        const moreCreations = await fetchCreations(page + 1);
+        const moreCreations = await pullCreations(page + 1);
         button.remove();
         br.remove();
         renderMoreCreations(moreCreations, page + 1);
