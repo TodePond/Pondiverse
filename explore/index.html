@@ -17,9 +17,10 @@
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Explore</h1>
 <header
   id="view-source"
-  style="position: absolute; top: 0; right: 0; padding: 16px"
->
-  <a href="https://github.com/TodePond/Pondiverse" target="_blank">View source</a>
+  style="position: absolute; top: 0; right: 0; padding: 16px">
+  <a href="https://github.com/TodePond/Pondiverse" target="_blank"
+    >View source</a
+  >
 </header>
 <header>
   <p>Here are all the creations.</p>
@@ -32,8 +33,8 @@
     fetchCreations,
     getCreationImageUrl,
     getCreationUrlForTool,
-  } from "/script/pondiverse.js";
-  import config from "/pondiverse.js";
+  } from "/pondiverse.js";
+  import config from "/rubbish.js";
 
   const main = document.querySelector("main");
 
@@ -51,11 +52,11 @@
     let areThereMorePages = true;
 
     if (originalCreations.length === 0) {
-        main.innerHTML += `<p class="secondary">
+      main.innerHTML += `<p class="secondary">
           No more creations yet.
           <a href="/create/">Create one yourself?</a>
         </p>`;
-        areThereMorePages = false;
+      areThereMorePages = false;
     }
 
     let creations = originalCreations;
@@ -98,7 +99,9 @@
           }</h2>
           ${
             tool?.urls.open
-              ? `<a title="open with ${tool.name}" href="${tool.urls.open + creation.id}">${imageEl}</a>`
+              ? `<a title="open with ${tool.name}" href="${
+                  tool.urls.open + creation.id
+                }">${imageEl}</a>`
               : imageEl
           }
           <details>
