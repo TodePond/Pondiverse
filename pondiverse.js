@@ -2,8 +2,7 @@
 // PONDIVERSE CONSTANTS //
 //======================//
 // Configure these to your needs
-const PONDIVERSE_INSTANCE_URL =
-  "https://todepond--33148208245911f0bc54569c3dd06744.web.val.run";
+const PONDIVERSE_INSTANCE_URL = "https://pondiverse.val.run";
 
 const PONDIVERSE_BUTTON_STYLE = `
 	.pondiverse-button-container {
@@ -125,7 +124,7 @@ const PONDIVERSE_BUTTON_STYLE = `
 export async function fetchPondiverseCreations(page = 0) {
   console.log("Fetching creations from page", page);
   const response = await fetch(
-    new URL(`/creations?page=${page}`, PONDIVERSE_INSTANCE_URL)
+    new URL(`/get-creations?page=${page}`, PONDIVERSE_INSTANCE_URL)
   );
   const json = await response.json();
   if (!json.ok) throw new Error("Failed to fetch creations");
@@ -144,7 +143,7 @@ export async function fetchPondiverseCreation(id) {
     throw new Error("You need to provide an id to fetch a creation");
   }
   const response = await fetch(
-    new URL(`/creations?json&c=${id}`, PONDIVERSE_INSTANCE_URL)
+    new URL(`/get-creation?id=${id}`, PONDIVERSE_INSTANCE_URL)
   );
   if (!response.ok) {
     throw new Error(response.statusText);
@@ -157,7 +156,7 @@ export async function fetchPondiverseCreation(id) {
 //===================================//
 // Get the image URL for a creation
 export function getPondiverseCreationImageUrl(id) {
-  return new URL(`/creations?c=${id}`, PONDIVERSE_INSTANCE_URL);
+  return new URL(`/get-creation-image?id=${id}`, PONDIVERSE_INSTANCE_URL);
 }
 
 //=======================//
@@ -260,7 +259,7 @@ export function addPondiverseButton() {
     publishButton.style.cursor = "not-allowed";
 
     const response = await fetch(
-      new URL("/creations", PONDIVERSE_INSTANCE_URL),
+      new URL("/add-creation", PONDIVERSE_INSTANCE_URL),
       {
         method: "POST",
         body: JSON.stringify(request),
@@ -345,7 +344,7 @@ export function closePondiverseDialog() {
 // This is an admin function
 export async function updatePondiverseDatabase() {
   const response = await fetch(
-    new URL("/updateDatabase", PONDIVERSE_INSTANCE_URL),
+    new URL("/update-table", PONDIVERSE_INSTANCE_URL),
     {
       method: "POST",
     }
