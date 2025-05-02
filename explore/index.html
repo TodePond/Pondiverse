@@ -94,7 +94,7 @@
         ? compatibleTools.map((tool) => {
             const toolName = tool.name;
             const toolUrl = tool.url;
-            return `<p>Open in <a href="${toolUrl}${creation.id}" target="_blank">${toolName}</a></p>`;
+            return `<p>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></p>`;
           })
         : ``;
 

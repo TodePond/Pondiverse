@@ -147,7 +147,12 @@ export async function fetchPondiverseCreation(
     // bad code only
     throw new Error("You need to provide an id to fetch a creation");
   }
-  const response = await fetch(instance.getCreation + id);
+  let url = instance.getCreation + id;
+  const idNumber = parseInt(id);
+  if (isNaN(idNumber)) {
+    url = id;
+  }
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error(response.statusText);
   }
