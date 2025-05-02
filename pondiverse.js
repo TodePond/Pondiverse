@@ -252,6 +252,8 @@ export function addPondiverseButton(
 
   dialog.addEventListener("pointerdown", (e) => e.stopPropagation());
   button.addEventListener("pointerdown", (e) => e.stopPropagation());
+  dialog.addEventListener("mousedown", (e) => e.stopPropagation());
+  button.addEventListener("mousedown", (e) => e.stopPropagation());
   button.addEventListener("click", (e) => {
     e.stopPropagation();
     openPondiverseDialog();
