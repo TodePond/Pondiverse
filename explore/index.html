@@ -97,19 +97,25 @@
             return `<p>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></p>`;
           })
         : ``;
+        
+        const detailsSection = creation.data
+        ? `
+          <details>
+            <summary>show data</summary>
+            <pre class="data-preview"><code>${prettyData}</code></pre>
+          </details>
+        `
+        : "";
 
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
           ${openInSection}
           ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
+          ${detailsSection}
           <p class="secondary">From <a class="tertiary" href="${
             creation.instance.home
           }">${creation.instance.name}</a></p>
-          <details>
-            <summary>show data</summary>
-            <pre class="data-preview"><code>${prettyData}</code></pre>
-          </details>
         </div>
       `;
     });
