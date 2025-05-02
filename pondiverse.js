@@ -162,7 +162,8 @@ export function getPondiverseCreationImageUrl(id) {
 //=======================//
 // ADD PONDIVERSE BUTTON //
 //=======================//
-export function addPondiverseButton() {
+export function addPondiverseButton(getPondiverseCreation) {
+  window.getPondiverseCreation = getPondiverseCreation;
   const styleSheet = document.createElement("style");
   styleSheet.innerText = PONDIVERSE_BUTTON_STYLE;
   document.head.appendChild(styleSheet);
