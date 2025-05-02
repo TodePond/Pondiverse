@@ -20,6 +20,7 @@
     fetchPondiverseCreations,
     getPondiverseCreationImageUrl,
   } from "/pondiverse.js";
+  import { tools } from "/tools.js";
 
   const main = document.querySelector("main");
 
@@ -65,10 +66,26 @@
 
       const imageUrl = getPondiverseCreationImageUrl(creation.id);
 
+      console.log(tools);
+      const compatibleTools = tools.filter((tool) => {
+        console.log(tool);
+        return tool.types.includes(creation.type);
+      });
+
+      const canOpen = compatibleTools.length > 0;
+      const openInSection = canOpen
+        ? compatibleTools.map((tool) => {
+            const toolName = tool.name;
+            const toolUrl = tool.url;
+            return `<p>Open in <a href="${toolUrl}${creation.id}" target="_blank">${toolName}</a></p>`;
+          })
+        : ``;
+
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
           <img src="${imageUrl}" alt="${creation.title}" />
+          ${openInSection}
           <details>
             <summary>show data</summary>
             <pre class="data-preview"><code>${prettyData}</code></pre>

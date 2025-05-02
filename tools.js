@@ -1,8 +1,8 @@
 export const tools = [
   {
-    name: "screendpond",
+    name: "screenpond",
     types: ["screenpond"],
-    url: "https://screendpond.cool?creation=",
+    url: "https://screenpond.cool?creation=",
   },
   {
     name: "chaoskit",
@@ -31,7 +31,7 @@ export const tools = [
   },
   {
     name: "bitart",
-    type: ["bitart"],
+    types: ["bitart"],
     url: "https://iliazeus.lol/bitart/?creation=",
   },
   {
