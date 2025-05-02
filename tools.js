@@ -42,6 +42,6 @@ export const tools = [
   {
     name: "fake shaders II",
     types: ["fake-shader"],
-    url: "https://garten.salat.dev/fake-shaders.html?creation=",
+    url: "https://garten.salat.dev/fake-shaders2.html?creation=",
   },
 ];
