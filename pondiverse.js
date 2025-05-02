@@ -150,6 +150,11 @@ export async function fetchPondiverseCreation(
   let url = instance.getCreation + id;
   const idNumber = parseInt(id);
   if (isNaN(idNumber)) {
+    if (!id.startsWith("http") && !id.startsWith("localhost")) {
+      throw new Error(
+        "You need to provide a valid id or a URL to fetch a creation"
+      );
+    }
     url = id;
   }
   const response = await fetch(url);
