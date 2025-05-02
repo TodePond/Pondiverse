@@ -7,10 +7,10 @@ export const instances = [
     getCreations: "https://pondiverse.val.run/get-creations",
   },
   {
-    name: "iliazeus.lol",
-    addCreation: "TODO",
-    getCreation: "TODO",
-    getCreationImage: "TODO",
-    getCreations: "TODO",
+    name: "iliazeus.lol/puddle",
+    addCreation: "https://iliazeus-puddle.web.val.run/creations/",
+    getCreation: "https://iliazeus-puddle.web.val.run/creations/",
+    getCreationImage: "TODO", // i have images as data URIs inside creations currently
+    getCreations: "https://iliazeus-puddle.web.val.run/creations/",
   },
 ];
