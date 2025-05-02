@@ -4,6 +4,7 @@
 // Configure these to your needs
 const DEFAULT_INSTANCE = {
   name: "todepondiverse",
+  homepage: "https://pondiverse.com/",
   addCreation: "https://pondiverse.val.run/add-creation",
   getCreation: "https://pondiverse.val.run/get-creation?id=",
   getCreationImage: "https://pondiverse.val.run/get-creation-image?id=",
@@ -209,7 +210,8 @@ export function addPondiverseButton(
 
   dialog.innerHTML = `
   <form>
-	<p>Do you want to share your creation to the <a href="https://pondiverse.com">Pondiverse</a>?</p>
+  <p>Do you want to share your creation to <a href="${instance.homepage}">${instance.name}</a>?</p>
+  <p>It will then become part of the <a href="https://pondiverse.com">Pondiverse</a>.</p>
 	<p>All creations get deleted after 25 hours.</p>
 	<p><img id="preview-image" src="" alt="Thumbnail of your creation"></p>
 	<label for="name">Title</label>
