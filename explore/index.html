@@ -124,15 +124,16 @@
         `
         : "";
 
-        var timeSince = getTimeSince(creation.time);
+      const timeSince = getTimeSince(creation.time);
 
+      const from = creation.instance.home ? `<a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>` : creation.instance.name
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
           ${openInSection}
           ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
           ${detailsSection}
-          <p class="secondary">From <a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>, about ${timeSince}</p>
+          <p class="secondary">From ${from}, about ${timeSince}</p>
         </div>
       `;
     });
