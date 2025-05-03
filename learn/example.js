@@ -3,6 +3,7 @@
 //
 
 const PONDIVERSE_INSTANCE_URL = "https://pondiverse.val.run";
+const appName = "example.js"  // change name of app
 
 const pondiverseControlsContainer = document.getElementById(
     "pondiverse-controls"
@@ -171,6 +172,77 @@ function addPondiverseButton() {
         });
     }
 }
+
+function openPondiverseDialog() {
+    const dialog = document.getElementById("pondiverse-dialog");
+    if (!dialog) {
+        console.error("Pondiverse dialog not found.");
+        return;
+    }
+
+    if (typeof window.getPondiverseCreation !== "function") {
+        console.error("window.getPondiverseCreation() is not defined.");
+        alert("Error: Cannot get creation data.");
+        return;
+    }
+    const creation = window.getPondiverseCreation();
+
+    const nameInput = dialog.querySelector("#pondiverse-name");
+    const hiddenDataInput = dialog.querySelector("input[name='data']");
+    const hiddenTypeInput = dialog.querySelector("input[name='type']");
+    const publishButton = dialog.querySelector("button.submit");
+    const cancelButton = dialog.querySelector("button.cancel");
+
+    // make sure elements exist before using them
+    if (
+        !nameInput ||
+        !hiddenDataInput ||
+        !hiddenTypeInput ||
+        !publishButton ||
+        !cancelButton
+    ) {
+        console.error(
+            "Could not find all necessary elements within the Pondiverse dialog."
+        );
+        alert("Dialog error. Cannot open.");
+        return;
+    }
+
+    hiddenDataInput.value = creation.data || "";
+    hiddenTypeInput.value = creation.type || appName;
+    nameInput.value = ""; // clear previous title
+    publishButton.disabled = false;
+    publishButton.textContent = "Publish";
+    publishButton.style.cursor = "pointer";
+    cancelButton.disabled = false;
+
+    dialog.showModal();
+    nameInput.focus();
+}
+
+function closePondiverseDialog() {
+    const dialog = document.getElementById("pondiverse-dialog");
+    if (dialog && dialog.open) {
+        // check if it's actually open
+        dialog.close();
+        const publishButton = dialog.querySelector("button.submit");
+        const cancelButton = dialog.querySelector("button.cancel");
+        if (publishButton) {
+            publishButton.disabled = false;
+            publishButton.textContent = "Publish";
+            publishButton.style.cursor = "pointer";
+        }
+        if (cancelButton) cancelButton.disabled = false;
+    }
+}
+
+window.getPondiverseCreation = function () {
+    return {
+        type: appName,
+        data: "",
+        // image: "",
+    };
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     addPondiverseButton();
