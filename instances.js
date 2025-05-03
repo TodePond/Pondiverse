@@ -1,7 +1,6 @@
 export const instances = [
   {
     name: "todepondiverse",
-    home: "https://pondiverse.com",
     addCreation: "https://pondiverse.val.run/add-creation",
     getCreation: "https://pondiverse.val.run/get-creation?id=",
     getCreationImage: "https://pondiverse.val.run/get-creation-image?id=",
