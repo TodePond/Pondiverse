@@ -63,20 +63,18 @@ if (response.ok) {
 }
 ```
 
-For full working code, you can check out the `example.js` file [here](https://pondiverse.com/learn/example.js/), which includes a setup to make a custom button and posting method.
+For full working code, you can check out the `example.js` file [here](https://pondiverse.com/learn/example.js), which includes a setup to make a custom button and posting method.
 
 ### Step-by-step instructions
 
-1. In your HTML, put in this div where you want the share button: 
+(1) In your HTML, put in this div where you want the share button: 
 
 ```html
 <div id="pondiverse-controls"></div>
 ```
 
-2. Then, add the `example.js` file provided, rename it to `pondiverse.js` or whatever you like, and import the script tag in your HTML:
+(2) Then, add the `example.js` file provided, rename it to `pondiverse.js` or whatever you like, and import the script tag in your HTML:
 
 ```html
 <script src="pondiverse.js"></script>
 ```
-
-3. Your app should work! If it doesn't work, <a href="https://github.com/TodePond/Pondiverse/issues/new">bring up an issue on TodePond/Pondiverse</a>! Good Luck!
