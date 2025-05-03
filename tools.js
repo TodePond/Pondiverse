@@ -49,4 +49,9 @@ export const tools = [
     types: ["cellpond"],
     url: "https://cellpond.cool?creation=",
   },
+  {
+    name: "arrayer",
+    types: ["arrayer"],
+    url: "https://gaimeri.github.io/text-tools/arrayer.html?creation=",
+  },
 ];
