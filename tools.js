@@ -16,7 +16,7 @@ export const tools = [
   },
   {
     name: "codepond",
-    types: ["codepond"],
+    types: ["CodePond"],
     url: "https://codepond.elouan.xyz/",
   },
   {
