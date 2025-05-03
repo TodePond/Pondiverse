@@ -2,9 +2,11 @@
 //  pondiverse | example.js
 //
 
-// example written by elouan
-
 const PONDIVERSE_INSTANCE_URL = "https://pondiverse.val.run";
+
+const pondiverseControlsContainer = document.getElementById(
+    "pondiverse-controls"
+);
 
 function addPondiverseButton() {
     // ensure container exists
