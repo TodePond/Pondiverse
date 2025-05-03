@@ -128,7 +128,7 @@
 
       return `
         <div class="creation" id="c${creation.id}">
-          <h2>${creation.title}, ${creation.type}</h2>
+          <h2>${creation.title}, <a href="${tool.url}">${creation.type}</a></h2>
           ${openInSection}
           ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
           ${detailsSection}
