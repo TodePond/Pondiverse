@@ -54,6 +54,23 @@
     renderMoreCreations({ head, tail });
   }
 
+  function getTimeSince(timestamp) {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffInMilliseconds = now.getTime() - past.getTime();
+    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+
+    if (diffInHours > 0) {
+      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    } else if (diffInMinutes > 0) {
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+    } else {
+      return `${diffInSeconds} second${diffInSeconds > 1 ? 's' : ''} ago`;
+    }
+  }
+
   function renderMoreCreations({ head, tail }) {
     if (head.length === 0) {
       main.innerHTML += `<p class="secondary">
@@ -107,15 +124,15 @@
         `
         : "";
 
+        var timeSince = getTimeSince(creation.time);
+
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
           ${openInSection}
           ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
           ${detailsSection}
-          <p class="secondary">From <a class="tertiary" href="${
-            creation.instance.home
-          }">${creation.instance.name}</a></p>
+          <p class="secondary">From <a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>, ${timeSince}</p>
         </div>
       `;
     });
