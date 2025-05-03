@@ -110,7 +110,7 @@ function addPondiverseButton() {
                     title: nameInput.value,
                     data: hiddenDataInput.value,
                     type: hiddenTypeInput.value,
-                    /image: "", // put an image in a data:image format (base64) if your tool needs this
+                    image: "", // put an image in a data:image format (base64) if your tool needs this
                 };
 
                 publishButton.disabled = true;
