@@ -124,11 +124,13 @@
         `
         : "";
 
+        var url = 
+
         var timeSince = getTimeSince(creation.time);
 
       return `
         <div class="creation" id="c${creation.id}">
-          <h2>${creation.title}, <a href="${tool.url}">${creation.type}</a></h2>
+          <h2>${creation.title}, <a>${creation.type}</a></h2>
           ${openInSection}
           ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
           ${detailsSection}
