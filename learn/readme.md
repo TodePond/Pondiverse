@@ -78,3 +78,5 @@ For full working code, you can check out the `example.js` file [here](https://po
 ```html
 <script src="pondiverse.js"></script>
 ```
+
+3. Your app should work! If it doesn't work, <a href="https://github.com/TodePond/Pondiverse/issues/new">bring up an issue on TodePond/Pondiverse</a>! Good Luck!
