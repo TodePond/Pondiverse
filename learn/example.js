@@ -1,10 +1,12 @@
 //  
 //  pondiverse | example.js
+//    a simple showcase
 //
 
-const PONDIVERSE_INSTANCE_URL = "https://pondiverse.val.run";
+const PONDIVERSE_INSTANCE_URL = "https://pondiverse.val.run"; // default server, you could selfhost
 const appName = "example.js"  // change name of app
 
+// control container
 const pondiverseControlsContainer = document.getElementById(
     "pondiverse-controls"
 );
@@ -18,14 +20,15 @@ function addPondiverseButton() {
         return;
     }
 
+    // add button
     pondiverseButton = document.createElement("button");
     pondiverseButton.className = "pondiverse-button"; // make sure this class exists in CSS
     pondiverseButton.textContent = "✶ Share"; // the visible text for the button
 
     pondiverseControlsContainer.prepend(pondiverseButton); // FIX THIS
 
-    // --- create and append pondiverse dialog (only once) ---
-    // EDIT THIS HTML IF YOU WANT TO CHANGE ANYTHING!!!
+    // --- create and add pondiverse dialog ---
+    // (EDIT THIS HTML IF YOU WANT TO CHANGE ANYTHING!!!)
     let dialog = document.getElementById("pondiverse-dialog");
     if (!dialog) {
         dialog = document.createElement("dialog");
@@ -53,14 +56,6 @@ function addPondiverseButton() {
         const nameInput = dialog.querySelector("#pondiverse-name");
         const cancelButton = dialog.querySelector("button.cancel");
 
-        if (previewImage) {
-            previewImage.onerror = () => {
-                previewImage.style.display = "none";
-            };
-            previewImage.onload = () => {
-                previewImage.style.display = "block";
-            };
-        }
         if (nameInput)
             nameInput.addEventListener("keydown", (e) => {
                 e.stopPropagation();
@@ -176,6 +171,7 @@ function addPondiverseButton() {
     }
 }
 
+// function to open the main dialog
 function openPondiverseDialog() {
     const dialog = document.getElementById("pondiverse-dialog");
     if (!dialog) {
@@ -239,14 +235,17 @@ function closePondiverseDialog() {
     }
 }
 
+// kinda useless right now
 window.getPondiverseCreation = function () {
     return {
         type: appName,
         data: "",
-        // image: "",
     };
 };
 
+// add the button after everything has loaded!
 document.addEventListener("DOMContentLoaded", () => {
     addPondiverseButton();
 });
+
+// CONGRATS!!! it's the end!
