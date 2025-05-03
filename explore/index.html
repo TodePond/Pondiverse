@@ -111,7 +111,7 @@
         ? compatibleTools.map((tool) => {
             const toolName = tool.name;
             const toolUrl = tool.url;
-            return `<p><i>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></i></p>`;
+            return `<p>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></p>`;
           })
         : ``;
         
@@ -128,10 +128,10 @@
 
       return `
         <div class="creation" id="c${creation.id}">
-          <h2>${creation.title}, <a>${creation.type}</a></h2>
+          <h2>${creation.title}, ${creation.type}</h2>
+          ${openInSection}
           ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
           ${detailsSection}
-          ${openInSection}
           <p class="secondary">From <a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>, about ${timeSince}</p>
         </div>
       `;
