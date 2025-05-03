@@ -169,3 +169,7 @@ function addPondiverseButton() {
         });
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    addPondiverseButton();
+});
