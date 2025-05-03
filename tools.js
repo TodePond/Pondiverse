@@ -15,9 +15,9 @@ export const tools = [
     url: "https://mags.omg.lol/simulator.php",
   },
   {
-    name: "codepond",
-    types: [],
-    url: "https://codepond.elouan.xyz/",
+    name: "CodePond",
+    types: ["CodePond"],
+    url: "https://codepond.elouan.xyz/?creation=",
   },
   {
     name: "cherry",
