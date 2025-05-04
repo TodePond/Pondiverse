@@ -175,7 +175,7 @@ export function addPondiverseButton(
   getPondiverseCreation,
   { instance = DEFAULT_INSTANCE } = {}
 ) {
-  window.getPondiverseCreation = getPondiverseCreation;
+  window["getPondiverseCreation"] = getPondiverseCreation;
   const styleSheet = document.createElement("style");
   styleSheet.innerText = PONDIVERSE_BUTTON_STYLE;
   document.head.appendChild(styleSheet);
@@ -190,6 +190,21 @@ export function addPondiverseButton(
   buttonContainer.append(button);
   document.body.append(buttonContainer);
 
+  button.addEventListener("pointerdown", (e) => e.stopPropagation());
+  button.addEventListener("mousedown", (e) => e.stopPropagation());
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openPondiverseDialog();
+  });
+
+  addPondiverseDialog(getPondiverseCreation, { instance });
+}
+
+function addPondiverseDialog(
+  getPondiverseCreation = window["getPondiverseCreation"],
+  { instance = DEFAULT_INSTANCE } = {}
+) {
+  window["getPondiverseCreation"] = getPondiverseCreation;
   const dialog = document.createElement("dialog");
   document.body.append(dialog);
   dialog.id = "pondiverse-dialog";
@@ -211,7 +226,10 @@ export function addPondiverseButton(
   </form>
   `;
 
+  /** @type {HTMLImageElement | null} */
   const previewImage = dialog.querySelector("#preview-image");
+  if (!previewImage) throw new Error("Preview image not found.");
+
   previewImage.onerror = () => {
     previewImage.style.display = "none";
   };
@@ -219,14 +237,17 @@ export function addPondiverseButton(
     previewImage.style.display = "block";
   };
 
+  /** @type {HTMLInputElement | null} */
   const nameInput = dialog.querySelector("#name");
+  if (!nameInput) throw new Error("Name input not found.");
+
   nameInput.addEventListener(
     "keydown",
     (e) => {
       e.stopPropagation();
       e.stopImmediatePropagation();
     },
-    { passive: false, bubble: false }
+    { passive: false }
   );
 
   dialog.addEventListener(
@@ -235,19 +256,19 @@ export function addPondiverseButton(
       e.stopPropagation();
       e.stopImmediatePropagation();
     },
-    { passive: false, bubble: false }
+    { passive: false }
   );
 
   dialog.addEventListener("pointerdown", (e) => e.stopPropagation());
-  button.addEventListener("pointerdown", (e) => e.stopPropagation());
   dialog.addEventListener("mousedown", (e) => e.stopPropagation());
-  button.addEventListener("mousedown", (e) => e.stopPropagation());
-  button.addEventListener("click", (e) => {
+  dialog.addEventListener("wheel", (e) => {
     e.stopPropagation();
-    openPondiverseDialog();
+    e.preventDefault();
   });
 
   const cancelButton = dialog.querySelector("#cancel");
+  if (!cancelButton) throw new Error("Cancel button not found.");
+
   cancelButton.addEventListener("click", (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -255,9 +276,16 @@ export function addPondiverseButton(
   });
 
   const form = dialog.querySelector("form");
+  if (!form) throw new Error("Form not found.");
 
+  /** @type {HTMLInputElement | null} */
   const hiddenInput = dialog.querySelector("input[name='data']");
+  if (!hiddenInput) throw new Error("Hidden input not found.");
+
+  /** @type {HTMLInputElement | null} */
   const typeInput = dialog.querySelector("input[name='type']");
+  if (!typeInput) throw new Error("Type input not found.");
+
   form.addEventListener("submit", async (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -269,7 +297,9 @@ export function addPondiverseButton(
       image: previewImage.src,
     };
 
+    /** @type {HTMLButtonElement | null} */
     const publishButton = form.querySelector("button[type='submit']");
+    if (!publishButton) throw new Error("Publish button not found.");
     publishButton.disabled = true;
     publishButton.textContent = "Publishing...";
     publishButton.style.cursor = "not-allowed";
@@ -279,16 +309,12 @@ export function addPondiverseButton(
       body: JSON.stringify(request),
     });
 
-    if (response.ok) {
-      closePondiverseDialog();
-    } else {
+    if (!response.ok) {
       alert("Upload failed. Oh no!");
+      return;
     }
-  });
 
-  dialog.addEventListener("wheel", (e) => {
-    e.stopPropagation();
-    e.preventDefault();
+    closePondiverseDialog();
   });
 }
 
@@ -308,10 +334,10 @@ export function openPondiverseDialog() {
   titleInput.value = "";
   const previewImage = dialog.querySelector("#preview-image");
 
-  const getCreation = window.getPondiverseCreation;
+  const getCreation = window["getPondiverseCreation"];
   if (!getCreation) {
     throw new Error(
-      `\n\nwindow.getPondiverseCreation() function not found.\n\nIf you want your creation to be sent to the Pondiverse, add a window.getPondiverseCreation() function that returns a JSON object. The JSON object can provide:\n- type: A string to identify what kind of creation it is. For example, "screenpond" if it's intended to be loaded into screenpond.\n- data: A string containing the data of your creation, so that it can be loaded up again.\n- image: A base64 data URL string to be used as a thumbnail for your creation.\n\nAll properties are optional.`
+      `\n\getPondiverseCreation() function not specified.\n\nIf you want your creation to be sent to the Pondiverse, add a window.getPondiverseCreation() function that returns a JSON object. The JSON object can provide:\n- type: A string to identify what kind of creation it is. For example, "screenpond" if it's intended to be loaded into screenpond.\n- data: A string containing the data of your creation, so that it can be loaded up again.\n- image: A base64 data URL string to be used as a thumbnail for your creation.\n\nAll properties are optional.`
     );
   }
 
