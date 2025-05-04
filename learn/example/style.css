@@ -1,0 +1,148 @@
+/* styles from elouan.xyz, but we need more styles. */
+
+:root {
+  --default-highlight: var(--fuchsia);
+}
+
+#pondiverse-controls {
+  margin-top: 1.5em;
+  display: flex;
+  /* Align buttons nicely */
+  gap: 1em;
+  /* Space between buttons */
+  flex-wrap: wrap;
+}
+
+#pondiverse-controls button {
+  /* Inherit general button styles from style.css */
+  padding: 0.5em 1em;
+  font-size: 1em;
+  /* Add transition if desired */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+}
+
+/* Disabled state (applies to both) */
+#pondiverse-controls button:disabled {
+  --color: var(--stone-600);
+  background-color: var(--stone-700);
+  color: var(--stone-500);
+  cursor: not-allowed;
+  outline: none;
+  border-color: transparent;
+  /* Hide border when disabled maybe */
+}
+
+#pondiverse-controls button:disabled:hover {
+  background-color: var(--stone-700);
+  /* Prevent hover effect */
+  color: var(--stone-500);
+  outline: none;
+}
+
+.pondiverse-button {
+  --color: var(--fuchsia);
+  padding: 0.5em 1em;
+  font-size: 1em;
+  margin-right: 1em;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Disabled state */
+.pondiverse-button:disabled {
+  --color: var(--stone-600);
+  background-color: var(--stone-700);
+  color: var(--stone-500);
+  cursor: not-allowed;
+  outline: none;
+}
+
+.pondiverse-button:disabled:hover {
+  background-color: var(--stone-700);
+  color: var(--stone-500);
+  outline: none;
+}
+
+#pondiverse-dialog {
+  color: var(--stone-100);
+  font-size: 1.1em;
+  font-family: Inter, sans-serif;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  max-width: 500px;
+}
+
+#pondiverse-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+#pondiverse-dialog form {
+  background-color: var(--stone-900);
+  border: 1px solid var(--stone-700);
+  padding: 1.5em 2em;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+#pondiverse-dialog a {
+  --color: var(--default-highlight);
+}
+
+#pondiverse-dialog input[type="text"] {
+  width: 100%;
+  padding: 10px 15px;
+  margin: 0.5em 0 1em 0;
+  border: 1px solid var(--stone-600);
+  background-color: var(--stone-800);
+  color: var(--stone-100);
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+#pondiverse-dialog input[type="text"]:focus {
+  outline: 2px solid var(--default-highlight);
+  outline-offset: 1px;
+  border-color: var(--default-highlight);
+}
+
+#pondiverse-dialog button {
+  font-size: 1em;
+  padding: 0.6em 1.2em;
+  margin-top: 1em;
+}
+
+#pondiverse-dialog button[type="submit"] {
+  --color: var(--blue);
+}
+
+#pondiverse-dialog button.secondary {
+  --color: var(--stone-500);
+  background-color: var(--stone-700);
+}
+
+#pondiverse-dialog button.secondary:hover {
+  background-color: var(--color);
+  color: var(--stone-050);
+  outline: 2px solid var(--color);
+}
+
+#pondiverse-dialog button[type="submit"]:disabled {
+  --color: var(--stone-600);
+  background-color: var(--stone-700);
+  color: var(--stone-500);
+  cursor: not-allowed;
+  outline: none;
+}
+
+#pondiverse-dialog button[type="submit"]:disabled:hover {
+  background-color: var(--stone-700);
+  color: var(--stone-500);
+  outline: none;
+}
+
+#pondiverse-dialog hgroup.space {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5em;
+}
