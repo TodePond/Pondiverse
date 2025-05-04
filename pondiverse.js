@@ -122,12 +122,12 @@ const PONDIVERSE_BUTTON_STYLE = `
 		max-height: 300px;
 		margin: 10px auto;
 	}
-  `;
+`;
 
 //============================//
 // FETCH PONDIVERSE CREATIONS //
 //============================//
-// For getting a page-ful of creations
+// For getting a list of all creations
 export async function fetchPondiverseCreations({
   instance = DEFAULT_INSTANCE,
 } = {}) {
@@ -141,27 +141,13 @@ export async function fetchPondiverseCreations({
 //===========================//
 // For getting a single creation by its id
 export async function fetchPondiverseCreation(
-  id,
+  creation,
   { instance = DEFAULT_INSTANCE } = {}
 ) {
-  if (id === undefined || id === null) {
-    // bad code only
-    throw new Error("You need to provide an id to fetch a creation");
-  }
-  let url = instance.getCreation + id;
-  const idNumber = parseInt(id);
-  if (isNaN(idNumber)) {
-    if (!id.startsWith("http") && !id.startsWith("localhost")) {
-      throw new Error(
-        "You need to provide a valid id or a URL to fetch a creation"
-      );
-    }
-    url = id;
-  }
+  const url = isNaN(parseInt(creation))
+    ? creation
+    : instance.getCreation + creation;
   const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
   return await response.json();
 }
 
