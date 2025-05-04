@@ -54,4 +54,9 @@ export const tools = [
     types: ["arrayer"],
     url: "https://gaimeri.github.io/text-tools/arrayer.html?creation=",
   },
+  {
+    name: "pondiverse",
+    types: ["*"],
+    url: "https://pondiverse.com/tool/?creation=",
+  },
 ];

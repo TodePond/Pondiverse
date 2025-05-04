@@ -63,11 +63,11 @@
     const diffInHours = Math.floor(diffInMinutes / 60);
 
     if (diffInHours > 0) {
-      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
     } else if (diffInMinutes > 0) {
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
     } else {
-      return `${diffInSeconds} second${diffInSeconds > 1 ? 's' : ''} ago`;
+      return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
     }
   }
 
@@ -103,6 +103,7 @@
       });
 
       const compatibleTools = tools.filter((tool) => {
+        if (tool.types.includes("*")) return true;
         return tool.types.includes(creation.type);
       });
 
@@ -114,8 +115,8 @@
             return `<p>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></p>`;
           })
         : ``;
-        
-        const detailsSection = creation.data
+
+      const detailsSection = creation.data
         ? `
           <details>
             <summary>show data</summary>
@@ -126,7 +127,9 @@
 
       const timeSince = getTimeSince(creation.time);
 
-      const from = creation.instance.home ? `<a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>` : creation.instance.name
+      const from = creation.instance.home
+        ? `<a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>`
+        : creation.instance.name;
       return `
         <div class="creation" id="c${creation.id}">
           <h2>${creation.title}, ${creation.type}</h2>
