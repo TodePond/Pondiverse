@@ -29,10 +29,9 @@
     Image
     <img
       id="preview"
-      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+      src="/placeholder.png"
       alt="Preview"
       style="
-        width: 100%;
         max-width: 400px;
         border: 1px solid #9faeee;
         background-color: #374362;
@@ -65,7 +64,11 @@
 <br />
 
 <script type="module">
-  import { addPondiverseButton } from "/pondiverse.js";
+  import {
+    addPondiverseButton,
+    fetchPondiverseCreation,
+    getPondiverseCreationImageUrl,
+  } from "/pondiverse.js";
 
   const titleInput = document.querySelector("#title");
   const typeInput = document.querySelector("#type");
@@ -82,10 +85,20 @@
       };
       reader.readAsDataURL(file);
     } else {
-      previewImage.src =
-        "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+      previewImage.src = "/placeholder.png";
     }
   });
+
+  const searchParams = new URLSearchParams(window.location.search);
+  const creationParam = searchParams.get("creation");
+  if (creationParam) {
+    fetchPondiverseCreation(creationParam).then((creation) => {
+      titleInput.value = creation.title;
+      typeInput.value = creation.type;
+      previewImage.src = getPondiverseCreationImageUrl(creation);
+      dataInput.value = creation.data;
+    });
+  }
 
   addPondiverseButton(() => ({
     title: titleInput.value,
