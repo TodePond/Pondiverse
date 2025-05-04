@@ -109,11 +109,13 @@
 
       const canOpen = compatibleTools.length > 0;
       const openInSection = canOpen
-        ? compatibleTools.map((tool) => {
-            const toolName = tool.name;
-            const toolUrl = tool.url;
-            return `<p>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></p>`;
-          })
+        ? compatibleTools
+            .map((tool) => {
+              const toolName = tool.name;
+              const toolUrl = tool.url;
+              return `<p>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></p>`;
+            })
+            .join("")
         : ``;
 
       const detailsSection = creation.data
