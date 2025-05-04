@@ -379,7 +379,7 @@ export function openPondiverseDialog(
 // Use this if you want to programmatically close the dialog
 export function closePondiverseDialog() {
   /** @type {HTMLDialogElement | null} */
-  const dialog = document.querySelector("pondiverse-dialog");
+  const dialog = document.querySelector("#pondiverse-dialog");
   if (!dialog) {
     throw new Error("Could not find the Pondiverse dialog to close.");
   }
