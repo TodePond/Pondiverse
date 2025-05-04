@@ -175,6 +175,8 @@ export function addPondiverseButton(
   getPondiverseCreation,
   { instance = DEFAULT_INSTANCE } = {}
 ) {
+  if (window["addedPondiverseButton"]) return;
+
   window["getPondiverseCreation"] = getPondiverseCreation;
   const styleSheet = document.createElement("style");
   styleSheet.innerText = PONDIVERSE_BUTTON_STYLE;
@@ -197,6 +199,7 @@ export function addPondiverseButton(
     openPondiverseDialog();
   });
 
+  window["addedPondiverseButton"] = true;
   addPondiverseDialog(getPondiverseCreation, { instance });
 }
 
@@ -205,6 +208,9 @@ function addPondiverseDialog(
   { instance = DEFAULT_INSTANCE } = {}
 ) {
   window["getPondiverseCreation"] = getPondiverseCreation;
+
+  if (window["addedPondiverseDialog"]) return;
+
   const dialog = document.createElement("dialog");
   document.body.append(dialog);
   dialog.id = "pondiverse-dialog";
@@ -316,45 +322,56 @@ function addPondiverseDialog(
 
     closePondiverseDialog();
   });
+
+  window["addedPondiverseDialog"] = true;
 }
 
 //========================//
 // OPEN PONDIVERSE DIALOG //
 //========================//
 // Use this if you want to programmatically open the dialog
-export function openPondiverseDialog() {
-  const dialog = document.getElementById("pondiverse-dialog");
-  if (!dialog) {
-    throw new Error(
-      "Pondiverse dialog not found. Make sure you run addPondiverseButton() first."
-    );
-  }
+export function openPondiverseDialog(
+  getPondiverseCreation = window["getPondiverseCreation"],
+  { instance = DEFAULT_INSTANCE } = {}
+) {
+  addPondiverseDialog(getPondiverseCreation, { instance });
+
+  /** @type {HTMLDialogElement | null} */
+  const dialog = document.querySelector("#pondiverse-dialog");
+  if (!dialog) throw new Error("Pondiverse dialog not found.");
+
   dialog.showModal();
+
+  /** @type {HTMLButtonElement | null} */
   const titleInput = dialog.querySelector("#name");
+  if (!titleInput) throw new Error("Title input not found.");
   titleInput.value = "";
+
+  /** @type {HTMLImageElement | null} */
   const previewImage = dialog.querySelector("#preview-image");
+  if (!previewImage) throw new Error("Preview image not found.");
 
   const getCreation = window["getPondiverseCreation"];
   if (!getCreation) {
     throw new Error(
-      `\n\getPondiverseCreation() function not specified.\n\nIf you want your creation to be sent to the Pondiverse, add a window.getPondiverseCreation() function that returns a JSON object. The JSON object can provide:\n- type: A string to identify what kind of creation it is. For example, "screenpond" if it's intended to be loaded into screenpond.\n- data: A string containing the data of your creation, so that it can be loaded up again.\n- image: A base64 data URL string to be used as a thumbnail for your creation.\n\nAll properties are optional.`
+      `\ngetPondiverseCreation function not specified.\n\nIf you want your creation to be sent to the Pondiverse, pass a function as an argument that returns a JSON object. The JSON object can provide:\n- type: A string to identify what kind of creation it is. For example, "screenpond" if it's intended to be loaded into screenpond.\n- data: A string containing the data of your creation, so that it can be loaded up again.\n- image: A base64 data URL string to be used as a thumbnail for your creation.\n\nAll properties are optional.`
     );
   }
 
   const creation = getCreation();
 
-  if (creation.image) {
-    previewImage.src = creation.image;
-  }
-
+  /** @type {HTMLInputElement | null} */
   const hiddenInput = dialog.querySelector("input[name='data']");
+  if (!hiddenInput) throw new Error("Hidden input not found.");
+
+  /** @type {HTMLInputElement | null} */
   const typeInput = dialog.querySelector("input[name='type']");
-  if (creation.data) {
-    hiddenInput.value = creation.data;
-  }
-  if (creation.type) {
-    typeInput.value = creation.type;
-  }
+  if (!typeInput) throw new Error("Type input not found.");
+
+  if (creation.image) previewImage.src = creation.image;
+  if (creation.data) hiddenInput.value = creation.data;
+  if (creation.type) typeInput.value = creation.type;
+
   titleInput.focus();
 }
 
@@ -363,14 +380,16 @@ export function openPondiverseDialog() {
 //=========================//
 // Use this if you want to programmatically close the dialog
 export function closePondiverseDialog() {
-  const dialog = document.getElementById("pondiverse-dialog");
-
+  /** @type {HTMLDialogElement | null} */
+  const dialog = document.querySelector("pondiverse-dialog");
   if (!dialog) {
-    throw new Error(
-      "Pondiverse dialog not found. Make sure you run addPondiverseButton() first."
-    );
+    throw new Error("Could not find the Pondiverse dialog to close.");
   }
+
+  /** @type {HTMLButtonElement | null} */
   const publishButton = dialog.querySelector("button[type='submit']");
+  if (!publishButton) throw new Error("Publish button not found.");
+
   publishButton.disabled = false;
   publishButton.textContent = "Publish";
   publishButton.style.cursor = "pointer";
