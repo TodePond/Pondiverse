@@ -217,8 +217,7 @@ function addPondiverseDialog(
 
   dialog.innerHTML = `
   <form>
-  <p>Do you want to share your creation to <a href="${instance.home}">${instance.name}</a>?</p>
-  <p>It will then become part of the <a href="https://pondiverse.com">Pondiverse</a>.</p>
+  <p>Do you want to share your creation to the <a href="https://pondiverse.com" target=_blank rel="noopener noreferrer">pondiverse</a>?</p>
 	<p>All creations get deleted after 25 hours.</p>
 	<p><img id="preview-image" src="" alt="Thumbnail of your creation"></p>
 	<label for="name">Title</label>
@@ -346,6 +345,7 @@ export function openPondiverseDialog(
   const titleInput = dialog.querySelector("#name");
   if (!titleInput) throw new Error("Title input not found.");
   titleInput.value = "";
+  titleInput.focus();
 
   /** @type {HTMLImageElement | null} */
   const previewImage = dialog.querySelector("#preview-image");
@@ -371,8 +371,6 @@ export function openPondiverseDialog(
   if (creation.image) previewImage.src = creation.image;
   if (creation.data) hiddenInput.value = creation.data;
   if (creation.type) typeInput.value = creation.type;
-
-  titleInput.focus();
 }
 
 //=========================//
