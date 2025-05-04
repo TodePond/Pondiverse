@@ -14,6 +14,8 @@ client side code is here on github.
 
 server side code is on [val town](https://www.val.town/x/todepond/pondiverse)
 
+to run client side, clone and then run a file server from the root folder
+
 ## jam
 
 this is a jam. anyone can get involved. all contributions get accepted no matter what. let someone know if you want admin access. it's okay if stuff breaks
