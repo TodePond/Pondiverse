@@ -1,0 +1,96 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pondiverse - Tool</title>
+<link rel="stylesheet" href="/style.css" />
+<h1><a href="/" class="breadcrumb">Pondiverse</a> - Tool</h1>
+<header
+  id="view-source"
+  style="position: absolute; top: 0; right: 0; padding: 16px">
+  <a href="https://github.com/TodePond/Pondiverse" target="_blank">
+    View source
+  </a>
+</header>
+
+<p>
+  <label for="title">
+    Title
+    <input type="text" id="title" />
+  </label>
+</p>
+
+<p>
+  <label for="type">
+    Type
+    <input type="text" id="type" />
+  </label>
+</p>
+
+<p>
+  <label for="image">
+    Image
+    <img
+      id="preview"
+      src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+      alt="Preview"
+      style="
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid #9faeee;
+        background-color: #374362;
+        display: block;
+        margin-bottom: 10px;
+      " />
+    <input type="file" id="image" accept="image/*" />
+    <br />
+  </label>
+</p>
+
+<p>
+  <label for="data">
+    Data
+    <textarea
+      id="data"
+      rows="10"
+      style="display: block; resize: vertical"></textarea>
+  </label>
+</p>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<script type="module">
+  import { addPondiverseButton } from "/pondiverse.js";
+
+  const titleInput = document.querySelector("#title");
+  const typeInput = document.querySelector("#type");
+  const imageInput = document.querySelector("#image");
+  const previewImage = document.querySelector("#preview");
+  const dataInput = document.querySelector("#data");
+
+  imageInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImage.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      previewImage.src =
+        "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+    }
+  });
+
+  addPondiverseButton(() => ({
+    title: titleInput.value,
+    type: typeInput.value,
+    image: previewImage.src,
+    data: dataInput.value,
+  }));
+</script>

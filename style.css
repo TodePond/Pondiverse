@@ -129,6 +129,7 @@ a.footnote::after {
 
 label {
   user-select: none;
+  line-height: 2;
 }
 
 a:hover > img {

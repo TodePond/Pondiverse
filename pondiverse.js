@@ -371,6 +371,7 @@ export function openPondiverseDialog(
   if (creation.image) previewImage.src = creation.image;
   if (creation.data) hiddenInput.value = creation.data;
   if (creation.type) typeInput.value = creation.type;
+  if (creation.title) titleInput.value = creation.title;
 }
 
 //=========================//
