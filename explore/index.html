@@ -13,7 +13,7 @@
   <h2 id="refresh-heading">
     Creations <button id="refresh-sign" class="secondary span">Loading...</button>
   </h2>
-  <p class="secondary loading">Loading creations...</p>
+  <p class="secondary loading">Loading initial creations...</p>
 </main>
 
 <script type="module">
@@ -29,20 +29,36 @@
   const refreshHeading = document.querySelector("#refresh-heading");
 
   const CREATIONS_PER_PAGE = 10;
-  let displayedCreationIds = new Set();
   let isInitialLoad = true;
+  let latestCreationTimestamp = 0;
 
   let refreshTimeout;
   let secondsLeft = 9;
   const REFRESH_INTERVAL_SECONDS = 9;
-  const LOCAL_STORAGE_KEY = "pondiverseExploreAutoRefreshIncremental";
+  const AUTO_REFRESH_LS_KEY = "pondiverseExploreAutoRefreshIncremental";
+  const LATEST_TIMESTAMP_LS_KEY = "pondiverseExploreLatestTimestamp";
+
 
   function getLocalRefreshStatus() {
-    return localStorage.getItem(LOCAL_STORAGE_KEY) !== "false";
+    return localStorage.getItem(AUTO_REFRESH_LS_KEY) !== "false";
   }
 
   function setLocalRefreshStatus(on) {
-    localStorage.setItem(LOCAL_STORAGE_KEY, on ? "true" : "false");
+    localStorage.setItem(AUTO_REFRESH_LS_KEY, on ? "true" : "false");
+  }
+
+  function loadLatestTimestamp() {
+    const storedTimestamp = localStorage.getItem(LATEST_TIMESTAMP_LS_KEY);
+    if (storedTimestamp) {
+      latestCreationTimestamp = parseInt(storedTimestamp, 10) || 0;
+    }
+  }
+
+  function saveLatestTimestamp(timestamp) {
+    if (timestamp > latestCreationTimestamp) {
+      latestCreationTimestamp = timestamp;
+      localStorage.setItem(LATEST_TIMESTAMP_LS_KEY, latestCreationTimestamp.toString());
+    }
   }
 
   function getRefreshStatus() {
@@ -93,7 +109,7 @@
     const currentlyRefreshing = getLocalRefreshStatus();
     setRefreshStatus(!currentlyRefreshing);
     if (!currentlyRefreshing) {
-      pullCreations(); // Trigger an immediate check if turning on
+      pullCreations();
     }
   }
 
@@ -114,13 +130,11 @@
     try {
       const fetchPromises = instances.map(instance =>
         fetchPondiverseCreations({ instance })
-          .then(creations => creations.map(creation => ({ ...creation, instance })))
+          .then(creations => creations.map(creation => ({ ...creation, instance, timestamp: new Date(creation.time).getTime() })))
           .catch(e => {
             console.error(`Error fetching from ${instance.name}:`, e);
             fetchError = true;
-            // Optionally display instance-specific errors visually if needed
-            // For incremental, we might just log it unless it's critical
-            return []; // Return empty array for this instance on error
+            return [];
           })
       );
       const results = await Promise.all(fetchPromises);
@@ -129,19 +143,19 @@
     } catch (globalError) {
       console.error("Error during creation fetch coordination:", globalError);
       fetchError = true;
-      // Handle global fetch error display if necessary
     }
+
+    allCreations.sort((a, b) => b.timestamp - a.timestamp);
 
     if (isInitialLoad) {
       const loadingIndicator = main.querySelector('.loading');
       if (loadingIndicator) loadingIndicator.remove();
 
-      if (allCreations.length > 0) {
-        allCreations.sort((a, b) => new Date(b.time) - new Date(a.time));
-        // Display initial batch
-        const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE * 2); // Load a bit more initially
-        renderCreations(initialBatch, true); // true indicates initial render
-        initialBatch.forEach(c => displayedCreationIds.add(c.id));
+      const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE * 2);
+
+      if (initialBatch.length > 0) {
+        renderCreations(initialBatch, true);
+        saveLatestTimestamp(initialBatch[0].timestamp);
       } else if (!fetchError) {
         main.innerHTML += `<p class="secondary">No creations found yet.</p>`;
       } else {
@@ -149,20 +163,18 @@
       }
       isInitialLoad = false;
 
-    } else { // Incremental check
-      const newCreations = allCreations
-        .filter(c => !displayedCreationIds.has(c.id))
-        .sort((a, b) => new Date(b.time) - new Date(a.time)); // Sort only new ones
+    } else {
+      const newCreations = allCreations.filter(c => c.timestamp > latestCreationTimestamp);
 
       if (newCreations.length > 0) {
-        renderCreations(newCreations, false); // false indicates prepending
-        newCreations.forEach(c => displayedCreationIds.add(c.id));
+        renderCreations(newCreations, false);
+        saveLatestTimestamp(newCreations[0].timestamp);
         refreshSign.textContent = `Added ${newCreations.length} new`;
         setTimeout(() => {
           if (getLocalRefreshStatus()) {
             refreshSign.textContent = "Checking in " + secondsLeft;
           }
-        }, 2000); // Show for 2 seconds
+        }, 2000);
       } else {
         if (getLocalRefreshStatus()) {
           refreshSign.textContent = "Checking in " + secondsLeft;
@@ -170,21 +182,19 @@
       }
     }
 
-    if (getLocalRefreshStatus() && !isInitialLoad) { // Don't start timer during initial load message
-      if (refreshTimeout === undefined) { // Prevent multiple timers
+    if (getLocalRefreshStatus()) {
+      if (refreshTimeout === undefined) {
         refreshTimeout = setTimeout(handleTimer, 1000);
       }
-    } else if (getLocalRefreshStatus() && isInitialLoad) {
-      refreshTimeout = setTimeout(handleTimer, 1000);
     } else {
       refreshSign.textContent = "Auto-refresh paused";
     }
   }
 
   function getTimeSince(timestamp) {
-    const now = new Date();
-    const past = new Date(timestamp);
-    const diffInMilliseconds = now.getTime() - past.getTime();
+    const now = Date.now();
+    const past = timestamp;
+    const diffInMilliseconds = now - past;
     if (diffInMilliseconds < 0) return "just now";
     const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
     const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -193,7 +203,7 @@
     if (diffInDays > 0) return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
     if (diffInHours > 0) return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
     if (diffInMinutes > 0) return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-    return `${diffInSeconds === 1 ? '1 second' : diffInSeconds + ' seconds'} ago`;
+    return `${diffInSeconds <= 1 ? '1 second' : diffInSeconds + ' seconds'} ago`;
   }
 
   function renderCreations(creationsToRender, isInitial) {
@@ -227,7 +237,7 @@
         return `<p>Open in <a href="${targetUrl}" target="_blank">${toolName}</a></p>`;
       }).join("") : ``;
       const detailsSection = creation.data ? `<details><summary>show data</summary><pre class="data-preview"><code>${escapedPrettyData}</code></pre></details>` : "";
-      const timeSince = getTimeSince(creation.time);
+      const timeSince = getTimeSince(creation.timestamp);
       const from = creation.instance.home ? `<a class="tertiary" href="${creation.instance.home}" target="_blank" rel="noopener noreferrer">${creation.instance.name}</a>` : creation.instance.name;
 
       const div = document.createElement('div');
@@ -263,15 +273,19 @@
 
   refreshSign.addEventListener("click", toggleRefresh);
 
+  loadLatestTimestamp();
+
   if (!getLocalRefreshStatus()) {
     refreshSign.textContent = "Auto-refresh paused";
-    isInitialLoad = false; // Don't show initial loading if paused from start
+    isInitialLoad = false;
     const loadingIndicator = main.querySelector('.loading');
     if (loadingIndicator) loadingIndicator.remove();
-    main.innerHTML += `<p class="secondary">Auto-refresh is paused. <a href="#" onclick="document.getElementById('refresh-sign').click(); return false;">Click here</a> to load and enable.</p>`;
+    if (main.querySelectorAll('.creation').length === 0) {
+      main.innerHTML += `<p class="secondary">Auto-refresh is paused. <a href="#" onclick="document.getElementById('refresh-sign').click(); return false;">Click here</a> to load and enable.</p>`;
+    }
 
   } else {
-    pullCreations(); // Start initial load
+    pullCreations();
   }
 
 </script>
