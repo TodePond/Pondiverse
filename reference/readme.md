@@ -1,5 +1,5 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pondiverse - Docs</title>
+<title>Pondiverse - Reference</title>
 <link rel="stylesheet" href="/style.css" />
 <header
   id="view-source"
@@ -9,7 +9,7 @@
   >
 </header>
 
-<h1><a href="/" class="breadcrumb">Pondiverse</a> - Docs</h1>
+<h1><a href="/" class="breadcrumb">Pondiverse</a> - Reference</h1>
 
 This page lists all of the functions that are available to use from the pondiverse script.
 

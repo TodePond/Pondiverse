@@ -10,6 +10,11 @@
 
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Learn</h1>
 
+This page contains guides on how to build things for the pondiverse.
+
+For full reference of the pondiverse script, read the [reference](/reference/).\
+For an example of a pondiverse tool, check out the basic [tool](/tool/).
+
 ## Connect your tool to the pondiverse
 
 Import the pondiverse script and run the `addPondiverseButton` function somewhere in your tool's code.
@@ -74,8 +79,3 @@ if (creationParam) {
   const creation = await fetchPondiverseCreation(creationParam);
 }
 ```
-
-## More
-
-For full documentation of the pondiverse script, read the [docs](/docs/).\
-For an example of a pondiverse tool, check out the basic [tool](/tool/).
