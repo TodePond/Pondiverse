@@ -2,18 +2,19 @@
 <title>Pondiverse - Explore</title>
 <link rel="stylesheet" href="/style.css" />
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Explore</h1>
-<header
-  id="view-source"
-  style="position: absolute; top: 0; right: 0; padding: 16px">
-  <a href="https://github.com/TodePond/Pondiverse" target="_blank"
-    >View source</a
-  >
+<header id="view-source" style="position: absolute; top: 0; right: 0; padding: 16px">
+  <a href="https://github.com/TodePond/Pondiverse" target="_blank">View source</a>
 </header>
 <header>
   <p>Here are all the creations.</p>
 </header>
 
-<main><p class="secondary loading">Loading...</p></main>
+<main>
+  <h2 id="refresh-heading">
+    Creations <button id="refresh-sign" class="secondary span">Refreshing...</button>
+  </h2>
+  <p class="secondary loading">Loading...</p>
+</main>
 
 <script type="module">
   import {
@@ -24,59 +25,171 @@
   import { instances } from "/instances.js";
 
   const main = document.querySelector("main");
+  const refreshSign = document.querySelector("#refresh-sign");
+  const refreshHeading = document.querySelector("#refresh-heading");
 
   const CREATIONS_PER_PAGE = 10;
-  async function pullCreations() {
-    let allCreations = [];
 
-    for (const instance of instances) {
-      let creations;
-      try {
-        creations = await fetchPondiverseCreations({ instance });
-      } catch (e) {
-        main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
-        throw e;
-      }
-      allCreations.push(
-        ...creations.map((creation) => {
-          return {
-            ...creation,
-            instance,
-          };
-        })
-      );
+  let refreshTimeout;
+  let secondsLeft = 9;
+  const REFRESH_INTERVAL_SECONDS = 9;
+  const LOCAL_STORAGE_KEY = "pondiverseExploreAutoRefresh";
+
+  function getLocalRefreshStatus() {
+    return localStorage.getItem(LOCAL_STORAGE_KEY) !== "false";
+  }
+
+  function setLocalRefreshStatus(on) {
+    localStorage.setItem(LOCAL_STORAGE_KEY, on ? "true" : "false");
+  }
+
+  function getRefreshStatus() {
+    return refreshTimeout !== undefined;
+  }
+
+  async function handleTimer() {
+    secondsLeft--;
+    if (secondsLeft <= 0) {
+      await pullCreations();
+      return;
     }
-    allCreations = allCreations.sort((a, b) => {
-      return new Date(b.time) - new Date(a.time);
-    });
-    const head = allCreations.slice(0, CREATIONS_PER_PAGE);
-    const tail = allCreations.slice(CREATIONS_PER_PAGE);
-    renderMoreCreations({ head, tail });
+    refreshSign.textContent = "Auto-refreshing in " + secondsLeft;
+    if (refreshTimeout !== undefined) {
+      clearTimeout(refreshTimeout);
+    }
+    refreshTimeout = setTimeout(handleTimer, 1000);
+  }
+
+  function setRefreshStatus(on) {
+    if (on) {
+      setLocalRefreshStatus(true);
+      if (!getRefreshStatus()) {
+        secondsLeft = REFRESH_INTERVAL_SECONDS;
+        refreshSign.textContent = "Auto-refreshing in " + secondsLeft;
+        if (refreshTimeout !== undefined) clearTimeout(refreshTimeout);
+        refreshTimeout = setTimeout(handleTimer, 1000);
+      }
+    } else {
+      setLocalRefreshStatus(false);
+      refreshSign.textContent = "Auto-refresh paused";
+      if (getRefreshStatus()) {
+        clearTimeout(refreshTimeout);
+        refreshTimeout = undefined;
+      }
+    }
+  }
+
+  function toggleRefresh() {
+    const currentlyRefreshing = getRefreshStatus();
+    setRefreshStatus(!currentlyRefreshing);
+  }
+
+
+  async function pullCreations() {
+    // Start refresh state
+    refreshSign.textContent = "Refreshing...";
+    secondsLeft = REFRESH_INTERVAL_SECONDS;
+    if (refreshTimeout !== undefined) {
+      clearTimeout(refreshTimeout);
+      refreshTimeout = undefined;
+    }
+
+    main.innerHTML = '';
+    main.appendChild(refreshHeading);
+    const loadingP = document.createElement('p');
+    loadingP.className = 'secondary loading';
+    loadingP.textContent = 'Loading...';
+    main.appendChild(loadingP);
+
+    let allCreations = [];
+    let fetchError = false;
+
+    try {
+      for (const instance of instances) {
+        let creations;
+        try {
+          creations = await fetchPondiverseCreations({ instance });
+          allCreations.push(
+            ...creations.map((creation) => ({ ...creation, instance }))
+          );
+        } catch (e) {
+          console.error(`Error fetching from ${instance.name}:`, e);
+          fetchError = true;
+          const errorP = document.createElement('p');
+          errorP.className = 'danger';
+          errorP.textContent = `Error fetching creations from ${instance.name}.`;
+          main.appendChild(errorP);
+        }
+      }
+    } catch (globalError) {
+      console.error("Error during creation fetch loop:", globalError);
+      fetchError = true;
+      const errorP = document.createElement('p');
+      errorP.className = 'danger';
+      errorP.textContent = `A general error occurred while fetching creations.`;
+      main.appendChild(errorP);
+    }
+
+    const loadingIndicator = main.querySelector('.loading');
+    if (loadingIndicator) loadingIndicator.remove();
+
+
+    if (allCreations.length > 0) {
+      allCreations = allCreations.sort((a, b) => new Date(b.time) - new Date(a.time));
+      const head = allCreations.slice(0, CREATIONS_PER_PAGE);
+      const tail = allCreations.slice(CREATIONS_PER_PAGE);
+      renderMoreCreations({ head, tail });
+    } else if (!fetchError) {
+      main.innerHTML += `<p class="secondary">
+            No creations found yet.
+            <a href="/create/">Create one yourself?</a>
+          </p>`;
+    }
+
+    const shouldAutoRefresh = getLocalRefreshStatus();
+    if (shouldAutoRefresh) {
+      refreshSign.textContent = "Auto-refreshing in " + secondsLeft;
+      if (refreshTimeout === undefined) {
+        refreshTimeout = setTimeout(handleTimer, 1000);
+      }
+    } else {
+      refreshSign.textContent = "Auto-refresh paused";
+    }
   }
 
   function getTimeSince(timestamp) {
     const now = new Date();
     const past = new Date(timestamp);
     const diffInMilliseconds = now.getTime() - past.getTime();
+
+    if (diffInMilliseconds < 0) return "just now";
+
     const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
 
-    if (diffInHours > 0) {
+    if (diffInDays > 0) {
+      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+    } else if (diffInHours > 0) {
       return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
     } else if (diffInMinutes > 0) {
       return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
     } else {
-      return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
+      return `${diffInSeconds === 1 ? '1 second' : diffInSeconds + ' seconds'} ago`;
     }
   }
 
   function renderMoreCreations({ head, tail }) {
-    if (head.length === 0) {
-      main.innerHTML += `<p class="secondary">
-          No more creations yet.
-          <a href="/create/">Create one yourself?</a>
-        </p>`;
+    if (head.length === 0 && main.querySelectorAll('.creation').length === 0) {
+      const existingMessages = main.querySelectorAll('p.secondary, p.danger');
+      if (existingMessages.length === 0) {
+        main.innerHTML += `<p class="secondary">
+                 No creations found yet.
+                 <a href="/create/">Create one yourself?</a>
+               </p>`;
+      }
+      return;
     }
 
     let creations = head;
@@ -86,17 +199,19 @@
       loading.remove();
     }
 
-    // creations = creations.sort((a, b) => {
-    //   return new Date(b.time) - new Date(a.time);
-    // });
-
     const creationElements = creations.map((creation) => {
       let prettyData = "";
       try {
-        prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
+        if (creation.data && typeof creation.data === 'string' && (creation.data.trim().startsWith('{') || creation.data.trim().startsWith('['))) {
+          prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
+        } else {
+          prettyData = creation.data || "";
+        }
       } catch (e) {
-        prettyData = creation.data;
+        prettyData = creation.data || "";
       }
+
+      const escapedPrettyData = prettyData.replace(/</g, "<").replace(/>/g, ">");
 
       const imageUrl = getPondiverseCreationImageUrl(creation, {
         instance: creation.instance,
@@ -121,7 +236,7 @@
         ? `
           <details>
             <summary>show data</summary>
-            <pre class="data-preview"><code>${prettyData}</code></pre>
+            <pre class="data-preview"><code>${escapedPrettyData}</code></pre>
           </details>
         `
         : "";
@@ -129,13 +244,13 @@
       const timeSince = getTimeSince(creation.time);
 
       const from = creation.instance.home
-        ? `<a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>`
+        ? `<a class="tertiary" href="${creation.instance.home}" target="_blank" rel="noopener noreferrer">${creation.instance.name}</a>`
         : creation.instance.name;
       return `
         <div class="creation" id="c${creation.id}">
-          <h2>${creation.title}, ${creation.type}</h2>
+          <h2>${creation.title || 'Untitled'}, ${creation.type || 'Unknown Type'}</h2>
           ${openInSection}
-          ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
+          ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title || 'Creation image'}" loading="lazy" />` : ""}
           ${detailsSection}
           <p class="secondary">From ${from}, about ${timeSince}</p>
         </div>
@@ -145,13 +260,25 @@
 
     for (const creation of creations) {
       const img = document.querySelector(`#c${creation.id} img`);
-      if (img) img.onerror = () => img.remove();
+      if (img) {
+        img.onerror = () => {
+          console.warn(`Failed to load image: ${img.src}`);
+          img.remove();
+        };
+      }
     }
+
+    const existingButton = main.querySelector("button.load-more");
+    if (existingButton) existingButton.remove();
+    const existingBr = main.querySelector("br.load-more-br");
+    if (existingBr) existingBr.remove();
 
     const areThereMorePages = tail.length > 0;
     if (areThereMorePages) {
-      const button = document.createElement("button");
       const br = document.createElement("br");
+      br.className = "load-more-br";
+      const button = document.createElement("button");
+      button.className = "load-more";
       button.innerText = "Load more";
       button.onclick = async () => {
         button.innerText = "Loading...";
@@ -159,13 +286,17 @@
         button.style.cursor = "not-allowed";
         const _head = tail.slice(0, CREATIONS_PER_PAGE);
         const _tail = tail.slice(CREATIONS_PER_PAGE);
-        button.remove();
-        br.remove();
         renderMoreCreations({ head: _head, tail: _tail });
       };
       main.appendChild(br);
       main.appendChild(button);
     }
+  }
+
+  refreshSign.addEventListener("click", toggleRefresh);
+
+  if (!getLocalRefreshStatus()) {
+    refreshSign.textContent = "Auto-refresh paused";
   }
 
   pullCreations();

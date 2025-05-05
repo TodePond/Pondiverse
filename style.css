@@ -51,26 +51,26 @@
   --background: rgb(31, 39, 54);
 
   --rainbow-gradient: linear-gradient(
-    /* slanted */ 135deg,
-    var(--green),
-    var(--cyan),
-    var(--light-blue),
-    var(--purple),
-    var(--pink),
-    var(--coral),
-    var(--red),
-    var(--orange),
-    var(--yellow),
-    var(--green),
-    var(--cyan),
-    var(--light-blue),
-    var(--purple),
-    var(--pink),
-    var(--coral),
-    var(--red),
-    var(--orange),
-    var(--yellow)
-  );
+      /* slanted */
+      135deg,
+      var(--green),
+      var(--cyan),
+      var(--light-blue),
+      var(--purple),
+      var(--pink),
+      var(--coral),
+      var(--red),
+      var(--orange),
+      var(--yellow),
+      var(--green),
+      var(--cyan),
+      var(--light-blue),
+      var(--purple),
+      var(--pink),
+      var(--coral),
+      var(--red),
+      var(--orange),
+      var(--yellow));
 
   --glow: 0 0px 5px var(--best-colour), 0 0px 10px var(--best-colour);
 }
@@ -132,7 +132,7 @@ label {
   line-height: 2;
 }
 
-a:hover > img {
+a:hover>img {
   outline: 2px solid #46ff80;
 }
 
@@ -168,7 +168,7 @@ ul {
   /* color: white; */
 }
 
-ul > li {
+ul>li {
   list-style: " — ";
   /* margin-left: 0px; */
 }
@@ -505,4 +505,30 @@ button.selected {
   color: rgb(31, 39, 54) !important;
   background-color: #9faeee !important;
   outline: 2px solid #9faeee !important;
+}
+
+#refresh-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#refresh-sign {
+  color: var(--best-colour);
+  cursor: pointer;
+  user-select: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 16px;
+  float: right;
+  flex-shrink: 0;
+}
+
+#refresh-sign:hover {
+  background-color: var(--best-colour);
+  color: var(--shade-3);
+  outline: 2px solid var(--best-colour);
 }
