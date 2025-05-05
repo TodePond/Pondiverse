@@ -293,18 +293,17 @@
       }
       const escapedPrettyData = prettyData.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       const imageUrl = getPondiverseCreationImageUrl(creation, { instance: creation.instance });
-      const compatibleTools = tools.filter((tool) => {
-        if (!tool.types) return false;
-        if (tool.types.includes("*")) return true;
-        return tool.types.includes(creation.type);
-      });
+      const compatibleTools = tools.map((tool) => {
+        if (tool.types.includes("*")) return { tool, match: "wild" }
+        if (tool.types.includes(creation.type)) return { tool, match: "exact" }
+      }).filter(v => v)
       const canOpen = compatibleTools.length > 0;
-      const openInSection = canOpen ? compatibleTools.map((tool) => {
-        const toolName = tool.name;
-        const toolUrl = tool.url;
-        const targetUrl = `${toolUrl.endsWith('/') ? toolUrl : toolUrl + '/'}${creation.instance.getCreation}${creation.id}`;
-        return `<p>Open in <a href="${targetUrl}" target="_blank">${toolName}</a></p>`;
-      }).join("") : ``;
+      const choices = compatibleTools.map(v => {
+        return `<a href="${v.tool.url}${creation.instance.getCreation}${creation.id}" class="${v.match === "wild" ? "secondary" : "primary"}" target="_blank">${v.tool.name}</a>`
+      }).join(" or ")
+      const openInSection = canOpen
+        ? `<p>Open in ${choices}</p>`
+        : ``;
       const detailsSection = creation.data ? `<details><summary>show data</summary><pre class="data-preview"><code>${escapedPrettyData}</code></pre></details>` : "";
       const timeSince = getTimeSince(creation.timestamp);
       const from = creation.instance.home ? `<a class="tertiary" href="${creation.instance.home}" target="_blank" rel="noopener noreferrer">${creation.instance.name}</a>` : creation.instance.name;
