@@ -10,7 +10,7 @@
 
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Learn</h1>
 
-## How to connect your tool to the pondiverse
+## Connect your tool to the pondiverse
 
 Import the pondiverse script and run the `addPondiverseButton` function somewhere in your tool's code.
 
@@ -32,13 +32,11 @@ It takes one function as an argument. The function should return an object with 
 - `data` - A string containing the data for the creation. This can be anything.
 - `image` - A string containing a base64 encoded image. This can be anything.
 
-<br />
+<br>
 
-<hr />
+## Programmatically open the pondiverse dialog
 
-<br />
-
-Alternatively, you can programmatically open the pondiverse dialog by calling the `openPondiverseDialog` function.
+You can programmatically open the pondiverse dialog by calling the `openPondiverseDialog` function.
 
 ```js
 import { openPondiverseDialog } from "https://www.pondiverse.com/pondiverse.js";
@@ -51,6 +49,33 @@ openPondiverseDialog(() => {
   };
 });
 ```
+
+<br />
+
+## Let people open creations in your tool
+
+Add your tools to the <a href="https://github.com/TodePond/Pondiverse/blob/main/tools.js">list of tools</a>.
+
+```js
+{
+  name: "Example tool",
+  types: ["example"],
+  url: "https://example.com/tool?id=",
+}
+```
+
+Then you need to make sure your tool can open the creation. Get the creation's data by using the `fetchPondiverseCreation` function.
+
+```js
+import { fetchPondiverseCreation } from "https://www.pondiverse.com/pondiverse.js";
+
+const creationParam = new URL(window.location).searchParams.get("id");
+if (creationParam) {
+  const creation = await fetchPondiverseCreation(creationParam);
+}
+```
+
+## More
 
 For full documentation of the pondiverse script, read the [docs](/docs/).\
 For an example of a pondiverse tool, check out the basic [tool](/tool/).
