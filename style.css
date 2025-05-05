@@ -507,7 +507,7 @@ button.selected {
   outline: 2px solid #9faeee !important;
 }
 
-#refresh-heading {
+#heading {
   display: flex;
   justify-content: space-between;
   align-items: baseline;

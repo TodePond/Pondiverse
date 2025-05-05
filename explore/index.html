@@ -5,14 +5,11 @@
 <header id="view-source" style="position: absolute; top: 0; right: 0; padding: 16px">
   <a href="https://github.com/TodePond/Pondiverse" target="_blank">View source</a>
 </header>
-<header>
-  <p>Here are all the creations.</p>
+<header id="heading">
+  <p>Here are all the creations.</p> <button id="refresh-sign" class="secondary span">Loading...</button>
 </header>
 
 <main>
-  <h2 id="refresh-heading">
-    Creations <button id="refresh-sign" class="secondary span">Loading...</button>
-  </h2>
   <p class="secondary loading">Loading initial creations...</p>
 </main>
 
@@ -26,7 +23,7 @@
 
   const main = document.querySelector("main");
   const refreshSign = document.querySelector("#refresh-sign");
-  const refreshHeading = document.querySelector("#refresh-heading");
+  const heading = document.querySelector("#heading");
 
   const CREATIONS_PER_PAGE = 10;
   let isInitialLoad = true;
@@ -266,7 +263,7 @@
     if (isInitial) {
       main.appendChild(fragment);
     } else {
-      refreshHeading.after(fragment);
+      heading.after(fragment);
     }
   }
 
