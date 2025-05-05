@@ -238,11 +238,6 @@ summary.button {
   /* line-height: 2.3; */
 }
 
-summary.button:hover {
-  /* transform-origin: left; */
-  /* transform: scale(1.1); */
-}
-
 dialog h2 {
   margin: 0px;
 }
@@ -384,10 +379,6 @@ summary {
   width: fit-content;
 }
 
-details[open] summary {
-  /* margin-bottom: 10px; */
-}
-
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -476,10 +467,6 @@ pre mark {
   background: none;
 }
 
-input[type="checkbox"] {
-  /* width: 29px; */
-}
-
 select {
   background-color: #374362;
   border: 1px solid #9faeee;
@@ -510,7 +497,6 @@ button.selected {
 #heading {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
   flex-wrap: wrap;
   gap: 10px;
 }
