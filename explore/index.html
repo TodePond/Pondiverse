@@ -102,20 +102,19 @@
         instance: creation.instance,
       });
 
-      const compatibleTools = tools.filter((tool) => {
-        if (tool.types.includes("*")) return true;
-        return tool.types.includes(creation.type);
-      });
+      const compatibleTools = tools.map((tool) => {
+        if (tool.types.includes("*")) return {tool, match: "wild"}
+        if (tool.types.includes(creation.type)) return {tool, match: "exact"}
+      }).filter(v=>v)
 
       const canOpen = compatibleTools.length > 0;
+      const choices = compatibleTools.map(v=>{
+        return `<a href="${v.tool.url}${creation.instance.getCreation}${creation.id}" class="${v.match === "wild"?"secondary":"primary"}" target="_blank">${v.tool.name}</a>`
+      }).join(" or ")
+
+      
       const openInSection = canOpen
-        ? compatibleTools
-            .map((tool) => {
-              const toolName = tool.name;
-              const toolUrl = tool.url;
-              return `<p>Open in <a href="${toolUrl}${creation.instance.getCreation}${creation.id}" target="_blank">${toolName}</a></p>`;
-            })
-            .join("")
+        ? `<p>Open in ${choices}</p>`
         : ``;
 
       const detailsSection = creation.data
