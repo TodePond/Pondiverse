@@ -352,10 +352,10 @@
       const div = document.createElement("div");
       div.className = "creation";
       div.id = `c${creation.id}`;
+      // title can be blank!!!
+      // type can be blank!!!
       div.innerHTML = `
-          <h2>${creation.title || "Untitled"}, ${
-        creation.type || "Unknown Type"
-      }</h2>
+          <h2>${creation.title}, ${creation.type}</h2>
           ${openInSection}
           ${
             imageUrl
