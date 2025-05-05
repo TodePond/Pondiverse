@@ -18,6 +18,9 @@ For an example of a pondiverse tool, check out the basic [tool](/tool/).
 - [Connect your tool to the pondiverse](#connect)
 - [Let people open creations in your tool](#tools)
 - [Programmatically open the pondiverse dialog](#open)
+- [Create your own client](#client)
+- [Using other stores](#stores)
+- [Using your own store](#store)
 
 <h2 id="connect">Connect your tool to the pondiverse</h2>
 
@@ -83,6 +86,46 @@ openPondiverseDialog(() => {
   };
 });
 ```
+
+<br />
+
+<h2 id="client">Create your own client</h2>
+
+Pondiverse.com is a client for exploring pondiverse creations. You can create your own client too by using the `fetchPondiverseCreations` function.
+
+```js
+import { fetchPondiverseCreations } from "https://www.pondiverse.com/pondiverse.js";
+
+const creations = await fetchPondiverseCreations();
+
+// Then display the creations in some way...
+```
+
+<br />
+
+<h2 id="stores">Using other stores</h2>
+
+By default, the pondiverse stores creations in the [todepondiverse](https://todepond.com/pondiverse) store. Your client or tool can use other stores too. You can specify this by using the `instance` option. (This will eventually be renamed to `store`.)
+
+This example shows how to use the [puddle](https://iliazeus.lol/puddle/) store.
+
+```js
+import { fetchPondiverseCreations } from "https://www.pondiverse.com/pondiverse.js";
+
+const instance = {
+  name: "puddle",
+  home: "https://iliazeus.lol/puddle/",
+  addCreation: "https://api.iliazeus.lol/puddle/creations",
+  getCreation: "https://api.iliazeus.lol/puddle/creations/",
+  getCreations: "https://api.iliazeus.lol/puddle/creations",
+};
+
+const creations = await fetchPondiverseCreations({ instance });
+```
+
+<h2 id="store">Using your own store</h2>
+
+You can create your own store by creating all the endpoints that a store needs. Check out the [reference](/reference/) for the full details.
 
 <br />
 <br />
