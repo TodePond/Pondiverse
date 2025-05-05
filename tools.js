@@ -59,4 +59,9 @@ export const tools = [
     types: ["*"],
     url: "https://pondiverse.com/tool/?creation=",
   },
+  {
+    name: "talise",
+    types: ["talise"],
+    url: "https://ernestum.net/talise/?id=",
+  },
 ];
