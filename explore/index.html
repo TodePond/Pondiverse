@@ -10,7 +10,12 @@
 </header>
 
 <main>
-  <p class="secondary loading">Loading initial creations...</p>
+  <div id="creations-list">
+    <p class="secondary loading">Loading initial creations...</p>
+  </div>
+  <div id="load-more-container" style="text-align: center; padding: 20px; display: none;">
+    <button id="load-more-button">Load More</button>
+  </div>
 </main>
 
 <script type="module">
@@ -24,10 +29,15 @@
   const main = document.querySelector("main");
   const refreshSign = document.querySelector("#refresh-sign");
   const heading = document.querySelector("#heading");
+  const creationsList = document.querySelector("#creations-list");
+  const loadMoreContainer = document.querySelector("#load-more-container");
+  const loadMoreButton = document.querySelector("#load-more-button");
 
   const CREATIONS_PER_PAGE = 10;
   let isInitialLoad = true;
   let latestCreationTimestamp = 0;
+  let oldestDisplayedTimestamp = 0;
+  let isLoadingMore = false;
 
   let refreshTimeout;
   let secondsLeft = 9;
@@ -110,6 +120,28 @@
     }
   }
 
+  async function fetchAllSortedCreations() {
+    let allCreations = [];
+    try {
+      const fetchPromises = instances.map(instance =>
+        fetchPondiverseCreations({ instance })
+          .then(creations => creations.map(creation => ({ ...creation, instance, timestamp: new Date(creation.time).getTime() })))
+          .catch(e => {
+            console.error(`Error fetching from ${instance.name}:`, e);
+            return [];
+          })
+      );
+      const results = await Promise.all(fetchPromises);
+      allCreations = results.flat();
+      allCreations.sort((a, b) => b.timestamp - a.timestamp); // Sort descending
+    } catch (globalError) {
+      console.error("Error during creation fetch coordination:", globalError);
+      throw globalError;
+    }
+    return allCreations;
+  }
+
+
   async function pullCreations() {
     if (getLocalRefreshStatus() || isInitialLoad) {
       refreshSign.textContent = isInitialLoad ? "Loading..." : "Checking...";
@@ -125,38 +157,33 @@
     let fetchError = false;
 
     try {
-      const fetchPromises = instances.map(instance =>
-        fetchPondiverseCreations({ instance })
-          .then(creations => creations.map(creation => ({ ...creation, instance, timestamp: new Date(creation.time).getTime() })))
-          .catch(e => {
-            console.error(`Error fetching from ${instance.name}:`, e);
-            fetchError = true;
-            return [];
-          })
-      );
-      const results = await Promise.all(fetchPromises);
-      allCreations = results.flat();
-
-    } catch (globalError) {
-      console.error("Error during creation fetch coordination:", globalError);
+      allCreations = await fetchAllSortedCreations();
+    } catch (e) {
       fetchError = true;
     }
 
-    allCreations.sort((a, b) => b.timestamp - a.timestamp);
 
     if (isInitialLoad) {
-      const loadingIndicator = main.querySelector('.loading');
+      const loadingIndicator = creationsList.querySelector('.loading');
       if (loadingIndicator) loadingIndicator.remove();
 
-      const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE * 2);
+      const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE); // Load first page only
 
       if (initialBatch.length > 0) {
-        renderCreations(initialBatch, true);
+        renderCreations(initialBatch, 'initial');
         saveLatestTimestamp(initialBatch[0].timestamp);
+        oldestDisplayedTimestamp = initialBatch[initialBatch.length - 1].timestamp;
+        if (allCreations.length > initialBatch.length) {
+          loadMoreContainer.style.display = 'block';
+        } else {
+          loadMoreContainer.style.display = 'none';
+        }
       } else if (!fetchError) {
-        main.innerHTML += `<p class="secondary">No creations found yet.</p>`;
+        creationsList.innerHTML += `<p class="secondary">No creations found yet.</p>`;
+        loadMoreContainer.style.display = 'none';
       } else {
-        main.innerHTML += `<p class="danger">Could not load initial creations. Please try again later.</p>`;
+        creationsList.innerHTML += `<p class="danger">Could not load initial creations. Please try again later.</p>`;
+        loadMoreContainer.style.display = 'none';
       }
       isInitialLoad = false;
 
@@ -164,7 +191,7 @@
       const newCreations = allCreations.filter(c => c.timestamp > latestCreationTimestamp);
 
       if (newCreations.length > 0) {
-        renderCreations(newCreations, false);
+        renderCreations(newCreations, 'prepend');
         saveLatestTimestamp(newCreations[0].timestamp);
         refreshSign.textContent = `Added ${newCreations.length} new`;
         setTimeout(() => {
@@ -188,6 +215,51 @@
     }
   }
 
+  async function loadMoreCreations() {
+    if (isLoadingMore) return;
+    isLoadingMore = true;
+    loadMoreButton.textContent = 'Loading...';
+    loadMoreButton.disabled = true;
+
+    let allCreations = [];
+    let fetchError = false;
+    try {
+      allCreations = await fetchAllSortedCreations();
+    } catch (e) {
+      fetchError = true;
+      console.error("Failed to fetch for load more:", e);
+      loadMoreButton.textContent = 'Error. Retry?';
+      loadMoreButton.disabled = false;
+      isLoadingMore = false;
+      return;
+    }
+
+    const olderCreations = allCreations.filter(c => c.timestamp < oldestDisplayedTimestamp);
+
+    const nextBatch = olderCreations.slice(0, CREATIONS_PER_PAGE);
+
+    if (nextBatch.length > 0) {
+      renderCreations(nextBatch, 'append');
+      oldestDisplayedTimestamp = nextBatch[nextBatch.length - 1].timestamp;
+      if (olderCreations.length > nextBatch.length) {
+        loadMoreContainer.style.display = 'block';
+        loadMoreButton.textContent = 'Load More';
+        loadMoreButton.disabled = false;
+      } else {
+        loadMoreContainer.style.display = 'none';
+      }
+    } else {
+      loadMoreContainer.style.display = 'none';
+    }
+
+    isLoadingMore = false;
+    if (loadMoreContainer.style.display === 'block') {
+      loadMoreButton.textContent = 'Load More';
+      loadMoreButton.disabled = false;
+    }
+  }
+
+
   function getTimeSince(timestamp) {
     const now = Date.now();
     const past = timestamp;
@@ -203,7 +275,7 @@
     return `${diffInSeconds <= 1 ? '1 second' : diffInSeconds + ' seconds'} ago`;
   }
 
-  function renderCreations(creationsToRender, isInitial) {
+  function renderCreations(creationsToRender, mode) { // mode: 'initial', 'prepend', 'append'
     if (creationsToRender.length === 0) return;
 
     const fragment = document.createDocumentFragment();
@@ -219,7 +291,7 @@
       } catch (e) {
         prettyData = creation.data || "";
       }
-      const escapedPrettyData = prettyData.replace(/</g, "<").replace(/>/g, ">");
+      const escapedPrettyData = prettyData.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       const imageUrl = getPondiverseCreationImageUrl(creation, { instance: creation.instance });
       const compatibleTools = tools.filter((tool) => {
         if (!tool.types) return false;
@@ -260,26 +332,29 @@
       fragment.appendChild(div);
     });
 
-    if (isInitial) {
-      main.appendChild(fragment);
-    } else {
-      heading.after(fragment);
+    if (mode === 'initial' || mode === 'append') {
+      creationsList.appendChild(fragment); // Append to the list div
+    } else if (mode === 'prepend') {
+      creationsList.prepend(fragment); // Prepend to the list div
     }
   }
 
 
   refreshSign.addEventListener("click", toggleRefresh);
+  loadMoreButton.addEventListener("click", loadMoreCreations); // Add listener for load more
 
   loadLatestTimestamp();
 
   if (!getLocalRefreshStatus()) {
     refreshSign.textContent = "Auto-refresh paused";
     isInitialLoad = false;
-    const loadingIndicator = main.querySelector('.loading');
+    const loadingIndicator = creationsList.querySelector('.loading'); // Look inside creationsList
     if (loadingIndicator) loadingIndicator.remove();
-    if (main.querySelectorAll('.creation').length === 0) {
-      main.innerHTML += `<p class="secondary">Auto-refresh is paused. <a href="#" onclick="document.getElementById('refresh-sign').click(); return false;">Click here</a> to load and enable.</p>`;
+    if (creationsList.children.length <= 1 && creationsList.querySelector('.loading')) { // Check if only loading message is present
+      creationsList.removeChild(creationsList.querySelector('.loading')); // Remove loading if still there
+      creationsList.innerHTML += `<p class="secondary">Auto-refresh is paused. <a href="#" onclick="document.getElementById('refresh-sign').click(); return false;">Click here</a> to load and enable.</p>`;
     }
+    loadMoreContainer.style.display = 'none'; // Hide load more if paused
 
   } else {
     pullCreations();
