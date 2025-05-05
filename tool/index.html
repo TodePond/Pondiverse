@@ -5,7 +5,9 @@
 <header
   id="view-source"
   style="position: absolute; top: 0; right: 0; padding: 16px">
-  <a href="https://github.com/TodePond/Pondiverse" target="_blank">
+  <a
+    href="https://github.com/TodePond/Pondiverse/tree/main/tool/index.html"
+    target="_blank">
     View source
   </a>
 </header>
@@ -25,31 +27,31 @@
 </p>
 
 <p>
+  <label for="data">
+    Data
+    <textarea
+      id="data"
+      rows="5"
+      style="display: block; resize: vertical"></textarea>
+  </label>
+</p>
+
+<p>
   <label for="image">
     Image
+    <br />
     <img
       id="preview"
-      src="/placeholder.png"
       alt="Preview"
       style="
         max-width: 400px;
         border: 1px solid #9faeee;
         background-color: #374362;
-        display: block;
+        display: none;
         margin-bottom: 10px;
       " />
     <input type="file" id="image" accept="image/*" />
     <br />
-  </label>
-</p>
-
-<p>
-  <label for="data">
-    Data
-    <textarea
-      id="data"
-      rows="10"
-      style="display: block; resize: vertical"></textarea>
   </label>
 </p>
 
@@ -76,16 +78,22 @@
   const previewImage = document.querySelector("#preview");
   const dataInput = document.querySelector("#data");
 
+  imageInput.onerror = () => {
+    previewImage.style.display = "none";
+  };
+
   imageInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         previewImage.src = e.target.result;
+        previewImage.style.display = "block";
       };
       reader.readAsDataURL(file);
     } else {
-      previewImage.src = "/placeholder.png";
+      previewImage.src = "";
+      previewImage.style.display = "none";
     }
   });
 

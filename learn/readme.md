@@ -52,4 +52,5 @@ openPondiverseDialog(() => {
 });
 ```
 
-For full documentation of the pondiverse script, read the [docs](/docs).
+For full documentation of the pondiverse script, read the [docs](/docs/).\
+For an example of a pondiverse tool, check out the basic [tool](/tool/).
