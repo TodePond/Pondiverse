@@ -238,6 +238,11 @@ summary.button {
   /* line-height: 2.3; */
 }
 
+summary.button:hover {
+  /* transform-origin: left; */
+  /* transform: scale(1.1); */
+}
+
 dialog h2 {
   margin: 0px;
 }
@@ -379,6 +384,10 @@ summary {
   width: fit-content;
 }
 
+details[open] summary {
+  /* margin-bottom: 10px; */
+}
+
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -392,6 +401,10 @@ textarea {
   padding: 5px;
   width: 100%;
   font-size: 1em;
+}
+
+input[type="checkbox"] {
+  /* width: 29px; */
 }
 
 input[type="text"]::placeholder,

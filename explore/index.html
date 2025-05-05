@@ -133,7 +133,7 @@
       );
       const results = await Promise.all(fetchPromises);
       allCreations = results.flat();
-      allCreations.sort((a, b) => b.timestamp - a.timestamp); // Sort descending
+      allCreations.sort((a, b) => b.timestamp - a.timestamp);
     } catch (globalError) {
       console.error("Error during creation fetch coordination:", globalError);
       throw globalError;
@@ -167,7 +167,7 @@
       const loadingIndicator = creationsList.querySelector('.loading');
       if (loadingIndicator) loadingIndicator.remove();
 
-      const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE); // Load first page only
+      const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE);
 
       if (initialBatch.length > 0) {
         renderCreations(initialBatch, 'initial');
@@ -275,7 +275,7 @@
     return `${diffInSeconds <= 1 ? '1 second' : diffInSeconds + ' seconds'} ago`;
   }
 
-  function renderCreations(creationsToRender, mode) { // mode: 'initial', 'prepend', 'append'
+  function renderCreations(creationsToRender, mode) {
     if (creationsToRender.length === 0) return;
 
     const fragment = document.createDocumentFragment();
@@ -332,28 +332,28 @@
     });
 
     if (mode === 'initial' || mode === 'append') {
-      creationsList.appendChild(fragment); // Append to the list div
+      creationsList.appendChild(fragment);
     } else if (mode === 'prepend') {
-      creationsList.prepend(fragment); // Prepend to the list div
+      creationsList.prepend(fragment);
     }
   }
 
 
   refreshSign.addEventListener("click", toggleRefresh);
-  loadMoreButton.addEventListener("click", loadMoreCreations); // Add listener for load more
+  loadMoreButton.addEventListener("click", loadMoreCreations);
 
   loadLatestTimestamp();
 
   if (!getLocalRefreshStatus()) {
     refreshSign.textContent = "Auto-refresh paused";
     isInitialLoad = false;
-    const loadingIndicator = creationsList.querySelector('.loading'); // Look inside creationsList
+    const loadingIndicator = creationsList.querySelector('.loading');
     if (loadingIndicator) loadingIndicator.remove();
-    if (creationsList.children.length <= 1 && creationsList.querySelector('.loading')) { // Check if only loading message is present
-      creationsList.removeChild(creationsList.querySelector('.loading')); // Remove loading if still there
+    if (creationsList.children.length <= 1 && creationsList.querySelector('.loading')) {
+      creationsList.removeChild(creationsList.querySelector('.loading'));
       creationsList.innerHTML += `<p class="secondary">Auto-refresh is paused. <a href="#" onclick="document.getElementById('refresh-sign').click(); return false;">Click here</a> to load and enable.</p>`;
     }
-    loadMoreContainer.style.display = 'none'; // Hide load more if paused
+    loadMoreContainer.style.display = 'none';
 
   } else {
     pullCreations();
