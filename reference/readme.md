@@ -16,6 +16,8 @@ This page lists all of the functions that are available to use from the pondiver
 For guides, go to the <a href="/learn">learn</a> page.\
 For an example tool, look at the basic <a href="/tool">tool</a> page.
 
+<br />
+
 ## `addPondiverseButton(getCreation, { instance? })`
 
 Add the pondiverse button to your tool.
@@ -39,6 +41,8 @@ addPondiverseButton(() => {
   - `data` - A string containing the data for the creation. This can be anything.
   - `image` - A string containing a base64 encoded image. This can be anything.
 - `instance` - The instance to publish the creation to. Defaults to the todepondiverse.
+
+<br />
 
 ## `openPondiverseDialog(getCreation, { instance? })`
 
@@ -64,6 +68,8 @@ openPondiverseDialog(() => {
   - `image` - A string containing a base64 encoded image. This can be anything.
 - `instance` - The instance to publish the creation to. Defaults to the todepondiverse.
 
+<br />
+
 ## `fetchPondiverseCreations({ instance? })`
 
 Fetch all creations from an instance.
@@ -75,6 +81,8 @@ const creations = await fetchPondiverseCreations();
 ```
 
 - `instance` - The instance to fetch creations from. Defaults to the todepondiverse.
+
+<br />
 
 ## `fetchPondiverseCreation(creation, { instance? })`
 
@@ -98,6 +106,8 @@ const creation = await fetchPondiverseCreation(
 - `creation` - The ID or the URL of a creation.
 - `instance` - The instance to fetch the creation from. Defaults to the todepondiverse.
 
+<br />
+
 ## `deletePondiverseCreation(creation, { password?, instance? })`
 
 Delete a creation.
@@ -114,6 +124,8 @@ await deletePondiverseCreation(123, {
 - `password` - The admin password of the instance. This is required on some instances.
 - `instance` - The instance to delete the creation from. Defaults to the todepondiverse.
 
+<br />
+
 ## `getPondiverseCreationImage(creation, { instance? })`
 
 Get the image URL of a creation. This will eventually be deprecated, when the URL of a creation's image will be returned within `fetchPondiverseCreation` and `fetchPondiverseCreations`.
@@ -127,6 +139,8 @@ const imageUrl = getPondiverseCreationImage(creation);
 
 - `creation` - The ID of the creation to get the image for.
 - `instance` - The instance to get the image from. Defaults to the todepondiverse.
+
+<br />
 
 ## Instance
 

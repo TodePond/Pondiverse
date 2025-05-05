@@ -15,7 +15,11 @@ This page contains guides on how to build things for the pondiverse.
 For full reference of the pondiverse script, read the [reference](/reference/).\
 For an example of a pondiverse tool, check out the basic [tool](/tool/).
 
-## Connect your tool to the pondiverse
+- [Connect your tool to the pondiverse](#connect)
+- [Programmatically open the pondiverse dialog](#open)
+- [Let people open creations in your tool](#tools)
+
+<h2 id="connect">Connect your tool to the pondiverse</h2>
 
 Import the pondiverse script and run the `addPondiverseButton` function somewhere in your tool's code.
 
@@ -39,7 +43,7 @@ It takes one function as an argument. The function should return an object with 
 
 <br>
 
-## Programmatically open the pondiverse dialog
+<h2 id="open">Programmatically open the pondiverse dialog</h2>
 
 You can programmatically open the pondiverse dialog by calling the `openPondiverseDialog` function.
 
@@ -57,7 +61,7 @@ openPondiverseDialog(() => {
 
 <br />
 
-## Let people open creations in your tool
+<h2 id="tools">Let people open creations in your tool</h2>
 
 Add your tools to the <a href="https://github.com/TodePond/Pondiverse/blob/main/tools.js">list of tools</a>.
 
@@ -79,3 +83,10 @@ if (creationParam) {
   const creation = await fetchPondiverseCreation(creationParam);
 }
 ```
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
