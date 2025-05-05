@@ -2,18 +2,21 @@
 <title>Pondiverse - Explore</title>
 <link rel="stylesheet" href="/style.css" />
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Explore</h1>
-<header
-  id="view-source"
-  style="position: absolute; top: 0; right: 0; padding: 16px">
-  <a href="https://github.com/TodePond/Pondiverse" target="_blank"
-    >View source</a
-  >
+<header id="view-source" style="position: absolute; top: 0; right: 0; padding: 16px">
+  <a href="https://github.com/TodePond/Pondiverse" target="_blank">View source</a>
 </header>
-<header>
-  <p>Here are all the creations.</p>
+<header id="heading">
+  <p>Here are all the creations.</p> <button id="refresh-sign" class="secondary span">Loading...</button>
 </header>
 
-<main><p class="secondary loading">Loading...</p></main>
+<main>
+  <div id="creations-list">
+    <p class="secondary loading">Loading initial creations...</p>
+  </div>
+  <div id="load-more-container" style="text-align: center; padding: 20px; display: none;">
+    <button id="load-more-button">Load More</button>
+  </div>
+</main>
 
 <script type="module">
   import {
@@ -24,149 +27,336 @@
   import { instances } from "/instances.js";
 
   const main = document.querySelector("main");
+  const refreshSign = document.querySelector("#refresh-sign");
+  const heading = document.querySelector("#heading");
+  const creationsList = document.querySelector("#creations-list");
+  const loadMoreContainer = document.querySelector("#load-more-container");
+  const loadMoreButton = document.querySelector("#load-more-button");
 
   const CREATIONS_PER_PAGE = 10;
-  async function pullCreations() {
-    let allCreations = [];
+  let isInitialLoad = true;
+  let latestCreationTimestamp = 0;
+  let oldestDisplayedTimestamp = 0;
+  let isLoadingMore = false;
 
-    for (const instance of instances) {
-      let creations;
-      try {
-        creations = await fetchPondiverseCreations({ instance });
-      } catch (e) {
-        main.innerHTML = `<p class="danger">Error fetching creations.</p>`;
-        throw e;
-      }
-      allCreations.push(
-        ...creations.map((creation) => {
-          return {
-            ...creation,
-            instance,
-          };
-        })
-      );
-    }
-    allCreations = allCreations.sort((a, b) => {
-      return new Date(b.time) - new Date(a.time);
-    });
-    const head = allCreations.slice(0, CREATIONS_PER_PAGE);
-    const tail = allCreations.slice(CREATIONS_PER_PAGE);
-    renderMoreCreations({ head, tail });
+  let refreshTimeout;
+  let secondsLeft = 9;
+  const REFRESH_INTERVAL_SECONDS = 9;
+  const AUTO_REFRESH_LS_KEY = "pondiverseExploreAutoRefreshIncremental";
+  const LATEST_TIMESTAMP_LS_KEY = "pondiverseExploreLatestTimestamp";
+
+
+  function getLocalRefreshStatus() {
+    return localStorage.getItem(AUTO_REFRESH_LS_KEY) !== "false";
   }
 
+  function setLocalRefreshStatus(on) {
+    localStorage.setItem(AUTO_REFRESH_LS_KEY, on ? "true" : "false");
+  }
+
+  function loadLatestTimestamp() {
+    const storedTimestamp = localStorage.getItem(LATEST_TIMESTAMP_LS_KEY);
+    if (storedTimestamp) {
+      latestCreationTimestamp = parseInt(storedTimestamp, 10) || 0;
+    }
+  }
+
+  function saveLatestTimestamp(timestamp) {
+    if (timestamp > latestCreationTimestamp) {
+      latestCreationTimestamp = timestamp;
+      localStorage.setItem(LATEST_TIMESTAMP_LS_KEY, latestCreationTimestamp.toString());
+    }
+  }
+
+  function getRefreshStatus() {
+    return refreshTimeout !== undefined;
+  }
+
+  async function handleTimer() {
+    secondsLeft--;
+    if (secondsLeft <= 0) {
+      await pullCreations();
+      return;
+    }
+
+    if (getLocalRefreshStatus()) {
+      refreshSign.textContent = "Checking in " + secondsLeft;
+    } else {
+      refreshSign.textContent = "Auto-refresh paused";
+      clearTimeout(refreshTimeout);
+      refreshTimeout = undefined;
+      return;
+    }
+
+    if (refreshTimeout !== undefined) {
+      clearTimeout(refreshTimeout);
+    }
+    refreshTimeout = setTimeout(handleTimer, 1000);
+  }
+
+  function setRefreshStatus(on) {
+    setLocalRefreshStatus(on);
+    if (on) {
+      if (!getRefreshStatus()) {
+        secondsLeft = REFRESH_INTERVAL_SECONDS;
+        refreshSign.textContent = "Checking in " + secondsLeft;
+        if (refreshTimeout !== undefined) clearTimeout(refreshTimeout);
+        refreshTimeout = setTimeout(handleTimer, 1000);
+      }
+    } else {
+      refreshSign.textContent = "Auto-refresh paused";
+      if (getRefreshStatus()) {
+        clearTimeout(refreshTimeout);
+        refreshTimeout = undefined;
+      }
+    }
+  }
+
+  function toggleRefresh() {
+    const currentlyRefreshing = getLocalRefreshStatus();
+    setRefreshStatus(!currentlyRefreshing);
+    if (!currentlyRefreshing) {
+      pullCreations();
+    }
+  }
+
+  async function fetchAllSortedCreations() {
+    let allCreations = [];
+    try {
+      const fetchPromises = instances.map(instance =>
+        fetchPondiverseCreations({ instance })
+          .then(creations => creations.map(creation => ({ ...creation, instance, timestamp: new Date(creation.time).getTime() })))
+          .catch(e => {
+            console.error(`Error fetching from ${instance.name}:`, e);
+            return [];
+          })
+      );
+      const results = await Promise.all(fetchPromises);
+      allCreations = results.flat();
+      allCreations.sort((a, b) => b.timestamp - a.timestamp);
+    } catch (globalError) {
+      console.error("Error during creation fetch coordination:", globalError);
+      throw globalError;
+    }
+    return allCreations;
+  }
+
+
+  async function pullCreations() {
+    if (getLocalRefreshStatus() || isInitialLoad) {
+      refreshSign.textContent = isInitialLoad ? "Loading..." : "Checking...";
+    }
+
+    if (refreshTimeout !== undefined) {
+      clearTimeout(refreshTimeout);
+      refreshTimeout = undefined;
+    }
+    secondsLeft = REFRESH_INTERVAL_SECONDS;
+
+    let allCreations = [];
+    let fetchError = false;
+
+    try {
+      allCreations = await fetchAllSortedCreations();
+    } catch (e) {
+      fetchError = true;
+    }
+
+
+    if (isInitialLoad) {
+      const loadingIndicator = creationsList.querySelector('.loading');
+      if (loadingIndicator) loadingIndicator.remove();
+
+      const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE);
+
+      if (initialBatch.length > 0) {
+        renderCreations(initialBatch, 'initial');
+        saveLatestTimestamp(initialBatch[0].timestamp);
+        oldestDisplayedTimestamp = initialBatch[initialBatch.length - 1].timestamp;
+        if (allCreations.length > initialBatch.length) {
+          loadMoreContainer.style.display = 'flex';
+        } else {
+          loadMoreContainer.style.display = 'none';
+        }
+      } else if (!fetchError) {
+        creationsList.innerHTML += `<p class="secondary">No creations found yet.</p>`;
+        loadMoreContainer.style.display = 'none';
+      } else {
+        creationsList.innerHTML += `<p class="danger">Could not load initial creations. Please try again later.</p>`;
+        loadMoreContainer.style.display = 'none';
+      }
+      isInitialLoad = false;
+
+    } else {
+      const newCreations = allCreations.filter(c => c.timestamp > latestCreationTimestamp);
+
+      if (newCreations.length > 0) {
+        renderCreations(newCreations, 'prepend');
+        saveLatestTimestamp(newCreations[0].timestamp);
+        refreshSign.textContent = `Added ${newCreations.length} new`;
+        setTimeout(() => {
+          if (getLocalRefreshStatus()) {
+            refreshSign.textContent = "Checking in " + secondsLeft;
+          }
+        }, 2000);
+      } else {
+        if (getLocalRefreshStatus()) {
+          refreshSign.textContent = "Checking in " + secondsLeft;
+        }
+      }
+    }
+
+    if (getLocalRefreshStatus()) {
+      if (refreshTimeout === undefined) {
+        refreshTimeout = setTimeout(handleTimer, 1000);
+      }
+    } else {
+      refreshSign.textContent = "Auto-refresh paused";
+    }
+  }
+
+  async function loadMoreCreations() {
+    if (isLoadingMore) return;
+    isLoadingMore = true;
+    loadMoreButton.textContent = 'Loading...';
+    loadMoreButton.disabled = true;
+
+    let allCreations = [];
+    let fetchError = false;
+    try {
+      allCreations = await fetchAllSortedCreations();
+    } catch (e) {
+      fetchError = true;
+      console.error("Failed to fetch for load more:", e);
+      loadMoreButton.textContent = 'Error. Retry?';
+      loadMoreButton.disabled = false;
+      isLoadingMore = false;
+      return;
+    }
+
+    const olderCreations = allCreations.filter(c => c.timestamp < oldestDisplayedTimestamp);
+
+    const nextBatch = olderCreations.slice(0, CREATIONS_PER_PAGE);
+
+    if (nextBatch.length > 0) {
+      renderCreations(nextBatch, 'append');
+      oldestDisplayedTimestamp = nextBatch[nextBatch.length - 1].timestamp;
+      if (olderCreations.length > nextBatch.length) {
+        loadMoreContainer.style.display = 'block';
+        loadMoreButton.textContent = 'Load More';
+        loadMoreButton.disabled = false;
+      } else {
+        loadMoreContainer.style.display = 'none';
+      }
+    } else {
+      loadMoreContainer.style.display = 'none';
+    }
+
+    isLoadingMore = false;
+    if (loadMoreContainer.style.display === 'block') {
+      loadMoreButton.textContent = 'Load More';
+      loadMoreButton.disabled = false;
+    }
+  }
+
+
   function getTimeSince(timestamp) {
-    const now = new Date();
-    const past = new Date(timestamp);
-    const diffInMilliseconds = now.getTime() - past.getTime();
+    const now = Date.now();
+    const past = timestamp;
+    const diffInMilliseconds = now - past;
+    if (diffInMilliseconds < 0) return "just now";
     const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     const diffInHours = Math.floor(diffInMinutes / 60);
-
-    if (diffInHours > 0) {
-      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
-    } else if (diffInMinutes > 0) {
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-    } else {
-      return `${diffInSeconds} second${diffInSeconds > 1 ? "s" : ""} ago`;
-    }
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays > 0) return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+    if (diffInHours > 0) return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+    if (diffInMinutes > 0) return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
+    return `${diffInSeconds <= 1 ? '1 second' : diffInSeconds + ' seconds'} ago`;
   }
 
-  function renderMoreCreations({ head, tail }) {
-    if (head.length === 0) {
-      main.innerHTML += `<p class="secondary">
-          No more creations yet.
-          <a href="/create/">Create one yourself?</a>
-        </p>`;
-    }
+  function renderCreations(creationsToRender, mode) {
+    if (creationsToRender.length === 0) return;
 
-    let creations = head;
+    const fragment = document.createDocumentFragment();
 
-    const loading = main.querySelector(".loading");
-    if (loading) {
-      loading.remove();
-    }
-
-    // creations = creations.sort((a, b) => {
-    //   return new Date(b.time) - new Date(a.time);
-    // });
-
-    const creationElements = creations.map((creation) => {
+    creationsToRender.forEach((creation) => {
       let prettyData = "";
       try {
-        prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
+        if (creation.data && typeof creation.data === 'string' && (creation.data.trim().startsWith('{') || creation.data.trim().startsWith('['))) {
+          prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
+        } else {
+          prettyData = creation.data || "";
+        }
       } catch (e) {
-        prettyData = creation.data;
+        prettyData = creation.data || "";
       }
-
-      const imageUrl = getPondiverseCreationImageUrl(creation, {
-        instance: creation.instance,
-      });
-
+      const escapedPrettyData = prettyData.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const imageUrl = getPondiverseCreationImageUrl(creation, { instance: creation.instance });
       const compatibleTools = tools.map((tool) => {
-        if (tool.types.includes("*")) return {tool, match: "wild"}
-        if (tool.types.includes(creation.type)) return {tool, match: "exact"}
-      }).filter(v=>v)
-
+        if (tool.types.includes("*")) return { tool, match: "wild" }
+        if (tool.types.includes(creation.type)) return { tool, match: "exact" }
+      }).filter(v => v)
       const canOpen = compatibleTools.length > 0;
-      const choices = compatibleTools.map(v=>{
-        return `<a href="${v.tool.url}${creation.instance.getCreation}${creation.id}" class="${v.match === "wild"?"secondary":"primary"}" target="_blank">${v.tool.name}</a>`
+      const choices = compatibleTools.map(v => {
+        return `<a href="${v.tool.url}${creation.instance.getCreation}${creation.id}" class="${v.match === "wild" ? "secondary" : "primary"}" target="_blank">${v.tool.name}</a>`
       }).join(" or ")
-
-      
       const openInSection = canOpen
         ? `<p>Open in ${choices}</p>`
         : ``;
+      const detailsSection = creation.data ? `<details><summary>show data</summary><pre class="data-preview"><code>${escapedPrettyData}</code></pre></details>` : "";
+      const timeSince = getTimeSince(creation.timestamp);
+      const from = creation.instance.home ? `<a class="tertiary" href="${creation.instance.home}" target="_blank" rel="noopener noreferrer">${creation.instance.name}</a>` : creation.instance.name;
 
-      const detailsSection = creation.data
-        ? `
-          <details>
-            <summary>show data</summary>
-            <pre class="data-preview"><code>${prettyData}</code></pre>
-          </details>
-        `
-        : "";
-
-      const timeSince = getTimeSince(creation.time);
-
-      const from = creation.instance.home
-        ? `<a class="tertiary" href="${creation.instance.home}">${creation.instance.name}</a>`
-        : creation.instance.name;
-      return `
-        <div class="creation" id="c${creation.id}">
-          <h2>${creation.title}, ${creation.type}</h2>
+      const div = document.createElement('div');
+      div.className = 'creation';
+      div.id = `c${creation.id}`;
+      div.innerHTML = `
+          <h2>${creation.title || 'Untitled'}, ${creation.type || 'Unknown Type'}</h2>
           ${openInSection}
-          ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title}" />` : ""}
+          ${imageUrl ? `<img src="${imageUrl}" alt="${creation.title || 'Creation image'}" loading="lazy" />` : ""}
           ${detailsSection}
           <p class="secondary">From ${from}, about ${timeSince}</p>
-        </div>
-      `;
+        `;
+
+      if (imageUrl) {
+        const img = div.querySelector('img');
+        if (img) {
+          img.onerror = () => {
+            console.warn(`Failed to load image: ${img.src}`);
+            img.remove();
+          };
+        }
+      }
+      fragment.appendChild(div);
     });
-    main.innerHTML += creationElements.join("");
 
-    for (const creation of creations) {
-      const img = document.querySelector(`#c${creation.id} img`);
-      if (img) img.onerror = () => img.remove();
-    }
-
-    const areThereMorePages = tail.length > 0;
-    if (areThereMorePages) {
-      const button = document.createElement("button");
-      const br = document.createElement("br");
-      button.innerText = "Load more";
-      button.onclick = async () => {
-        button.innerText = "Loading...";
-        button.disabled = true;
-        button.style.cursor = "not-allowed";
-        const _head = tail.slice(0, CREATIONS_PER_PAGE);
-        const _tail = tail.slice(CREATIONS_PER_PAGE);
-        button.remove();
-        br.remove();
-        renderMoreCreations({ head: _head, tail: _tail });
-      };
-      main.appendChild(br);
-      main.appendChild(button);
+    if (mode === 'initial' || mode === 'append') {
+      creationsList.appendChild(fragment);
+    } else if (mode === 'prepend') {
+      creationsList.prepend(fragment);
     }
   }
 
-  pullCreations();
+
+  refreshSign.addEventListener("click", toggleRefresh);
+  loadMoreButton.addEventListener("click", loadMoreCreations);
+
+  loadLatestTimestamp();
+
+  if (!getLocalRefreshStatus()) {
+    refreshSign.textContent = "Auto-refresh paused";
+    isInitialLoad = false;
+    const loadingIndicator = creationsList.querySelector('.loading');
+    if (loadingIndicator) loadingIndicator.remove();
+    if (creationsList.children.length <= 1 && creationsList.querySelector('.loading')) {
+      creationsList.removeChild(creationsList.querySelector('.loading'));
+      creationsList.innerHTML += `<p class="secondary">Auto-refresh is paused. <a href="#" onclick="document.getElementById('refresh-sign').click(); return false;">Click here</a> to load and enable.</p>`;
+    }
+    loadMoreContainer.style.display = 'none';
+
+  } else {
+    pullCreations();
+  }
+
 </script>
