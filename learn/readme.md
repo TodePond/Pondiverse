@@ -9,15 +9,15 @@
 
 This page contains guides on how to build things for the pondiverse.
 
-For full reference of the pondiverse script, read the [reference](/reference/).\
-For an example of a pondiverse tool, check out the basic [tool](/tool/).
-
 - [Connect your tool to the pondiverse](#connect)
 - [Let people open creations in your tool](#tools)
 - [Programmatically open the pondiverse dialog](#open)
 - [Create your own client](#client)
 - [Using other stores](#stores)
 - [Using your own store](#store)
+
+For full reference of the pondiverse script, read the [reference](/reference/).\
+For an example of a pondiverse tool, check out the basic [tool](/tool/).
 
 <h2 id="connect">Connect your tool to the pondiverse</h2>
 
