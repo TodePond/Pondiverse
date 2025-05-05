@@ -16,8 +16,8 @@ For full reference of the pondiverse script, read the [reference](/reference/).\
 For an example of a pondiverse tool, check out the basic [tool](/tool/).
 
 - [Connect your tool to the pondiverse](#connect)
-- [Programmatically open the pondiverse dialog](#open)
 - [Let people open creations in your tool](#tools)
+- [Programmatically open the pondiverse dialog](#open)
 
 <h2 id="connect">Connect your tool to the pondiverse</h2>
 
@@ -43,33 +43,15 @@ It takes one function as an argument. The function should return an object with 
 
 <br>
 
-<h2 id="open">Programmatically open the pondiverse dialog</h2>
-
-You can programmatically open the pondiverse dialog by calling the `openPondiverseDialog` function.
-
-```js
-import { openPondiverseDialog } from "https://www.pondiverse.com/pondiverse.js";
-
-openPondiverseDialog(() => {
-  return {
-    type: "example",
-    data: "example data",
-    image: canvas?.toDataURL("image/png"),
-  };
-});
-```
-
-<br />
-
 <h2 id="tools">Let people open creations in your tool</h2>
 
-Add your tools to the <a href="https://github.com/TodePond/Pondiverse/blob/main/tools.js">list of tools</a>.
+Add your tools to the [list of tools](https://github.com/TodePond/Pondiverse/blob/main/tools.js).
 
 ```js
 {
   name: "Example tool",
   types: ["example"],
-  url: "https://example.com/tool?id=",
+  url: "https://example.com/?id=",
 }
 ```
 
@@ -82,6 +64,24 @@ const creationParam = new URL(window.location).searchParams.get("id");
 if (creationParam) {
   const creation = await fetchPondiverseCreation(creationParam);
 }
+```
+
+<br />
+
+<h2 id="open">Programmatically open the pondiverse dialog</h2>
+
+You can programmatically open the pondiverse dialog by calling the `openPondiverseDialog` function. This is useful if you don't want to use the default button.
+
+```js
+import { openPondiverseDialog } from "https://www.pondiverse.com/pondiverse.js";
+
+openPondiverseDialog(() => {
+  return {
+    type: "example",
+    data: "example data",
+    image: canvas?.toDataURL("image/png"),
+  };
+});
 ```
 
 <br />
