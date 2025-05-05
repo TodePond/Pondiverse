@@ -1,6 +1,3 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pondiverse - Reference</title>
-<link rel="stylesheet" href="/style.css" />
 <header
   id="view-source"
   style="position: absolute; top: 0; right: 0; padding: 16px">
