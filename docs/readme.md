@@ -13,6 +13,9 @@
 
 This page lists all of the functions that are available to use from the pondiverse script.
 
+For guides, go to the <a href="/learn">learn</a> page.\
+For an example tool, look at the basic <a href="/tool">tool</a> page.
+
 ## `addPondiverseButton(getCreation, { instance? })`
 
 Add the pondiverse button to your tool.
