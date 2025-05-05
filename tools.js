@@ -64,4 +64,9 @@ export const tools = [
     types: ["talise"],
     url: "https://ernestum.net/talise/?id=",
   },
+  {
+    name: "meme",
+    types: ["*"],
+    url: "https://pondmemes.cthulahoops.org/?creation=",
+  },
 ];
