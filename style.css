@@ -556,11 +556,15 @@ button.selected {
   max-width: 90%;
   max-height: 90%;
   object-fit: contain;
-  cursor: default;
+  cursor: zoom-in;
   transition: transform 0.2s ease-in-out;
 }
 
 #lightbox-image.zoomed {
   transform: scale(1.5);
   cursor: zoom-out;
+}
+
+.creation-image {
+  cursor: pointer;
 }
