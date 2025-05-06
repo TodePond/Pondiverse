@@ -394,18 +394,8 @@
 
   if (!getLocalRefreshStatus()) {
     refreshSign.textContent = "Auto-refresh paused";
-    isInitialLoad = false;
-    const loadingIndicator = creationsList.querySelector(".loading");
-    if (loadingIndicator) loadingIndicator.remove();
-    if (
-      creationsList.children.length <= 1 &&
-      creationsList.querySelector(".loading")
-    ) {
-      creationsList.removeChild(creationsList.querySelector(".loading"));
-      creationsList.innerHTML += `<p class="secondary">Auto-refresh is paused. <a href="#" onclick="document.getElementById('refresh-sign').click(); return false;">Click here</a> to load and enable.</p>`;
-    }
-    loadMoreContainer.style.display = "none";
-  } else {
-    pullCreations();
   }
+
+  pullCreations();
+
 </script>
