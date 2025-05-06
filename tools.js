@@ -72,4 +72,12 @@ export const tools = [
       create: null,
     },
   },
+  {
+    name: "gamify",
+    types: ["collapse"], // Eventually "*", but for the moment...
+    urls: {
+      open: "https://gamify.cthulahoops.org/?creation=",
+      create: null,
+    },
+  },
 ];
