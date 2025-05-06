@@ -534,7 +534,7 @@ button.selected {
 }
 
 .lightbox-hidden {
-  display: none;
+  display: none !important;
 }
 
 #image-lightbox {
