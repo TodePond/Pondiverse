@@ -532,3 +532,39 @@ button.selected {
   color: var(--shade-3);
   outline: 2px solid var(--best-colour);
 }
+
+.lightbox-hidden {
+  display: none !important;
+}
+
+#image-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#lightbox-image {
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  cursor: zoom-in;
+  transition: transform 0.2s ease-in-out;
+}
+
+#lightbox-image.zoomed {
+  transform: scale(1.5);
+  cursor: zoom-out;
+}
+
+.creation-image {
+  cursor: pointer;
+}

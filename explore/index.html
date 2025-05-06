@@ -2,12 +2,8 @@
 <title>Pondiverse - Explore</title>
 <link rel="stylesheet" href="/style.css" />
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Explore</h1>
-<header
-  id="view-source"
-  style="position: absolute; top: 0; right: 0; padding: 16px">
-  <a href="https://github.com/TodePond/Pondiverse" target="_blank"
-    >View source</a
-  >
+<header id="view-source" style="position: absolute; top: 0; right: 0; padding: 16px">
+  <a href="https://github.com/TodePond/Pondiverse" target="_blank">View source</a>
 </header>
 <header id="heading">
   <p>Here are all the creations.</p>
@@ -18,12 +14,14 @@
   <div id="creations-list">
     <p class="secondary loading"></p>
   </div>
-  <div
-    id="load-more-container"
-    style="text-align: center; padding: 20px; display: none">
+  <div id="load-more-container" style="text-align: center; padding: 20px; display: none">
     <button id="load-more-button">Load More</button>
   </div>
 </main>
+
+<div id="image-lightbox" class="lightbox-hidden">
+  <img id="lightbox-image" src="" alt="Enlarged creation">
+</div>
 
 <script type="module">
   import {
@@ -39,6 +37,9 @@
   const creationsList = document.querySelector("#creations-list");
   const loadMoreContainer = document.querySelector("#load-more-container");
   const loadMoreButton = document.querySelector("#load-more-button");
+
+  const imageLightbox = document.getElementById('image-lightbox');
+  const lightboxImage = document.getElementById('lightbox-image');
 
   const CREATIONS_PER_PAGE = 10;
   let isInitialLoad = true;
@@ -291,9 +292,8 @@
       return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
     if (diffInMinutes > 0)
       return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-    return `${
-      diffInSeconds <= 1 ? "1 second" : diffInSeconds + " seconds"
-    } ago`;
+    return `${diffInSeconds <= 1 ? "1 second" : diffInSeconds + " seconds"
+      } ago`;
   }
 
   function renderCreations(creationsToRender, mode) {
@@ -333,11 +333,9 @@
       const canOpen = compatibleTools.length > 0;
       const choices = compatibleTools
         .map((v) => {
-          return `<a href="${v.tool.url}${creation.instance.getCreation}${
-            creation.id
-          }" class="${
-            v.match === "wild" ? "secondary" : "primary"
-          }" target="_blank">${v.tool.name}</a>`;
+          return `<a href="${v.tool.url}${creation.instance.getCreation}${creation.id
+            }" class="${v.match === "wild" ? "secondary" : "primary"
+            }" target="_blank">${v.tool.name}</a>`;
         })
         .join(" or ");
       const openInSection = canOpen ? `<p>Open in ${choices}</p>` : ``;
@@ -357,13 +355,11 @@
       div.innerHTML = `
           <h2>${creation.title}, ${creation.type}</h2>
           ${openInSection}
-          ${
-            imageUrl
-              ? `<img src="${imageUrl}" alt="${
-                  creation.title || "Creation image"
-                }" loading="lazy" />`
-              : ""
-          }
+          ${imageUrl
+          ? `<img class="creation-image" src="${imageUrl}" alt="${creation.title || "Creation image"
+          }" loading="lazy" />`
+          : ""
+        }
           ${detailsSection}
           <p class="secondary">From ${from}, about ${timeSince}</p>
         `;
@@ -387,9 +383,50 @@
     }
   }
 
+  function showLightbox(src) {
+    lightboxImage.src = src;
+    lightboxImage.classList.remove('zoomed');
+    imageLightbox.classList.remove('lightbox-hidden');
+    document.addEventListener('keydown', handleEscapeKey);
+    imageLightbox.addEventListener('click', handleLightboxClick);
+    lightboxImage.addEventListener('click', handleLightboxImageClick);
+  }
+
+  function hideLightbox() {
+    imageLightbox.classList.add('lightbox-hidden');
+    lightboxImage.src = '';
+    document.removeEventListener('keydown', handleEscapeKey);
+    imageLightbox.removeEventListener('click', handleLightboxClick);
+    lightboxImage.removeEventListener('click', handleLightboxImageClick);
+  }
+
+  function handleEscapeKey(event) {
+    if (event.key === 'Escape') {
+      hideLightbox();
+    }
+  }
+
+  function handleLightboxClick(event) {
+    if (event.target === imageLightbox) {
+      hideLightbox();
+    }
+  }
+
+  function handleLightboxImageClick(event) {
+    event.stopPropagation();
+    lightboxImage.classList.toggle('zoomed');
+  }
+
   refreshSign.addEventListener("click", toggleRefresh);
   loadMoreButton.addEventListener("click", loadMoreCreations);
 
+  creationsList.addEventListener('click', (event) => {
+    if (event.target.tagName === 'IMG' && event.target.classList.contains('creation-image')) {
+      showLightbox(event.target.src);
+    }
+  });
+
+  hideLightbox()
   loadLatestTimestamp();
 
   if (!getLocalRefreshStatus()) {
