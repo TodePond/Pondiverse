@@ -356,7 +356,7 @@
           <h2>${creation.title}, ${creation.type}</h2>
           ${openInSection}
           ${imageUrl
-          ? `<img src="${imageUrl}" alt="${creation.title || "Creation image"
+          ? `<img class="creation-image" src="${imageUrl}" alt="${creation.title || "Creation image"
           }" loading="lazy" />`
           : ""
         }
@@ -394,7 +394,7 @@
 
   function hideLightbox() {
     imageLightbox.classList.add('lightbox-hidden');
-    lightboxImage.src = ''; // Clear src
+    lightboxImage.src = '';
     document.removeEventListener('keydown', handleEscapeKey);
     imageLightbox.removeEventListener('click', handleLightboxClick);
     lightboxImage.removeEventListener('click', handleLightboxImageClick);
@@ -421,9 +421,9 @@
   loadMoreButton.addEventListener("click", loadMoreCreations);
 
   creationsList.addEventListener('click', (event) => {
-      if (event.target.tagName === 'IMG' && event.target.classList.contains('creation-image')) {
-          showLightbox(event.target.src);
-      }
+    if (event.target.tagName === 'IMG' && event.target.classList.contains('creation-image')) {
+      showLightbox(event.target.src);
+    }
   });
 
   hideLightbox()
