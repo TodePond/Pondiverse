@@ -302,12 +302,6 @@
     const fragment = document.createDocumentFragment();
 
     creationsToRender.forEach((creation) => {
-      // check if deleted by mods
-      if (creation.title === "Creation deleted by moderator") {
-        // console.log(`skipping render for deleted creation ID: ${creation.id}`);
-        return;
-      }
-
       let prettyData = "";
       try {
         if (
@@ -339,10 +333,9 @@
       const canOpen = compatibleTools.length > 0;
       const choices = compatibleTools
         .map((v) => {
-          const toolUrl = v.tool.url.endsWith('/') ? v.tool.url : v.tool.url + '/';
-          const creationPath = creation.instance.getCreation ? creation.instance.getCreation : '';
-          const targetUrl = `${toolUrl}${creationPath}${creation.id}`;
-          return `<a href="${targetUrl}" class="${v.match === "wild" ? "secondary" : "primary"}" target="_blank">${v.tool.name}</a>`;
+          return `<a href="${v.tool.url}${creation.instance.getCreation}${creation.id
+            }" class="${v.match === "wild" ? "secondary" : "primary"
+            }" target="_blank">${v.tool.name}</a>`;
         })
         .join(" or ");
       const openInSection = canOpen ? `<p>Open in ${choices}</p>` : ``;
