@@ -25,6 +25,10 @@
     const buttons = document.getElementById("linkButtons");
 
     for (const tool of tools) {
+      const url = tools.urls ? tools.urls.create : tool.url;
+      if (!url) {
+        continue;
+      }
       buttons.innerHTML += ` <a href=${tool.url} class="button secondary">${tool.name}</a> `;
     }
   </script>

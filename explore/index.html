@@ -333,7 +333,7 @@
       const canOpen = compatibleTools.length > 0;
       const choices = compatibleTools
         .map((v) => {
-          return `<a href="${v.tool.url}${creation.instance.getCreation}${creation.id
+          return `<a href="${v.tool.urls?.open ?? v.tool.url}${creation.instance.getCreation}${creation.id
             }" class="${v.match === "wild" ? "secondary" : "primary"
             }" target="_blank">${v.tool.name}</a>`;
         })

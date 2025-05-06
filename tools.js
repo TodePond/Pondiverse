@@ -67,6 +67,9 @@ export const tools = [
   {
     name: "meme",
     types: ["*"],
-    url: "https://pondmemes.cthulahoops.org/?creation=",
+    urls: {
+      open: "https://pondmemes.cthulahoops.org/?creation=",
+      create: null,
+    },
   },
 ];
