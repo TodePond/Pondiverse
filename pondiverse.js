@@ -129,12 +129,11 @@ const PONDIVERSE_BUTTON_STYLE = `
 // FETCH PONDIVERSE CREATIONS //
 //============================//
 // For getting a list of all creations
-export async function fetchPondiverseCreations({
-  store = DEFAULT_STORE,
-} = {}) {
+export async function fetchPondiverseCreations({ store = DEFAULT_STORE } = {}) {
   const response = await fetch(store.getCreations);
   const json = await response.json();
-  return json.rows ?? json.items;
+  const creations = json.rows ?? json.items;
+  return creations.map((creation) => ({ ...creation, store }));
 }
 
 //===========================//

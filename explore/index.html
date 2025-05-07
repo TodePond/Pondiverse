@@ -67,6 +67,14 @@
         border-radius: 8px
       `;
 
+      const exactTools = tools.filter((tool) => {
+        return tool.types.includes(creation.type) && tool.open;
+      });
+
+      const wildcardTools = tools.filter((tool) => {
+        return tool.types.includes("*") && tool.open;
+      });
+
       card.innerHTML = `
         <h3>${creation.title}</h3>
         <p>${creation.type}</p>
@@ -74,6 +82,19 @@
           style="max-width: 100%; background-color: black"
           src="${getPondiverseCreationImageUrl(creation)}" />
       `;
+
+      const compatibleTools = [...exactTools, ...wildcardTools];
+
+      if (compatibleTools.length > 0) {
+        const ul = document.createElement("ul");
+        for (const tool of compatibleTools) {
+          const li = document.createElement("li");
+          li.innerHTML = `open in <a href="${tool.open}${creation.store.getCreation}${creation.id}" target="_blank" rel="noopener noreferrer">${tool.name}</a>`;
+          ul.appendChild(li);
+        }
+        card.appendChild(ul);
+      }
+
       article.appendChild(card);
     }
 
