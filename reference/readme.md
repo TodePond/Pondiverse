@@ -15,7 +15,7 @@ For an example tool, look at the basic <a href="/tool">tool</a> page.
 
 <br />
 
-## `addPondiverseButton(getCreation, { instance? })`
+## `addPondiverseButton(getCreation, { store? })`
 
 Add the pondiverse button to your tool.
 
@@ -37,11 +37,11 @@ addPondiverseButton(() => {
   - `type` - A string identifying what type of creation this is. This can be anything.
   - `data` - A string containing the data for the creation. This can be anything.
   - `image` - A string containing a base64 encoded image. This can be anything.
-- `instance` - The instance to publish the creation to. Defaults to the todepondiverse.
+- `store` - The store to publish the creation to. Defaults to the todepondiverse.
 
 <br />
 
-## `openPondiverseDialog(getCreation, { instance? })`
+## `openPondiverseDialog(getCreation, { store? })`
 
 Programmatically open the pondiverse dialog.
 
@@ -63,13 +63,13 @@ openPondiverseDialog(() => {
   - `type` - A string identifying what type of creation this is. This can be anything.
   - `data` - A string containing the data for the creation. This can be anything.
   - `image` - A string containing a base64 encoded image. This can be anything.
-- `instance` - The instance to publish the creation to. Defaults to the todepondiverse.
+- `store` - The store to publish the creation to. Defaults to the todepondiverse.
 
 <br />
 
-## `fetchPondiverseCreations({ instance? })`
+## `fetchPondiverseCreations({ store? })`
 
-Fetch all creations from an instance.
+Fetch all creations from an store.
 
 ```js
 import { fetchPondiverseCreations } from "https://www.pondiverse.com/pondiverse.js";
@@ -77,11 +77,11 @@ import { fetchPondiverseCreations } from "https://www.pondiverse.com/pondiverse.
 const creations = await fetchPondiverseCreations();
 ```
 
-- `instance` - The instance to fetch creations from. Defaults to the todepondiverse.
+- `store` - The store to fetch creations from. Defaults to the todepondiverse.
 
 <br />
 
-## `fetchPondiverseCreation(creation, { instance? })`
+## `fetchPondiverseCreation(creation, { store? })`
 
 Fetch a single creation.
 
@@ -101,11 +101,11 @@ const creation = await fetchPondiverseCreation(
 ```
 
 - `creation` - The ID or the URL of a creation.
-- `instance` - The instance to fetch the creation from. Defaults to the todepondiverse.
+- `store` - The store to fetch the creation from. Defaults to the todepondiverse.
 
 <br />
 
-## `deletePondiverseCreation(creation, { password?, instance? })`
+## `deletePondiverseCreation(creation, { password?, store? })`
 
 Delete a creation.
 
@@ -118,12 +118,12 @@ await deletePondiverseCreation(123, {
 ```
 
 - `creation` - The ID of the creation to delete.
-- `password` - The admin password of the instance. This is required on some instances.
-- `instance` - The instance to delete the creation from. Defaults to the todepondiverse.
+- `password` - The admin password of the store. This is required on some stores.
+- `store` - The store to delete the creation from. Defaults to the todepondiverse.
 
 <br />
 
-## `getPondiverseCreationImage(creation, { instance? })`
+## `getPondiverseCreationImage(creation, { store? })`
 
 Get the image URL of a creation. This will eventually be deprecated, when the URL of a creation's image will be returned within `fetchPondiverseCreation` and `fetchPondiverseCreations`.
 
@@ -135,18 +135,18 @@ const imageUrl = getPondiverseCreationImage(creation);
 ```
 
 - `creation` - The ID of the creation to get the image for.
-- `instance` - The instance to get the image from. Defaults to the todepondiverse.
+- `store` - The store to get the image from. Defaults to the todepondiverse.
 
 <br />
 
-## Instance
+## Store
 
-Most functions have an optional `instance` option. This determines the instance to use when publishing and fetching creations. If not specified, it defaults to the [todepondiverse](https://todepond.com/todepondiverse).
+Most functions have an optional `store` option. This determines the store to use when publishing and fetching creations. If not specified, it defaults to the [todepondiverse](https://todepond.com/todepondiverse).
 
-The instance option is an object with the following properties. All are optional.
+The store option is an object with the following properties. All are optional.
 
-- `name` - The name of the instance. Used in user interfaces.
-- `home` - The URL of the home page of the instance (if one exists).
+- `name` - The name of the store. Used in user interfaces.
+- `home` - The URL of the home page of the store (if one exists).
 - `addCreation` - The endpoint used to add new creations. It sends a POST request to this, with its body containing the creation's info.
 - `getCreation` - The endpoint used to get an individual creation. It sends a GET request to this, appending the ID of the creation to the URL.
 - `getCreationsImage` - The endpoint used to get the image of a creation. It sends a GET request to this, appending the ID of the creation to the URL.

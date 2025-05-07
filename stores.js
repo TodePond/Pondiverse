@@ -1,4 +1,4 @@
-export const instances = [
+export const stores = [
   {
     name: "todepondiverse",
     home: "https://todepond.com/pondiverse/",
@@ -16,7 +16,7 @@ export const instances = [
     getCreations: "https://api.iliazeus.lol/puddle/creations",
   },
   {
-    // elouan.xyz's instance, currently just a fork of the todepondiverse store but i will add stuff later
+    // elouan.xyz's store, currently just a fork of the todepondiverse store but i will add stuff later
     name: "oceaniverse",
     home: "https://oceaniverse.elouan.xyz",
     addCreation: "https://theoceaniverse.val.run/add-creation",

@@ -102,14 +102,14 @@ const creations = await fetchPondiverseCreations();
 
 <h2 id="stores">Using other stores</h2>
 
-By default, the pondiverse stores creations in the [todepondiverse](https://todepond.com/pondiverse) store. Your client or tool can use other stores too. You can specify this by using the `instance` option. (This will eventually be renamed to `store`.)
+By default, the pondiverse stores creations in the [todepondiverse](https://todepond.com/pondiverse) store. Your client or tool can use other stores too. You can specify this by using the `store` option. (This will eventually be renamed to `store`.)
 
 This example shows how to use the [puddle](https://iliazeus.lol/puddle/) store.
 
 ```js
 import { fetchPondiverseCreations } from "https://www.pondiverse.com/pondiverse.js";
 
-const instance = {
+const store = {
   name: "puddle",
   home: "https://iliazeus.lol/puddle/",
   addCreation: "https://api.iliazeus.lol/puddle/creations",
@@ -117,7 +117,7 @@ const instance = {
   getCreations: "https://api.iliazeus.lol/puddle/creations",
 };
 
-const creations = await fetchPondiverseCreations({ instance });
+const creations = await fetchPondiverseCreations({ store });
 ```
 
 <h2 id="store">Using your own store</h2>

@@ -1,5 +1,5 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pondiverse - Instances</title>
+<title>Pondiverse - Stores</title>
 <link rel="stylesheet" href="/style.css" />
 <header
   id="view-source"
@@ -9,27 +9,27 @@
   </a>
 </header>
 
-<h1><a href="/" class="breadcrumb">Pondiverse</a> - Instances</h1>
+<h1><a href="/" class="breadcrumb">Pondiverse</a> - Stores</h1>
 
 <header>
   <p>
     To post something to the pondiverse, use one of these
-    instances or <a href="https://pondiverse.com/reference">make your own</a>.
+    stores or <a href="https://pondiverse.com/reference">make your own</a>.
   </p>
 </header>
 
 <main>
   <script type="module">
-    import { instances } from "../instances.js";
+    import { stores } from "../stores.js";
 
     const buttons = document.getElementById("linkButtons");
 
-    for (const instance of instances) {
-      const url = instance.home;
+    for (const store of stores) {
+      const url = store.home;
       if (!url) {
         continue;
       }
-      buttons.innerHTML += ` <a href=${tool.url} class="button secondary">${instance.name}</a> `;
+      buttons.innerHTML += ` <a href=${store.home} class="button secondary">${store.name}</a> `;
     }
   </script>
   <!-- bad code only ^^ -->

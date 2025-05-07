@@ -18,7 +18,7 @@
 <script type="module">
   export async function updateDatabase() {
     const response = await fetch(
-      new URL("/update-table", PONDIVERSE_INSTANCE_URL),
+      new URL("/update-table", PONDIVERSE_STORE_URL),
       {
         method: "POST",
       }

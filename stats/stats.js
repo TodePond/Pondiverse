@@ -1,14 +1,14 @@
 import { tools } from "/tools.js";
-import { instances } from "/instances.js";
+import { stores } from "/stores.js";
 import { fetchPondiverseCreations } from "/pondiverse.js";
 
 const TOOLS_COUNT_LS_KEY = "pondiverseHomepageToolsCount";
-const INSTANCES_COUNT_LS_KEY = "pondiverseHomepageInstancesCount";
+const STORE_COUNT_LS_KEY = "pondiverseHomepageStoreCount";
 const CREATIONS_COUNT_LS_KEY = "pondiverseHomepageCreationsCount";
 const UNIQUE_TYPES_COUNT_LS_KEY = "pondiverseHomepageUniqueTypesCount";
 
 const toolsCountElement = document.getElementById("tools-count");
-const instancesCountElement = document.getElementById("instances-count");
+const storeCountElement = document.getElementById("store-count");
 const creationsCountElement = document.getElementById("creations-count");
 const uniqueTypesCountElement = document.getElementById("unique-types-count");
 
@@ -18,10 +18,10 @@ function loadCachedCounts() {
         if (cachedTools) toolsCountElement.textContent = cachedTools;
     }
 
-    if (instancesCountElement) {
-        const cachedInstances = localStorage.getItem(INSTANCES_COUNT_LS_KEY);
-        if (cachedInstances)
-            instancesCountElement.textContent = cachedInstances;
+    if (storeCountElement) {
+        const cachedStores = localStorage.getItem(STORE_COUNT_LS_KEY);
+        if (cachedStores)
+            storeCountElement.textContent = cachedStores;
     }
 
     if (creationsCountElement) {
@@ -55,22 +55,22 @@ async function updateLiveCounts() {
         toolsCountElement.textContent = "Error";
     }
 
-    if (instances && instancesCountElement) {
-        const liveInstancesCount = instances.length;
-        instancesCountElement.textContent = liveInstancesCount;
+    if (stores && storeCountElement) {
+        const liveStoreCount = stores.length;
+        storeCountElement.textContent = liveStoreCount;
         try {
             localStorage.setItem(
-                INSTANCES_COUNT_LS_KEY,
-                liveInstancesCount.toString()
+                STORE_COUNT_LS_KEY,
+                liveStoreCount.toString()
             );
         } catch (e) {
             console.warn("not saved to ls:", e);
         }
     } else if (
-        instancesCountElement &&
-        !localStorage.getItem(INSTANCES_COUNT_LS_KEY)
+        storeCountElement &&
+        !localStorage.getItem(STORE_COUNT_LS_KEY)
     ) {
-        instancesCountElement.textContent = "error";
+        storeCountElement.textContent = "error";
     }
 
     if (
@@ -90,15 +90,15 @@ async function updateLiveCounts() {
     let totalLiveCreations = 0;
     let fetchErrors = 0;
 
-    if (instances) {
-        const creationPromises = instances.map(async (instance) => {
+    if (stores) {
+        const creationPromises = stores.map(async (store) => {
             try {
-                const creations = await fetchPondiverseCreations({ instance });
+                const creations = await fetchPondiverseCreations({ store });
                 allFetchedCreations.push(...creations);
                 return creations.length;
             } catch (e) {
                 console.error(
-                    `Error fetching creations from ${instance.name} for live update:`,
+                    `Error fetching creations from ${store.name} for live update:`,
                     e
                 );
                 fetchErrors++;
@@ -107,14 +107,14 @@ async function updateLiveCounts() {
         });
 
         try {
-            const countsPerInstance = await Promise.all(creationPromises);
-            totalLiveCreations = countsPerInstance.reduce(
+            const countsPerStore = await Promise.all(creationPromises);
+            totalLiveCreations = countsPerStore.reduce(
                 (sum, count) => sum + count,
                 0
             );
 
             if (creationsCountElement) {
-                if (fetchErrors === instances.length && instances.length > 0) {
+                if (fetchErrors === stores.length && stores.length > 0) {
                     const cachedCreations = localStorage.getItem(
                         CREATIONS_COUNT_LS_KEY
                     );
@@ -137,7 +137,7 @@ async function updateLiveCounts() {
             }
 
             if (uniqueTypesCountElement) {
-                if (fetchErrors < instances.length || totalLiveCreations > 0) {
+                if (fetchErrors < stores.length || totalLiveCreations > 0) {
                     const uniqueTypes = new Set();
                     allFetchedCreations.forEach((creation) => {
                         if (creation.type) {
@@ -196,7 +196,7 @@ async function updateLiveCounts() {
         )
             uniqueTypesCountElement.textContent = "error";
         console.error(
-            "instances data not found for live update and no cache available!"
+            "stores data not found for live update and no cache available!"
         );
     }
 }
