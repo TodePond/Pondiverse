@@ -30,8 +30,8 @@
       }
 
       const buttonClass = `button-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-      const buttonHTML = ` <a href=${tool.url} class="button secondary ${buttonClass}" style="${tool.styles}">${tool.name}</a> `;
-      buttons.innerHTML += buttonHTML;
+      let toolButtonClass = "";
+      let toolStyles = "";
 
       if (tool.color) {
         customStyles += `
@@ -40,21 +40,32 @@
           }
           
           .${buttonClass} {
-            border: 3px solid var(--${buttonClass}-color); !important
-            padding: 4px 8px; !important
-            text-decoration: none; !important
-            line-height: 1.5; !important
-            word-wrap: none; !important
-            white-space: nowrap; !important
+            border: 3px solid var(--${buttonClass}-color);
+            padding: 4px 8px;
+            text-decoration: none;
+            line-height: 1.5;
+            word-wrap: none;
+            white-space: nowrap;
           }
 
           .${buttonClass}:hover {
-            color: var(--shade-3); !important
-            background-color: var(--${buttonClass}-color); !important
-            outline: 2px solid var(--${buttonClass}-color); !important
+            color: var(--shade-3);
+            background-color: var(--${buttonClass}-color);
+            outline: 2px solid var(--${buttonClass}-color);
           }
         `;
+        toolButtonClass = ""
+      } else {
+        toolButtonClass = "tool-button"
       }
+
+      if (tool.styles) {
+        toolStyles = tool.styles
+      } else {
+        toolStyles = ""
+      }
+      const buttonHTML = ` <a href=${tool.url} class="${toolButtonClass} ${buttonClass}" style="${toolStyles}">${tool.name}</a> `;
+      buttons.innerHTML += buttonHTML;
     }
 
     if (customStyles) {

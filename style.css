@@ -568,3 +568,18 @@ button.selected {
 .creation-image {
   cursor: pointer;
 }
+
+.tool-button {
+  border: 3px solid #4699ff;
+  padding: 4px 8px;
+  text-decoration: none;
+  line-height: 1.5;
+  word-wrap: none;
+  white-space: nowrap;
+}
+
+.tool-button:hover {
+  color: var(--shade-3);
+  background-color: #4699ff;
+  outline: 2px solid #4699ff;
+}
