@@ -582,5 +582,4 @@ button.selected {
 .tool-button:hover {
   color: var(--shade-3);
   background-color: #4699ff;
-  outline: 2px solid #4699ff;
 }
