@@ -34,7 +34,7 @@
       buttons.innerHTML += buttonHTML;
 
       if (tool.color) {
-        dynamicCss += `
+        customStyles += `
           root: {
             --${buttonClass}-color: ${tool.color}
           }
@@ -57,10 +57,10 @@
       }
     }
 
-    if (dynamicCss) {
+    if (customStyles) {
       const styleTag = document.createElement('style');
       styleTag.type = 'text/css';
-      styleTag.innerHTML = dynamicCss;
+      styleTag.innerHTML = customStyles;
       document.head.appendChild(styleTag);
     }
   </script>
