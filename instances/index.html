@@ -1,0 +1,51 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pondiverse - Instances</title>
+<link rel="stylesheet" href="/style.css" />
+<header
+  id="view-source"
+  style="position: absolute; top: 0; right: 0; padding: 16px">
+  <a href="https://github.com/TodePond/Pondiverse" target="_blank">
+    View source
+  </a>
+</header>
+
+<h1><a href="/" class="breadcrumb">Pondiverse</a> - Instances</h1>
+
+<header>
+  <p>
+    To post something to the pondiverse, use one of these
+    instances or <a href="https://pondiverse.com/reference">make your own</a>.
+  </p>
+</header>
+
+<main>
+  <script type="module">
+    import { instances } from "../instances.js";
+
+    const buttons = document.getElementById("linkButtons");
+
+    for (const instance of instances) {
+      const url = instance.home;
+      if (!url) {
+        continue;
+      }
+      buttons.innerHTML += ` <a href=${tool.url} class="button secondary">${instance.name}</a> `;
+    }
+  </script>
+  <!-- bad code only ^^ -->
+  <div id="linkButtons" class="linkButtons" style="display: flex; flex-wrap: wrap; height: 10px; gap: 5px !important; padding-top: 5px !important;">
+    <!--
+    <a href="https://screenpond.cool" class="button secondary">Screenpond</a>
+    <a href="https://cellpond.cool" class="button secondary">Cellpond</a>
+    <a href="https://iliazeus.lol/bitart/" class="button secondary">BitArt</a>
+    <a href="https://codepond.elouan.xyz/" class="button secondary">CodePond</a>
+    <a href="https://collapse.cthulahoops.org/" class="button secondary">Collapse</a>
+    <a href="https://garten.salat.dev/real-shaders.html" class="button secondary">Real Shaders</a>
+    <a href="https://garten.salat.dev/fake-shaders2.html" class="button secondary">Fake Shaders II</a>
+    <a href="https://evolved.systems/chaoskit/" class="button secondary">ChaosKit</a>
+    <a href="https://gaimeri.github.io/text-tools/arrayer.html" class="button secondary">Arrayer</a>
+    <a href="https://mags.omg.lol/simulator.php" class="button secondary">PNMRSIMJS</a>
+    <a href="https://cherry.cthulahoops.org/" class="button secondary">Cherry</a>
+    -->
+  </div>
+</main>
