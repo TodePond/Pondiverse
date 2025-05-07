@@ -33,7 +33,9 @@ function loadCachedCounts() {
     }
 
     if (uniqueTypesCountElement) {
-        const cachedUniqueTypes = localStorage.getItem(UNIQUE_TYPES_COUNT_LS_KEY);
+        const cachedUniqueTypes = localStorage.getItem(
+            UNIQUE_TYPES_COUNT_LS_KEY
+        );
         if (cachedUniqueTypes)
             uniqueTypesCountElement.textContent = cachedUniqueTypes;
     }
@@ -41,7 +43,9 @@ function loadCachedCounts() {
 
 async function updateLiveCounts() {
     if (tools && toolsCountElement) {
-        const liveToolsCount = tools.length;
+        const creatableTools = tools.filter(
+            (tool) => tool.urls && tool.urls.create !== null
+        );
         toolsCountElement.textContent = liveToolsCount;
         try {
             localStorage.setItem(TOOLS_COUNT_LS_KEY, liveToolsCount.toString());
@@ -128,10 +132,7 @@ async function updateLiveCounts() {
                             totalLiveCreations.toString()
                         );
                     } catch (e) {
-                        console.warn(
-                            "not saved to ls:",
-                            e
-                        );
+                        console.warn("not saved to ls:", e);
                     }
                 }
             }
@@ -152,10 +153,7 @@ async function updateLiveCounts() {
                             liveUniqueTypesCount.toString()
                         );
                     } catch (e) {
-                        console.warn(
-                            "couldn't save to ls:",
-                            e
-                        );
+                        console.warn("couldn't save to ls:", e);
                     }
                 } else {
                     const cachedUniqueTypes = localStorage.getItem(
