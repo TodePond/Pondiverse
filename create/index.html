@@ -30,7 +30,7 @@
       }
 
       const buttonClass = `button-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-      const buttonHTML = ` <a href=${tool.url} class="button secondary ${buttonClass}" style="${tool.styles}">${tool.name}</a> `;
+      const buttonHTML = ` <a href=${tool.url} class="button secondary ${buttonClass}-button" style="${tool.styles}">${tool.name}</a> `;
       buttons.innerHTML += buttonHTML;
 
       if (tool.color) {
