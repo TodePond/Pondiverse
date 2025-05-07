@@ -361,6 +361,7 @@
           : ""
         }
           ${detailsSection}
+          <button class="secondary action-button like">Like</button>
           <p class="secondary">From ${from}, about ${timeSince}</p>
         `;
 
@@ -423,6 +424,9 @@
   creationsList.addEventListener('click', (event) => {
     if (event.target.tagName === 'IMG' && event.target.classList.contains('creation-image')) {
       showLightbox(event.target.src);
+    }
+    if (event.target.classList.contains("like")) {
+      alert("glad you like it babe (!)");
     }
   });
 
