@@ -33,9 +33,7 @@ function loadCachedCounts() {
     }
 
     if (uniqueTypesCountElement) {
-        const cachedUniqueTypes = localStorage.getItem(
-            UNIQUE_TYPES_COUNT_LS_KEY
-        );
+        const cachedUniqueTypes = localStorage.getItem(UNIQUE_TYPES_COUNT_LS_KEY);
         if (cachedUniqueTypes)
             uniqueTypesCountElement.textContent = cachedUniqueTypes;
     }
@@ -48,7 +46,7 @@ async function updateLiveCounts() {
         try {
             localStorage.setItem(TOOLS_COUNT_LS_KEY, liveToolsCount.toString());
         } catch (e) {
-            console.warn("Could not save tools count to localStorage:", e);
+            console.warn("not saved to ls:", e);
         }
     } else if (toolsCountElement && !localStorage.getItem(TOOLS_COUNT_LS_KEY)) {
         toolsCountElement.textContent = "Error";
@@ -63,13 +61,13 @@ async function updateLiveCounts() {
                 liveInstancesCount.toString()
             );
         } catch (e) {
-            console.warn("Could not save instances count to localStorage:", e);
+            console.warn("not saved to ls:", e);
         }
     } else if (
         instancesCountElement &&
         !localStorage.getItem(INSTANCES_COUNT_LS_KEY)
     ) {
-        instancesCountElement.textContent = "Error";
+        instancesCountElement.textContent = "error";
     }
 
     if (
@@ -119,7 +117,7 @@ async function updateLiveCounts() {
                     );
                     creationsCountElement.textContent = cachedCreations
                         ? cachedCreations
-                        : "Error fetching all";
+                        : "error fetching all";
                 } else {
                     let displayText = totalLiveCreations.toString();
                     if (fetchErrors > 0) displayText += ` (some errors)`;
@@ -131,7 +129,7 @@ async function updateLiveCounts() {
                         );
                     } catch (e) {
                         console.warn(
-                            "Could not save creations count to localStorage:",
+                            "not saved to ls:",
                             e
                         );
                     }
@@ -155,7 +153,7 @@ async function updateLiveCounts() {
                         );
                     } catch (e) {
                         console.warn(
-                            "Could not save unique types count to localStorage:",
+                            "couldn't save to ls:",
                             e
                         );
                     }
@@ -166,19 +164,19 @@ async function updateLiveCounts() {
                     uniqueTypesCountElement.textContent = cachedUniqueTypes
                         ? cachedUniqueTypes
                         : fetchErrors > 0
-                        ? "Error"
+                        ? "error"
                         : "0";
                 }
             }
         } catch (error) {
-            console.error("Error processing live creation/type counts:", error);
+            console.error("error processing live creation/type counts:", error);
             if (creationsCountElement) {
                 const cachedCreations = localStorage.getItem(
                     CREATIONS_COUNT_LS_KEY
                 );
                 creationsCountElement.textContent = cachedCreations
                     ? cachedCreations
-                    : "Error";
+                    : "error";
             }
             if (uniqueTypesCountElement) {
                 const cachedUniqueTypes = localStorage.getItem(
@@ -186,7 +184,7 @@ async function updateLiveCounts() {
                 );
                 uniqueTypesCountElement.textContent = cachedUniqueTypes
                     ? cachedUniqueTypes
-                    : "Error";
+                    : "error";
             }
         }
     } else if (creationsCountElement || uniqueTypesCountElement) {
@@ -194,14 +192,14 @@ async function updateLiveCounts() {
             creationsCountElement &&
             !localStorage.getItem(CREATIONS_COUNT_LS_KEY)
         )
-            creationsCountElement.textContent = "Error";
+            creationsCountElement.textContent = "error";
         if (
             uniqueTypesCountElement &&
             !localStorage.getItem(UNIQUE_TYPES_COUNT_LS_KEY)
         )
-            uniqueTypesCountElement.textContent = "Error";
+            uniqueTypesCountElement.textContent = "error";
         console.error(
-            "Instances data not found for live update and no cache available."
+            "instances data not found for live update and no cache available!"
         );
     }
 }
