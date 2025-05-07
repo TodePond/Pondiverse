@@ -21,7 +21,7 @@ export const tools = [
     name: "CodePond",
     types: ["CodePond"],
     url: "https://codepond.elouan.xyz/?creation=",
-    styles: "",
+    styles: "color: #d946ef;",
   },
   {
     name: "cherry",
