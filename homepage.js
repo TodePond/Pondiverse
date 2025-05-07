@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { tools } from "/tools.js";
 import { instances } from "/instances.js";
 import { fetchPondiverseCreations } from "/pondiverse.js";
@@ -46,11 +44,12 @@ async function updateLiveCounts() {
         const creatableTools = tools.filter(
             (tool) => tool.urls && tool.urls.create !== null
         );
+        const liveToolsCount = creatableTools.length;
         toolsCountElement.textContent = liveToolsCount;
         try {
             localStorage.setItem(TOOLS_COUNT_LS_KEY, liveToolsCount.toString());
         } catch (e) {
-            console.warn("not saved to ls:", e);
+            console.warn("Could not save tools count to localStorage:", e);
         }
     } else if (toolsCountElement && !localStorage.getItem(TOOLS_COUNT_LS_KEY)) {
         toolsCountElement.textContent = "Error";
