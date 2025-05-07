@@ -2,7 +2,7 @@
 // PONDIVERSE CONSTANTS //
 //======================//
 // Configure these to your needs
-const DEFAULT_INSTANCE = {
+const DEFAULT_STORE = {
   name: "todepondiverse",
   home: "https://pondiverse.com/",
   addCreation: "https://pondiverse.val.run/add-creation",
@@ -130,9 +130,9 @@ const PONDIVERSE_BUTTON_STYLE = `
 //============================//
 // For getting a list of all creations
 export async function fetchPondiverseCreations({
-  instance = DEFAULT_INSTANCE,
+  store = DEFAULT_STORE,
 } = {}) {
-  const response = await fetch(instance.getCreations);
+  const response = await fetch(store.getCreations);
   const json = await response.json();
   return json.rows ?? json.items;
 }
@@ -143,11 +143,11 @@ export async function fetchPondiverseCreations({
 // For getting a single creation by its id
 export async function fetchPondiverseCreation(
   creation,
-  { instance = DEFAULT_INSTANCE } = {}
+  { store = DEFAULT_STORE } = {}
 ) {
   const url = isNaN(parseInt(creation))
     ? creation
-    : instance.getCreation + creation;
+    : store.getCreation + creation;
   const response = await fetch(url);
   return await response.json();
 }
@@ -158,9 +158,9 @@ export async function fetchPondiverseCreation(
 // For deleting a creation by its id
 export async function deletePondiverseCreation(
   id,
-  { instance = DEFAULT_INSTANCE, password = "" } = {}
+  { store = DEFAULT_STORE, password = "" } = {}
 ) {
-  const response = await fetch(instance.deleteCreation, {
+  const response = await fetch(store.deleteCreation, {
     method: "POST",
     body: JSON.stringify({ id, password }),
   });
@@ -177,15 +177,15 @@ export async function deletePondiverseCreation(
 // Get the image URL for a creation
 export function getPondiverseCreationImageUrl(
   creation,
-  { instance = DEFAULT_INSTANCE } = {}
+  { store = DEFAULT_STORE } = {}
 ) {
   if (creation.image) {
     return creation.image;
   }
-  if (!instance.getCreationImage) {
+  if (!store.getCreationImage) {
     return null;
   }
-  return instance.getCreationImage + creation.id;
+  return store.getCreationImage + creation.id;
 }
 
 //=======================//
@@ -193,7 +193,7 @@ export function getPondiverseCreationImageUrl(
 //=======================//
 export function addPondiverseButton(
   getPondiverseCreation,
-  { instance = DEFAULT_INSTANCE } = {}
+  { store = DEFAULT_STORE } = {}
 ) {
   if (window["addedPondiverseButton"]) return;
 
@@ -220,12 +220,12 @@ export function addPondiverseButton(
   });
 
   window["addedPondiverseButton"] = true;
-  addPondiverseDialog(getPondiverseCreation, { instance });
+  addPondiverseDialog(getPondiverseCreation, { store });
 }
 
 function addPondiverseDialog(
   getPondiverseCreation = window["getPondiverseCreation"],
-  { instance = DEFAULT_INSTANCE } = {}
+  { store = DEFAULT_STORE } = {}
 ) {
   window["getPondiverseCreation"] = getPondiverseCreation;
 
@@ -329,7 +329,7 @@ function addPondiverseDialog(
     publishButton.textContent = "Publishing...";
     publishButton.style.cursor = "not-allowed";
 
-    const response = await fetch(instance.addCreation, {
+    const response = await fetch(store.addCreation, {
       method: "POST",
       body: JSON.stringify(request),
     });
@@ -351,9 +351,9 @@ function addPondiverseDialog(
 // Use this if you want to programmatically open the dialog
 export function openPondiverseDialog(
   getPondiverseCreation = window["getPondiverseCreation"],
-  { instance = DEFAULT_INSTANCE } = {}
+  { store = DEFAULT_STORE } = {}
 ) {
-  addPondiverseDialog(getPondiverseCreation, { instance });
+  addPondiverseDialog(getPondiverseCreation, { store });
 
   /** @type {HTMLDialogElement | null} */
   const dialog = document.querySelector("#pondiverse-dialog");

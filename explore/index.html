@@ -29,7 +29,7 @@
     getPondiverseCreationImageUrl,
   } from "/pondiverse.js";
   import { tools } from "/tools.js";
-  import { instances } from "/instances.js";
+  import { stores } from "/stores.js";
 
   const main = document.querySelector("main");
   const refreshSign = document.querySelector("#refresh-sign");
@@ -133,17 +133,17 @@
   async function fetchAllSortedCreations() {
     let allCreations = [];
     try {
-      const fetchPromises = instances.map((instance) =>
-        fetchPondiverseCreations({ instance })
+      const fetchPromises = stores.map((store) =>
+        fetchPondiverseCreations({ store })
           .then((creations) =>
             creations.map((creation) => ({
               ...creation,
-              instance,
+              store,
               timestamp: new Date(creation.time).getTime(),
             }))
           )
           .catch((e) => {
-            console.error(`Error fetching from ${instance.name}:`, e);
+            console.error(`Error fetching from ${store.name}:`, e);
             return [];
           })
       );
@@ -321,7 +321,7 @@
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
       const imageUrl = getPondiverseCreationImageUrl(creation, {
-        instance: creation.instance,
+        store: creation.store,
       });
       const compatibleTools = tools
         .map((tool) => {
@@ -333,7 +333,7 @@
       const canOpen = compatibleTools.length > 0;
       const choices = compatibleTools
         .map((v) => {
-          return `<a href="${v.tool.urls?.open ?? v.tool.url}${creation.instance.getCreation}${creation.id
+          return `<a href="${v.tool.urls?.open ?? v.tool.url}${creation.store.getCreation}${creation.id
             }" class="${v.match === "wild" ? "secondary" : "primary"
             }" target="_blank">${v.tool.name}</a>`;
         })
@@ -343,9 +343,9 @@
         ? `<details><summary>show data</summary><pre class="data-preview"><code>${escapedPrettyData}</code></pre></details>`
         : "";
       const timeSince = getTimeSince(creation.timestamp);
-      const from = creation.instance.home
-        ? `<a class="tertiary" href="${creation.instance.home}" target="_blank" rel="noopener noreferrer">${creation.instance.name}</a>`
-        : creation.instance.name;
+      const from = creation.store.home
+        ? `<a class="tertiary" href="${creation.store.home}" target="_blank" rel="noopener noreferrer">${creation.store.name}</a>`
+        : creation.store.name;
 
       const div = document.createElement("div");
       div.className = "creation";
