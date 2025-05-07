@@ -1,6 +1,6 @@
-import { tools } from "./tools.js";
-import { instances } from "./instances.js";
-import { fetchPondiverseCreations } from "./pondiverse.js";
+import { tools } from "/tools.js";
+import { instances } from "/instances.js";
+import { fetchPondiverseCreations } from "/pondiverse.js";
 
 const TOOLS_COUNT_LS_KEY = "pondiverseHomepageToolsCount";
 const INSTANCES_COUNT_LS_KEY = "pondiverseHomepageInstancesCount";
