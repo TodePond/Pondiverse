@@ -23,7 +23,26 @@
     places!
   </p>
 
-  <h4><span id="tools-count">...</span> tools | <span id="creations-count">...</span> creations today | <span id="unique-types-count">...</span> unique types today | <span id="instances-count">...</span> connected instances</h4>
+  <h4>
+    <span id="tools-count">...</span> tools |
+    <span id="creations-count">...</span> creations today |
+    <span id="unique-types-count">...</span> unique types today |
+    <span id="instances-count">...</span> connected instances
+  </h4>
+
+  <script>
+    let sleep = (ms) => new Promise((cb) => setTimeout(cb, ms));
+    (async () => {
+      await sleep(2000);
+      document.querySelector("#tools-count").innerHTML = `not enough (<a href="/learn/">make more?</a>)`;
+      await sleep(2000);
+      document.querySelector("#creations-count").innerHTML = `not enough (<a href="/create/">make more?</a>)`;
+      await sleep(2000);
+      document.querySelector("#unique-types-count").innerHTML = `not enough (<a href="/learn/">make more?</a>)`;
+      await sleep(2000);
+      document.querySelector("#instances-count").innerHTML = `not enough (<a href="/reference/">make more?</a>)`;
+    })();
+  </script>
 </header>
 
 <main>
@@ -42,5 +61,3 @@
 <section>
   <a href="/admin/" class="button danger">Admin</a>
 </section> -->
-
-<script type="module" src="homepage.js"></script>
