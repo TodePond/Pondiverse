@@ -1,33 +1,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Pondiverse - Explore</title>
 <link rel="stylesheet" href="/style.css" />
+
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Explore</h1>
-<header
+
+<nav
   id="view-source"
   style="position: absolute; top: 0; right: 0; padding: 16px">
-  <a href="https://github.com/TodePond/Pondiverse" target="_blank"
-    >View source</a
-  >
-</header>
-<header id="heading">
-  <p>Here are all the creations.</p>
-  <button id="refresh-sign" class="secondary span">Loading...</button>
-</header>
+  <a href="https://github.com/TodePond/Pondiverse" target="_blank">
+    View source
+  </a>
+</nav>
+<header>Loading...</header>
 
 <main>
-  <div id="creations-list">
-    <p class="secondary loading"></p>
-  </div>
-  <div
-    id="load-more-container"
-    style="text-align: center; padding: 20px; display: none">
-    <button id="load-more-button">Load More</button>
-  </div>
+  <article
+    style="
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin: 0 auto;
+    "></article>
 </main>
 
-<div id="image-lightbox" class="lightbox-hidden">
-  <img id="lightbox-image" src="" alt="Enlarged creation" />
-</div>
+<footer></footer>
 
 <script type="module">
   import {
@@ -38,418 +34,62 @@
   import { stores } from "/stores.js";
 
   const main = document.querySelector("main");
-  const refreshSign = document.querySelector("#refresh-sign");
-  const heading = document.querySelector("#heading");
-  const creationsList = document.querySelector("#creations-list");
-  const loadMoreContainer = document.querySelector("#load-more-container");
-  const loadMoreButton = document.querySelector("#load-more-button");
+  const header = document.querySelector("header");
+  const article = document.querySelector("article");
+  const footer = document.querySelector("footer");
 
-  const imageLightbox = document.getElementById("image-lightbox");
-  const lightboxImage = document.getElementById("lightbox-image");
+  const CREATIONS_PER_PAGE = 12;
 
-  const CREATIONS_PER_PAGE = 10;
-  let isInitialLoad = true;
-  let latestCreationTimestamp = 0;
-  let oldestDisplayedTimestamp = 0;
-  let isLoadingMore = false;
-
-  let refreshTimeout;
-  let secondsLeft = 9;
-  const REFRESH_INTERVAL_SECONDS = 9;
-  const AUTO_REFRESH_LS_KEY = "pondiverseExploreAutoRefreshIncremental";
-  const LATEST_TIMESTAMP_LS_KEY = "pondiverseExploreLatestTimestamp";
-
-  function getLocalRefreshStatus() {
-    return localStorage.getItem(AUTO_REFRESH_LS_KEY) !== "false";
-  }
-
-  function setLocalRefreshStatus(on) {
-    localStorage.setItem(AUTO_REFRESH_LS_KEY, on ? "true" : "false");
-  }
-
-  function loadLatestTimestamp() {
-    const storedTimestamp = localStorage.getItem(LATEST_TIMESTAMP_LS_KEY);
-    if (storedTimestamp) {
-      latestCreationTimestamp = parseInt(storedTimestamp, 10) || 0;
-    }
-  }
-
-  function saveLatestTimestamp(timestamp) {
-    if (timestamp > latestCreationTimestamp) {
-      latestCreationTimestamp = timestamp;
-      localStorage.setItem(
-        LATEST_TIMESTAMP_LS_KEY,
-        latestCreationTimestamp.toString()
-      );
-    }
-  }
-
-  function getRefreshStatus() {
-    return refreshTimeout !== undefined;
-  }
-
-  async function handleTimer() {
-    secondsLeft--;
-    if (secondsLeft <= 0) {
-      await pullCreations();
-      return;
-    }
-
-    if (getLocalRefreshStatus()) {
-      refreshSign.textContent = "Checking in " + secondsLeft;
-    } else {
-      refreshSign.textContent = "Auto-refresh paused";
-      clearTimeout(refreshTimeout);
-      refreshTimeout = undefined;
-      return;
-    }
-
-    if (refreshTimeout !== undefined) {
-      clearTimeout(refreshTimeout);
-    }
-    refreshTimeout = setTimeout(handleTimer, 1000);
-  }
-
-  function setRefreshStatus(on) {
-    setLocalRefreshStatus(on);
-    if (on) {
-      if (!getRefreshStatus()) {
-        secondsLeft = REFRESH_INTERVAL_SECONDS;
-        refreshSign.textContent = "Checking in " + secondsLeft;
-        if (refreshTimeout !== undefined) clearTimeout(refreshTimeout);
-        refreshTimeout = setTimeout(handleTimer, 1000);
-      }
-    } else {
-      refreshSign.textContent = "Auto-refresh paused";
-      if (getRefreshStatus()) {
-        clearTimeout(refreshTimeout);
-        refreshTimeout = undefined;
-      }
-    }
-  }
-
-  function toggleRefresh() {
-    const currentlyRefreshing = getLocalRefreshStatus();
-    setRefreshStatus(!currentlyRefreshing);
-    if (!currentlyRefreshing) {
-      pullCreations();
-    }
-  }
-
-  async function fetchAllSortedCreations() {
-    let allCreations = [];
+  async function fetchCreations() {
+    const creations = [];
     try {
-      const fetchPromises = stores.map((store) =>
-        fetchPondiverseCreations({ store })
-          .then((creations) =>
-            creations.map((creation) => ({
-              ...creation,
-              store,
-              timestamp: new Date(creation.time).getTime(),
-            }))
-          )
-          .catch((e) => {
-            console.error(`Error fetching from ${store.name}:`, e);
-            return [];
-          })
-      );
-      const results = await Promise.all(fetchPromises);
-      allCreations = results.flat();
-      allCreations.sort((a, b) => b.timestamp - a.timestamp);
-    } catch (globalError) {
-      console.error("Error during creation fetch coordination:", globalError);
-      throw globalError;
-    }
-    return allCreations;
-  }
-
-  async function pullCreations() {
-    if (getLocalRefreshStatus() || isInitialLoad) {
-      refreshSign.textContent = isInitialLoad ? "Loading..." : "Checking...";
-    }
-
-    if (refreshTimeout !== undefined) {
-      clearTimeout(refreshTimeout);
-      refreshTimeout = undefined;
-    }
-    secondsLeft = REFRESH_INTERVAL_SECONDS;
-
-    let allCreations = [];
-    let fetchError = false;
-
-    try {
-      allCreations = await fetchAllSortedCreations();
+      for (const store of stores) {
+        const storeCreations = await fetchPondiverseCreations({ store });
+        creations.push(...storeCreations);
+      }
     } catch (e) {
-      fetchError = true;
+      console.error(e);
     }
-
-    if (isInitialLoad) {
-      const loadingIndicator = creationsList.querySelector(".loading");
-      if (loadingIndicator) loadingIndicator.remove();
-
-      const initialBatch = allCreations.slice(0, CREATIONS_PER_PAGE);
-
-      if (initialBatch.length > 0) {
-        renderCreations(initialBatch, "initial");
-        saveLatestTimestamp(initialBatch[0].timestamp);
-        oldestDisplayedTimestamp =
-          initialBatch[initialBatch.length - 1].timestamp;
-        if (allCreations.length > initialBatch.length) {
-          loadMoreContainer.style.display = "flex";
-        } else {
-          loadMoreContainer.style.display = "none";
-        }
-      } else if (!fetchError) {
-        creationsList.innerHTML += `<p class="secondary">No creations found yet.</p>`;
-        loadMoreContainer.style.display = "none";
-      } else {
-        creationsList.innerHTML += `<p class="danger">Could not load initial creations. Please try again later.</p>`;
-        loadMoreContainer.style.display = "none";
-      }
-      isInitialLoad = false;
-    } else {
-      const newCreations = allCreations.filter(
-        (c) => c.timestamp > latestCreationTimestamp
-      );
-
-      if (newCreations.length > 0) {
-        renderCreations(newCreations, "prepend");
-        saveLatestTimestamp(newCreations[0].timestamp);
-        refreshSign.textContent = `Added ${newCreations.length} new`;
-        setTimeout(() => {
-          if (getLocalRefreshStatus()) {
-            refreshSign.textContent = "Checking in " + secondsLeft;
-          }
-        }, 2000);
-      } else {
-        if (getLocalRefreshStatus()) {
-          refreshSign.textContent = "Checking in " + secondsLeft;
-        }
-      }
-    }
-
-    if (getLocalRefreshStatus()) {
-      if (refreshTimeout === undefined) {
-        refreshTimeout = setTimeout(handleTimer, 1000);
-      }
-    } else {
-      refreshSign.textContent = "Auto-refresh paused";
-    }
+    return creations;
   }
 
-  async function loadMoreCreations() {
-    if (isLoadingMore) return;
-    isLoadingMore = true;
-    loadMoreButton.textContent = "Loading...";
-    loadMoreButton.disabled = true;
+  function renderMoreCreations(creations) {
+    const head = creations.slice(0, CREATIONS_PER_PAGE);
+    const tail = creations.slice(CREATIONS_PER_PAGE);
+    header.innerHTML = "";
 
-    let allCreations = [];
-    let fetchError = false;
-    try {
-      allCreations = await fetchAllSortedCreations();
-    } catch (e) {
-      fetchError = true;
-      console.error("Failed to fetch for load more:", e);
-      loadMoreButton.textContent = "Error. Retry?";
-      loadMoreButton.disabled = false;
-      isLoadingMore = false;
-      return;
+    for (const creation of head) {
+      console.log(creation);
+      const card = document.createElement("div");
+      card.style = `
+        border: 1px solid black;
+        padding: 16px;
+        padding-top: 0px;
+        border-radius: 8px
+      `;
+
+      card.innerHTML = `
+        <h3>${creation.title}</h3>
+        <p>${creation.type}</p>
+        <img
+          style="max-width: 100%; background-color: black"
+          src="${getPondiverseCreationImageUrl(creation)}" />
+      `;
+      article.appendChild(card);
     }
 
-    const olderCreations = allCreations.filter(
-      (c) => c.timestamp < oldestDisplayedTimestamp
-    );
+    if (tail.length === 0) return;
 
-    const nextBatch = olderCreations.slice(0, CREATIONS_PER_PAGE);
-
-    if (nextBatch.length > 0) {
-      renderCreations(nextBatch, "append");
-      oldestDisplayedTimestamp = nextBatch[nextBatch.length - 1].timestamp;
-      if (olderCreations.length > nextBatch.length) {
-        loadMoreContainer.style.display = "block";
-        loadMoreButton.textContent = "Load More";
-        loadMoreButton.disabled = false;
-      } else {
-        loadMoreContainer.style.display = "none";
-      }
-    } else {
-      loadMoreContainer.style.display = "none";
-    }
-
-    isLoadingMore = false;
-    if (loadMoreContainer.style.display === "block") {
-      loadMoreButton.textContent = "Load More";
-      loadMoreButton.disabled = false;
-    }
-  }
-
-  function getTimeSince(timestamp) {
-    const now = Date.now();
-    const past = timestamp;
-    const diffInMilliseconds = now - past;
-    if (diffInMilliseconds < 0) return "just now";
-    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays > 0)
-      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
-    if (diffInHours > 0)
-      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
-    if (diffInMinutes > 0)
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-    return `${
-      diffInSeconds <= 1 ? "1 second" : diffInSeconds + " seconds"
-    } ago`;
-  }
-
-  function renderCreations(creationsToRender, mode) {
-    if (creationsToRender.length === 0) return;
-
-    const fragment = document.createDocumentFragment();
-
-    creationsToRender.forEach((creation) => {
-      let prettyData = "";
-      try {
-        if (
-          creation.data &&
-          typeof creation.data === "string" &&
-          (creation.data.trim().startsWith("{") ||
-            creation.data.trim().startsWith("["))
-        ) {
-          prettyData = JSON.stringify(JSON.parse(creation.data), null, 2);
-        } else {
-          prettyData = creation.data || "";
-        }
-      } catch (e) {
-        prettyData = creation.data || "";
-      }
-      const escapedPrettyData = prettyData
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-      const imageUrl = getPondiverseCreationImageUrl(creation, {
-        store: creation.store,
-      });
-      const compatibleTools = tools
-        .map((tool) => {
-          if (tool.types.includes("*")) return { tool, match: "wild" };
-          if (tool.types.includes(creation.type))
-            return { tool, match: "exact" };
-        })
-        .filter((v) => v);
-      const canOpen = compatibleTools.length > 0;
-      const choices = compatibleTools
-        .map((v) => {
-          return `<a href="${v.tool.urls?.open ?? v.tool.url}${
-            creation.store.getCreation
-          }${creation.id}" class="${
-            v.match === "wild" ? "secondary" : "primary"
-          }" target="_blank">${v.tool.name}</a>`;
-        })
-        .join(" or ");
-      const openInSection = canOpen ? `<p>Open in ${choices}</p>` : ``;
-      const detailsSection = creation.data
-        ? `<details><summary>show data</summary><pre class="data-preview"><code>${escapedPrettyData}</code></pre></details>`
-        : "";
-      const timeSince = getTimeSince(creation.timestamp);
-      const from = creation.store.home
-        ? `<a class="tertiary" href="${creation.store.home}" target="_blank" rel="noopener noreferrer">${creation.store.name}</a>`
-        : creation.store.name;
-
-      const div = document.createElement("div");
-      div.className = "creation";
-      div.id = `c${creation.id}`;
-      // title can be blank!!!
-      // type can be blank!!!
-      div.innerHTML = `
-          <h2>${creation.title}, ${creation.type}</h2>
-          ${openInSection}
-          ${
-            imageUrl
-              ? `<img class="creation-image" src="${imageUrl}" 
-                style="max-width: 100%; width: 800px;"
-              alt="${creation.title || "Creation image"}" loading="lazy" />`
-              : ""
-          }
-          ${detailsSection}
-          <!-- remove for now <button class="secondary action-button like">Like</button> -->
-          <p class="secondary">From ${from}, about ${timeSince}</p>
-        `;
-
-      if (imageUrl) {
-        const img = div.querySelector("img");
-        if (img) {
-          img.onerror = () => {
-            console.warn(`Failed to load image: ${img.src}`);
-            img.remove();
-          };
-        }
-      }
-      fragment.appendChild(div);
+    const button = document.createElement("button");
+    button.style = "display: block";
+    button.innerText = "Load more";
+    button.addEventListener("click", () => {
+      button.remove();
+      renderMoreCreations(tail);
     });
-
-    if (mode === "initial" || mode === "append") {
-      creationsList.appendChild(fragment);
-    } else if (mode === "prepend") {
-      creationsList.prepend(fragment);
-    }
+    footer.appendChild(button);
   }
 
-  function showLightbox(src) {
-    lightboxImage.src = src;
-    lightboxImage.classList.remove("zoomed");
-    imageLightbox.classList.remove("lightbox-hidden");
-    document.addEventListener("keydown", handleEscapeKey);
-    imageLightbox.addEventListener("click", handleLightboxClick);
-    lightboxImage.addEventListener("click", handleLightboxImageClick);
-  }
-
-  function hideLightbox() {
-    imageLightbox.classList.add("lightbox-hidden");
-    lightboxImage.src = "";
-    document.removeEventListener("keydown", handleEscapeKey);
-    imageLightbox.removeEventListener("click", handleLightboxClick);
-    lightboxImage.removeEventListener("click", handleLightboxImageClick);
-  }
-
-  function handleEscapeKey(event) {
-    if (event.key === "Escape") {
-      hideLightbox();
-    }
-  }
-
-  function handleLightboxClick(event) {
-    if (event.target === imageLightbox) {
-      hideLightbox();
-    }
-  }
-
-  function handleLightboxImageClick(event) {
-    event.stopPropagation();
-    lightboxImage.classList.toggle("zoomed");
-  }
-
-  refreshSign.addEventListener("click", toggleRefresh);
-  loadMoreButton.addEventListener("click", loadMoreCreations);
-
-  creationsList.addEventListener("click", (event) => {
-    if (
-      event.target.tagName === "IMG" &&
-      event.target.classList.contains("creation-image")
-    ) {
-      showLightbox(event.target.src);
-    }
-    if (event.target.classList.contains("like")) {
-      alert("glad you like it babe (!)");
-    }
-  });
-
-  hideLightbox();
-  loadLatestTimestamp();
-
-  if (!getLocalRefreshStatus()) {
-    refreshSign.textContent = "Auto-refresh paused";
-  }
-
-  pullCreations();
+  const creations = await fetchCreations();
+  renderMoreCreations(creations);
 </script>
