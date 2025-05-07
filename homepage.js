@@ -41,9 +41,9 @@ function loadCachedCounts() {
 
 async function updateLiveCounts() {
     if (tools && toolsCountElement) {
-        const creatableTools = tools.filter(
-            (tool) => tool.urls.create !== null
-        );
+        const creatableTools = tools.filter(tool => {
+            return !(tool.urls && tool.urls.create === null);
+        });
         const liveToolsCount = creatableTools.length;
         toolsCountElement.textContent = liveToolsCount;
         try {
