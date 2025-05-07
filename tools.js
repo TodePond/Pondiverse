@@ -80,4 +80,9 @@ export const tools = [
       create: null,
     },
   },
+  {
+    name: "styleshoot",
+    types: ["styleshoot"],
+    url: "https://ponder.ooo/styleshoot.html",
+  },
 ];
