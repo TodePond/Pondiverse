@@ -18,7 +18,7 @@ export const instances = [
   {
     // elouan.xyz's instance, currently just a fork of the todepondiverse store but i will add stuff later
     name: "oceaniverse",
-    // home: "todo",
+    home: "https://oceaniverse.elouan.xyz",
     addCreation: "https://theoceaniverse.val.run/add-creation",
     getCreation: "https://theoceaniverse.val.run/get-creation?id=",
     getCreationImage: "https://theoceaniverse.val.run/get-creation-image?id=",
