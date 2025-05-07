@@ -570,6 +570,7 @@ button.selected {
 }
 
 .tool-button {
+  color: #4699ff;
   border: 3px solid #4699ff;
   padding: 4px 8px;
   text-decoration: none;
