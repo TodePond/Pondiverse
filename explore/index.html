@@ -82,6 +82,9 @@
     const button = document.createElement("button");
     button.style = "display: block";
     button.innerText = "Load more";
+    button.style.height = "40px";
+    button.style.width = "100%";
+    button.style.margin = "10px 0";
     button.addEventListener("click", () => {
       button.remove();
       renderMoreCreations(tail);
