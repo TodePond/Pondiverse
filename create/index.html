@@ -52,7 +52,7 @@
           .${buttonClass}:hover {
             color: var(--shade-3);
             background-color: var(--${buttonClass}-color);
-            outline: 2px solid var(--${buttonClass}-color);
+            outline: none;
           }
         `;
         toolButtonClass = ""
@@ -65,6 +65,7 @@
       } else {
         toolStyles = ""
       }
+      
       const buttonHTML = ` <a href=${tool.url} class="${toolButtonClass} ${buttonClass}" style="${toolStyles}">${tool.name}</a> `;
       buttons.innerHTML += buttonHTML;
     }

@@ -1,82 +1,89 @@
+//         Add your own tool!!!
+//
+// Instructions:
+//
+// add your tool using any of the tools below
+// if your tool can process esiting creations (see the learn page)
+// then add mething like ?creation= to the url.
+//
+// if you want custom INLINE styles, add styles: "" to your tool like the example.
+// or, if you just want your own theme color, add color="#ffffff" (pick a color) to the tool!
+// we'll handle it ourselves.
+
 export const tools = [
+  //  {
+  //    name: "exampletool"
+  //    types: ["example"]
+  //    url: "https://example.com/?creation="
+  //    color: "#ffffff"
+  //    styles: "border: dashed"
+  //  }
+
   {
     name: "screenpond",
     types: ["screenpond"],
     url: "https://screenpond.cool?creation=",
-    styles: "",
   },
   {
     name: "chaoskit",
     types: ["chaoskit"],
     url: "https://evolved.systems/chaoskit/?creation=",
-    styles: "",
   },
   {
     name: "pnmrsimjs",
     types: [],
     url: "https://mags.omg.lol/simulator.php",
-    styles: "",
   },
   {
     name: "CodePond",
     types: ["CodePond"],
     url: "https://codepond.elouan.xyz/?creation=",
     color: "#d946ef",
-    // styles: "color: #d946ef; border-color: #d946ef",
   },
   {
     name: "cherry",
     types: [],
     url: "https://cherry.cthulahoops.org/",
-    styles: "",
   },
   {
     name: "collapse",
     types: ["collapse"],
     url: "https://collapse.cthulahoops.org/?creation=",
-    styles: "",
   },
   {
     name: "bitart",
     types: ["bitart"],
     url: "https://iliazeus.lol/bitart/?creation=",
-    styles: "",
   },
   {
     name: "real shaders",
     types: ["real-shader"],
     url: "https://garten.salat.dev/real-shaders.html?creation=",
-    styles: "",
   },
   {
     name: "fake shaders II",
     types: ["fake-shader"],
     url: "https://garten.salat.dev/fake-shaders2.html?creation=",
-    styles: "",
   },
   {
     name: "cellpond",
     types: ["cellpond"],
     url: "https://cellpond.cool?creation=",
-    styles: "",
   },
   {
     name: "arrayer",
     types: ["arrayer"],
     url: "https://gaimeri.github.io/text-tools/arrayer.html?creation=",
-    styles: "",
   },
   {
     name: "pondiverse",
     types: ["*"],
     url: "https://pondiverse.com/tool/?creation=",
-    styles: "",
   },
   {
     name: "talise",
     types: ["talise"],
     url: "https://ernestum.net/talise/?id=",
-    styles: "",
   },
   {
     name: "meme",
@@ -85,7 +92,6 @@ export const tools = [
       open: "https://pondmemes.cthulahoops.org/?creation=",
       create: null,
     },
-    styles: "",
   },
   {
     name: "gamify",
@@ -94,12 +100,10 @@ export const tools = [
       open: "https://gamify.cthulahoops.org/?creation=",
       create: null,
     },
-    styles: "",
   },
   {
     name: "styleshoot",
     types: ["styleshoot"],
     url: "https://ponder.ooo/styleshoot.html",
-    styles: "",
   },
 ];
