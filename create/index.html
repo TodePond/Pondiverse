@@ -25,14 +25,22 @@
   import { tools } from "../tools.js";
 
   const main = document.querySelector("main");
+  const list = document.createElement("ul");
+
+  // not a real shuffle but who cares
+  tools.sort(() => Math.random() - 0.5);
+
   for (const tool of tools) {
-    console.log(tool);
     if (!tool.create) continue;
+    const li = document.createElement("li");
     const link = document.createElement("a");
     link.href = tool.create;
     link.target = "_blank";
     link.innerText = tool.name;
     link.rel = "noopener noreferrer";
-    main.appendChild(link);
+    li.appendChild(link);
+    list.appendChild(li);
   }
+
+  main.appendChild(list);
 </script>
