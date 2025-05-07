@@ -1,9 +1,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Pondiverse - Create</title>
 <link rel="stylesheet" href="/style.css" />
-<header
-  id="view-source"
-  style="position: absolute; top: 0; right: 0; padding: 16px">
+<header id="view-source" style="position: absolute; top: 0; right: 0; padding: 16px">
   <a href="https://github.com/TodePond/Pondiverse" target="_blank">
     View source
   </a>
@@ -23,29 +21,64 @@
     import { tools } from "../tools.js";
 
     const buttons = document.getElementById("linkButtons");
+    let customStyles = "";
 
     for (const tool of tools) {
       const url = tools.urls ? tools.urls.create : tool.url;
       if (!url) {
         continue;
       }
-      buttons.innerHTML += ` <a href=${tool.url} class="button secondary">${tool.name}</a> `;
+
+      const buttonClass = `button-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+      let toolButtonClass = "";
+      let toolStyles = "";
+
+      if (tool.color) {
+        customStyles += `
+          :root {
+            --${buttonClass}-color: ${tool.color}
+          }
+          
+          .${buttonClass} {
+            color: var(--${buttonClass}-color);
+            border: 3px solid var(--${buttonClass}-color);
+            padding: 4px 8px;
+            text-decoration: none;
+            line-height: 1.5;
+            word-wrap: none;
+            white-space: nowrap;
+          }
+
+          .${buttonClass}:hover {
+            color: var(--shade-3);
+            background-color: var(--${buttonClass}-color);
+            outline: none;
+          }
+        `;
+        toolButtonClass = ""
+      } else {
+        toolButtonClass = "tool-button"
+      }
+
+      if (tool.styles) {
+        toolStyles = tool.styles
+      } else {
+        toolStyles = ""
+      }
+      
+      const buttonHTML = ` <a href=${tool.url} class="${toolButtonClass} ${buttonClass}" style="${toolStyles}">${tool.name}</a> `;
+      buttons.innerHTML += buttonHTML;
+    }
+
+    if (customStyles) {
+      const styleTag = document.createElement('style');
+      styleTag.type = 'text/css';
+      styleTag.innerHTML = customStyles;
+      document.head.appendChild(styleTag);
     }
   </script>
   <!-- bad code only ^^ -->
-  <div id="linkButtons" class="linkButtons" style="display: flex; flex-wrap: wrap; height: 10px; gap: 5px !important; padding-top: 5px !important;">
-    <!--
-    <a href="https://screenpond.cool" class="button secondary">Screenpond</a>
-    <a href="https://cellpond.cool" class="button secondary">Cellpond</a>
-    <a href="https://iliazeus.lol/bitart/" class="button secondary">BitArt</a>
-    <a href="https://codepond.elouan.xyz/" class="button secondary">CodePond</a>
-    <a href="https://collapse.cthulahoops.org/" class="button secondary">Collapse</a>
-    <a href="https://garten.salat.dev/real-shaders.html" class="button secondary">Real Shaders</a>
-    <a href="https://garten.salat.dev/fake-shaders2.html" class="button secondary">Fake Shaders II</a>
-    <a href="https://evolved.systems/chaoskit/" class="button secondary">ChaosKit</a>
-    <a href="https://gaimeri.github.io/text-tools/arrayer.html" class="button secondary">Arrayer</a>
-    <a href="https://mags.omg.lol/simulator.php" class="button secondary">PNMRSIMJS</a>
-    <a href="https://cherry.cthulahoops.org/" class="button secondary">Cherry</a>
-    -->
+  <div id="linkButtons" class="linkButtons"
+    style="display: flex; flex-wrap: wrap; height: 10px; gap: 5px !important; padding-top: 5px !important;">
   </div>
 </main>

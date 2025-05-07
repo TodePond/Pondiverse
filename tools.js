@@ -1,4 +1,24 @@
+//         Add your own tool!!!
+//
+// Instructions:
+//
+// add your tool using any of the tools below
+// if your tool can process esiting creations (see the learn page)
+// then add mething like ?creation= to the url.
+//
+// if you want custom INLINE styles, add styles: "" to your tool like the example.
+// or, if you just want your own theme color, add color="#ffffff" (pick a color) to the tool!
+// we'll handle it ourselves.
+
 export const tools = [
+  //  {
+  //    name: "exampletool"
+  //    types: ["example"]
+  //    url: "https://example.com/?creation="
+  //    color: "#ffffff"
+  //    styles: "border: dashed"
+  //  }
+
   {
     name: "screenpond",
     types: ["screenpond"],
@@ -18,6 +38,7 @@ export const tools = [
     name: "CodePond",
     types: ["CodePond"],
     url: "https://codepond.elouan.xyz/?creation=",
+    color: "#d946ef",
   },
   {
     name: "cherry",
