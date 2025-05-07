@@ -30,7 +30,7 @@
       }
 
       const buttonClass = `button-${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-      const buttonHTML = ` <a href=${tool.url} class="button secondary ${buttonClass}-button" style="${tool.styles}">${tool.name}</a> `;
+      const buttonHTML = ` <a href=${tool.url} class="button secondary ${buttonClass}" style="${tool.styles}">${tool.name}</a> `;
       buttons.innerHTML += buttonHTML;
 
       if (tool.color) {
@@ -39,7 +39,7 @@
             --${buttonClass}-color: ${tool.color}
           }
           
-          .${buttonClass}-button {
+          .${buttonClass} {
             border: 3px solid var(--${buttonClass}-color); !important
             padding: 4px 8px; !important
             text-decoration: none; !important
@@ -48,7 +48,7 @@
             white-space: nowrap; !important
           }
 
-          .${buttonClass}-button:hover {
+          .${buttonClass}:hover {
             color: var(--shade-3); !important
             background-color: var(--${buttonClass}-color); !important
             outline: 2px solid var(--${buttonClass}-color); !important
