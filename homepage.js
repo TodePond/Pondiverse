@@ -1,26 +1,43 @@
+// @ts-nocheck
+
 import { tools } from "/tools.js";
 import { instances } from "/instances.js";
 import { fetchPondiverseCreations } from "/pondiverse.js";
 
 const TOOLS_COUNT_LS_KEY = "pondiverseHomepageToolsCount";
+const INSTANCES_COUNT_LS_KEY = "pondiverseHomepageInstancesCount";
 const CREATIONS_COUNT_LS_KEY = "pondiverseHomepageCreationsCount";
+const UNIQUE_TYPES_COUNT_LS_KEY = "pondiverseHomepageUniqueTypesCount";
 
 const toolsCountElement = document.getElementById("tools-count");
+const instancesCountElement = document.getElementById("instances-count");
 const creationsCountElement = document.getElementById("creations-count");
+const uniqueTypesCountElement = document.getElementById("unique-types-count");
 
 function loadCachedCounts() {
     if (toolsCountElement) {
         const cachedTools = localStorage.getItem(TOOLS_COUNT_LS_KEY);
-        if (cachedTools) {
-            toolsCountElement.textContent = cachedTools;
-        }
+        if (cachedTools) toolsCountElement.textContent = cachedTools;
+    }
+
+    if (instancesCountElement) {
+        const cachedInstances = localStorage.getItem(INSTANCES_COUNT_LS_KEY);
+        if (cachedInstances)
+            instancesCountElement.textContent = cachedInstances;
     }
 
     if (creationsCountElement) {
         const cachedCreations = localStorage.getItem(CREATIONS_COUNT_LS_KEY);
-        if (cachedCreations) {
+        if (cachedCreations)
             creationsCountElement.textContent = cachedCreations;
-        }
+    }
+
+    if (uniqueTypesCountElement) {
+        const cachedUniqueTypes = localStorage.getItem(
+            UNIQUE_TYPES_COUNT_LS_KEY
+        );
+        if (cachedUniqueTypes)
+            uniqueTypesCountElement.textContent = cachedUniqueTypes;
     }
 }
 
@@ -35,26 +52,48 @@ async function updateLiveCounts() {
         }
     } else if (toolsCountElement && !localStorage.getItem(TOOLS_COUNT_LS_KEY)) {
         toolsCountElement.textContent = "Error";
-        console.error(
-            "Tools data not found for live update and no cache available."
-        );
     }
 
-    if (instances && creationsCountElement) {
-        const currentCreationsText = creationsCountElement.textContent;
-        if (
-            currentCreationsText.includes("...") ||
-            !isNaN(parseInt(currentCreationsText))
-        ) {
-            creationsCountElement.textContent = "Calculating...";
+    if (instances && instancesCountElement) {
+        const liveInstancesCount = instances.length;
+        instancesCountElement.textContent = liveInstancesCount;
+        try {
+            localStorage.setItem(
+                INSTANCES_COUNT_LS_KEY,
+                liveInstancesCount.toString()
+            );
+        } catch (e) {
+            console.warn("Could not save instances count to localStorage:", e);
         }
+    } else if (
+        instancesCountElement &&
+        !localStorage.getItem(INSTANCES_COUNT_LS_KEY)
+    ) {
+        instancesCountElement.textContent = "Error";
+    }
 
-        let totalLiveCreations = 0;
-        let fetchErrors = 0;
+    if (
+        creationsCountElement &&
+        creationsCountElement.textContent.includes("...")
+    ) {
+        creationsCountElement.textContent = "Calculating...";
+    }
+    if (
+        uniqueTypesCountElement &&
+        uniqueTypesCountElement.textContent.includes("...")
+    ) {
+        uniqueTypesCountElement.textContent = "Calculating...";
+    }
 
+    let allFetchedCreations = [];
+    let totalLiveCreations = 0;
+    let fetchErrors = 0;
+
+    if (instances) {
         const creationPromises = instances.map(async (instance) => {
             try {
                 const creations = await fetchPondiverseCreations({ instance });
+                allFetchedCreations.push(...creations);
                 return creations.length;
             } catch (e) {
                 console.error(
@@ -73,53 +112,94 @@ async function updateLiveCounts() {
                 0
             );
 
-            if (fetchErrors === instances.length && instances.length > 0) {
-                console.error(
-                    "All instances failed to fetch creations for live update."
-                );
-                const cachedCreations = localStorage.getItem(
-                    CREATIONS_COUNT_LS_KEY
-                );
-                if (cachedCreations) {
-                    creationsCountElement.textContent = cachedCreations;
+            if (creationsCountElement) {
+                if (fetchErrors === instances.length && instances.length > 0) {
+                    const cachedCreations = localStorage.getItem(
+                        CREATIONS_COUNT_LS_KEY
+                    );
+                    creationsCountElement.textContent = cachedCreations
+                        ? cachedCreations
+                        : "Error fetching all";
                 } else {
-                    creationsCountElement.textContent = "Error fetching all";
+                    let displayText = totalLiveCreations.toString();
+                    if (fetchErrors > 0) displayText += ` (some errors)`;
+                    creationsCountElement.textContent = displayText;
+                    try {
+                        localStorage.setItem(
+                            CREATIONS_COUNT_LS_KEY,
+                            totalLiveCreations.toString()
+                        );
+                    } catch (e) {
+                        console.warn(
+                            "Could not save creations count to localStorage:",
+                            e
+                        );
+                    }
                 }
-            } else {
-                let displayText = totalLiveCreations.toString();
-                if (fetchErrors > 0) {
-                    displayText += ` (some errors)`;
-                }
-                creationsCountElement.textContent = displayText;
+            }
 
-                try {
-                    localStorage.setItem(
-                        CREATIONS_COUNT_LS_KEY,
-                        totalLiveCreations.toString()
+            if (uniqueTypesCountElement) {
+                if (fetchErrors < instances.length || totalLiveCreations > 0) {
+                    const uniqueTypes = new Set();
+                    allFetchedCreations.forEach((creation) => {
+                        if (creation.type) {
+                            uniqueTypes.add(creation.type);
+                        }
+                    });
+                    const liveUniqueTypesCount = uniqueTypes.size;
+                    uniqueTypesCountElement.textContent = liveUniqueTypesCount;
+                    try {
+                        localStorage.setItem(
+                            UNIQUE_TYPES_COUNT_LS_KEY,
+                            liveUniqueTypesCount.toString()
+                        );
+                    } catch (e) {
+                        console.warn(
+                            "Could not save unique types count to localStorage:",
+                            e
+                        );
+                    }
+                } else {
+                    const cachedUniqueTypes = localStorage.getItem(
+                        UNIQUE_TYPES_COUNT_LS_KEY
                     );
-                } catch (e) {
-                    console.warn(
-                        "Could not save creations count to localStorage:",
-                        e
-                    );
+                    uniqueTypesCountElement.textContent = cachedUniqueTypes
+                        ? cachedUniqueTypes
+                        : fetchErrors > 0
+                        ? "Error"
+                        : "0";
                 }
             }
         } catch (error) {
-            console.error("Error processing live creation counts:", error);
-            const cachedCreations = localStorage.getItem(
-                CREATIONS_COUNT_LS_KEY
-            );
-            if (cachedCreations) {
-                creationsCountElement.textContent = cachedCreations;
-            } else {
-                creationsCountElement.textContent = "Error";
+            console.error("Error processing live creation/type counts:", error);
+            if (creationsCountElement) {
+                const cachedCreations = localStorage.getItem(
+                    CREATIONS_COUNT_LS_KEY
+                );
+                creationsCountElement.textContent = cachedCreations
+                    ? cachedCreations
+                    : "Error";
+            }
+            if (uniqueTypesCountElement) {
+                const cachedUniqueTypes = localStorage.getItem(
+                    UNIQUE_TYPES_COUNT_LS_KEY
+                );
+                uniqueTypesCountElement.textContent = cachedUniqueTypes
+                    ? cachedUniqueTypes
+                    : "Error";
             }
         }
-    } else if (
-        creationsCountElement &&
-        !localStorage.getItem(CREATIONS_COUNT_LS_KEY)
-    ) {
-        creationsCountElement.textContent = "Error";
+    } else if (creationsCountElement || uniqueTypesCountElement) {
+        if (
+            creationsCountElement &&
+            !localStorage.getItem(CREATIONS_COUNT_LS_KEY)
+        )
+            creationsCountElement.textContent = "Error";
+        if (
+            uniqueTypesCountElement &&
+            !localStorage.getItem(UNIQUE_TYPES_COUNT_LS_KEY)
+        )
+            uniqueTypesCountElement.textContent = "Error";
         console.error(
             "Instances data not found for live update and no cache available."
         );
