@@ -50,7 +50,7 @@
     } catch (e) {
       console.error(e);
     }
-    return creations;
+    return creations.sort((a, b) => +(new Date(b.time)) - +(new Date(a.time)));
   }
 
   function renderMoreCreations(creations) {
