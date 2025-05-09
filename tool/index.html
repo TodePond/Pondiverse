@@ -82,8 +82,7 @@
     previewImage.style.display = "none";
   };
 
-  imageInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
+  function updateImage(file) {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -95,17 +94,29 @@
       previewImage.src = "";
       previewImage.style.display = "none";
     }
+  }
+
+  imageInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    updateImage(file);
   });
 
   const searchParams = new URLSearchParams(window.location.search);
   const creationParam = searchParams.get("creation");
   if (creationParam) {
-    fetchPondiverseCreation(creationParam).then((creation) => {
+    fetchPondiverseCreation(creationParam).then(async (creation) => {
       titleInput.value = creation.title;
       typeInput.value = creation.type;
-      previewImage.style.display = "block";
-      previewImage.src = getPondiverseCreationImageUrl(creation);
       dataInput.value = creation.data;
+
+      let imageUrl = getPondiverseCreationImageUrl(creation);
+      if (imageUrl) {
+        let res = await fetch(imageUrl);
+        let imageBlob = await res.blob();
+        updateImage(imageBlob);
+      } else {
+        updateImage(null);
+      }
     });
   }
 
