@@ -101,4 +101,9 @@ export const tools = [
     open: "https://r74n.com/cook/?pond-id=",
     create: "https://r74n.com/cook/?src=pondiverse",
   },
+  {
+    name: "linky",
+    types: ["linky"],
+    open: "https://cute-catgirl.github.io/linky/?id=",
+    create: "https://cute-catgirl.github.io/linky/"
 ];
