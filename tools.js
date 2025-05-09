@@ -110,6 +110,18 @@ export const tools = [
   {
     name: "style",
     types: ["style"],
-    action: "style"
-  }
+    action: "style",
+  },
+  {
+    name: "cart maker",
+    types: ["*"],
+    open: "https://iliazeus.lol/puddle/carts/make.html?creation=",
+    create: null,
+  },
+  {
+    name: "cart loader",
+    types: [],
+    open: null,
+    create: "https://iliazeus.lol/puddle/carts/load.html",
+  },
 ];
