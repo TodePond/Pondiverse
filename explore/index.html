@@ -1,6 +1,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Pondiverse - Explore</title>
 <link rel="stylesheet" href="/style.css" />
+<style id="user-style"></style>
 
 <h1><a href="/" class="breadcrumb">Pondiverse</a> - Explore</h1>
 
@@ -32,6 +33,7 @@
   } from "/pondiverse.js";
   import { tools } from "/tools.js";
   import { stores } from "/stores.js";
+  import { actions } from "/actions.js";
 
   const main = document.querySelector("main");
   const header = document.querySelector("header");
@@ -75,6 +77,10 @@
         return tool.types.includes("*") && tool.open;
       });
 
+      const actionTools = tools.filter((tool) => {
+        return tool.types.includes(creation.type) && tool.action;
+      });
+
       card.innerHTML = `
         <h3>${creation.title}</h3>
         <p>${creation.type}</p>
@@ -83,13 +89,26 @@
           src="${getPondiverseCreationImageUrl(creation)}" />
       `;
 
-      const compatibleTools = [...exactTools, ...wildcardTools];
+      const compatibleTools = [...exactTools, ...wildcardTools, ...actionTools];
       if (compatibleTools.length > 0) {
         const ul = document.createElement("ul");
         for (const tool of compatibleTools) {
-          const li = document.createElement("li");
-          li.innerHTML = `open in <a href="${tool.open}${creation.store.getCreation}${creation.id}" target="_blank" rel="noopener noreferrer">${tool.name}</a>`;
-          ul.appendChild(li);
+          if (tool.action) {
+            const button = document.createElement("button");
+            button.innerText = tool.name;
+            button.onclick = () => {
+              if (actions[tool.action]) {
+                actions[tool.action](creation);
+              } else {
+                console.error(`Action ${tool.action} not found`);
+              }
+            }
+            ul.appendChild(button);
+          } else {
+            const li = document.createElement("li");
+            li.innerHTML = `open in <a href="${tool.open}${creation.store.getCreation}${creation.id}" target="_blank" rel="noopener noreferrer">${tool.name}</a>`;
+            ul.appendChild(li);
+          }
         }
         card.appendChild(ul);
       }
