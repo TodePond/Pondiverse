@@ -105,5 +105,6 @@ export const tools = [
     name: "linky",
     types: ["linky"],
     open: "https://cute-catgirl.github.io/linky/?id=",
-    create: "https://cute-catgirl.github.io/linky/"
+    create: "https://cute-catgirl.github.io/linky/",
+  },
 ];
