@@ -1,6 +1,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Pondiverse - Create</title>
 <link rel="stylesheet" href="/style.css" />
+<style id="user-style"></style>
 <header
   id="view-source"
   style="position: absolute; top: 0; right: 0; padding: 16px">
@@ -23,6 +24,7 @@
 
 <script type="module">
   import { tools } from "../tools.js";
+  import { loadParams } from "../helper.js";
 
   const main = document.querySelector("main");
   const list = document.createElement("ul");
@@ -43,4 +45,6 @@
   }
 
   main.appendChild(list);
+
+  loadParams();
 </script>

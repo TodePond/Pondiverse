@@ -31,6 +31,8 @@
     fetchPondiverseCreations,
     getPondiverseCreationImageUrl,
   } from "/pondiverse.js";
+
+  import { loadParams } from "/helper.js";
   import { tools } from "/tools.js";
   import { stores } from "/stores.js";
   import { actions } from "/actions.js";
@@ -133,4 +135,6 @@
 
   const creations = await fetchCreations();
   renderMoreCreations(creations);
+
+  loadParams();
 </script>
