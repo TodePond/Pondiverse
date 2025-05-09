@@ -103,6 +103,7 @@
     fetchPondiverseCreation(creationParam).then((creation) => {
       titleInput.value = creation.title;
       typeInput.value = creation.type;
+      previewImage.display = "block";
       previewImage.src = getPondiverseCreationImageUrl(creation);
       dataInput.value = creation.data;
     });
