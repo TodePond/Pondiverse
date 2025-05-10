@@ -85,7 +85,7 @@ export const tools = [
   },
   {
     name: "gamify",
-    types: ["collapse", "styleshoot", "cellpond"],
+    types: ["collapse", "styleshoot", "cellpond", "gamified"],
     open: "https://gamify.cthulahoops.org/?creation=",
     create: null,
   },
