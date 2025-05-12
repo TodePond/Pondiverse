@@ -85,7 +85,7 @@ export const tools = [
   },
   {
     name: "gamify",
-    types: ["collapse", "styleshoot", "cellpond"],
+    types: ["collapse", "styleshoot", "cellpond", "gamified"],
     open: "https://gamify.cthulahoops.org/?creation=",
     create: null,
   },
@@ -110,6 +110,18 @@ export const tools = [
   {
     name: "style",
     types: ["style"],
-    action: "style"
-  }
+    action: "style",
+  },
+  {
+    name: "cart maker",
+    types: ["*"],
+    open: "https://iliazeus.lol/puddle/carts/make.html?creation=",
+    create: null,
+  },
+  {
+    name: "cart loader",
+    types: [],
+    open: null,
+    create: "https://iliazeus.lol/puddle/carts/load.html",
+  },
 ];
