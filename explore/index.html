@@ -57,6 +57,13 @@
     return creations.sort((a, b) => +(new Date(b.time)) - +(new Date(a.time)));
   }
 
+  function replaceWithText(node, text, style = "") {
+    const newNode = document.createElement("p");
+    newNode.innerText = text;
+    newNode.style = style;
+    node.parentNode.replaceChild(newNode, node);
+  }
+
   function renderMoreCreations(creations) {
     const head = creations.slice(0, CREATIONS_PER_PAGE);
     const tail = creations.slice(CREATIONS_PER_PAGE);
@@ -83,13 +90,21 @@
         return tool.types.includes(creation.type) && tool.action;
       });
 
+      let imgURL = getPondiverseCreationImageUrl(creation);
+      let img = document.createElement("img");
+      img.src = imgURL;
+      img.style = "max-width: 100%; background-color: black; max-height: 500px";
+      img.onerror = () => {
+        // Replace image with data
+        replaceWithText(img, creation.data, "max-height: 500px; overflow: scroll");
+      };
+
       card.innerHTML = `
         <h3>${creation.title}</h3>
         <p>${creation.type}</p>
-        <img
-          style="max-width: 100%; background-color: black; max-height: 500px"
-          src="${getPondiverseCreationImageUrl(creation)}" />
       `;
+
+      card.appendChild(img);
 
       const compatibleTools = [...exactTools, ...wildcardTools, ...actionTools];
       if (compatibleTools.length > 0) {
