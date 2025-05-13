@@ -126,7 +126,7 @@ export const tools = [
   },
   {
     name: "html viewer",
-    types: [html],
+    types: ["html"],
     open: "https://simply-violet.github.io/pondiverse/html-viewer.html?id=",
     create: null
   }
