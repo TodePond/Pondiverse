@@ -4,19 +4,17 @@ export async function loadParams() {
     const params = new URLSearchParams(window.location.search);
     const styleParam = params.get("style");
     const styleList = styleParam ? styleParam.split(",") : [];
-    if (styleList) {
-        let style = "";
-        const styleElement = document.getElementById("user-style");
-        for (const style of styleList) {
-            const creation = await fetchPondiverseCreation(style);
-            if (creation) {
-                style += creation.data;
-            } else {
-                console.error("Failed to fetch creation data");
-            }
+    let style = "";
+    const styleElement = document.getElementById("user-style");
+    for (const style of styleList) {
+        const creation = await fetchPondiverseCreation(style);
+        if (creation) {
+            style += creation.data;
+        } else {
+            console.error("Failed to fetch creation data");
         }
-        styleElement.innerHTML = style;
     }
+    styleElement.innerHTML = style;
 
     // Add params to links
     const links = document.querySelectorAll("a");
