@@ -6,7 +6,8 @@ export const actions = {
             styleElement.innerHTML += style;
         }
         const params = new URLSearchParams(window.location.search);
-        const styleArray = params.get("style").split(",");
+        const styleParam = params.get("style");
+        const styleArray = styleParam ? styleParam.split(",") : [];
         styleArray.push(creation.id);
         const styleList = styleArray.join(",");
 
@@ -29,4 +30,3 @@ export const actions = {
         });
     },
 };
-

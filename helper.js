@@ -2,10 +2,11 @@ import { fetchPondiverseCreation } from "./pondiverse.js";
 
 export async function loadParams() {
     const params = new URLSearchParams(window.location.search);
-    const styleList = params.get("style");
+    const styleParam = params.get("style");
+    const styleList = styleParam ? styleParam.split(",") : [];
     if (styleList) {
         const styleElement = document.getElementById("user-style");
-        for (const style of styleList.split(",")) {
+        for (const style of styleList) {
             const creation = await fetchPondiverseCreation(style);
             if (creation) {
                 styleElement.innerHTML += creation.data;
@@ -20,16 +21,17 @@ export async function loadParams() {
     links.forEach((link) => {
         const href = link.getAttribute("href");
         if (href && !href.startsWith("http") && !href.includes("?")) {
-            const styleParam = styleList
-                ? `?style=${encodeURIComponent(style)}`
-                : "";
+            const styleParam =
+                styleList.length > 0
+                    ? `?style=${encodeURIComponent(styleList.join(","))}`
+                    : "";
             link.setAttribute("href", `${href}${styleParam}`);
         } else if (href && !href.startsWith("http") && href.includes("?")) {
-            const styleParam = style
-                ? `&style=${encodeURIComponent(style)}`
-                : "";
+            const styleParam =
+                styleList.length > 0
+                    ? `&style=${encodeURIComponent(styleList.join(","))}`
+                    : "";
             link.setAttribute("href", `${href}${styleParam}`);
         }
     });
 }
-
