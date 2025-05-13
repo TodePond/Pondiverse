@@ -7,8 +7,13 @@ export const actions = {
         }
         const params = new URLSearchParams(window.location.search);
         const styleParam = params.get("style");
-        const styleArray = styleParam ? styleParam.split(",") : [];
-        styleArray.push(creation.id);
+        let styleArray = styleParam ? styleParam.split(",") : [];
+        styleArray = styleArray.map((x) => Number(x));
+        if (styleArray.includes(creation.id)) {
+            styleArray = styleArray.filter((x) => x !== creation.id);
+        } else {
+            styleArray.push(creation.id);
+        }
         const styleList = styleArray.join(",");
 
         const url = new URL(window.location.href);
