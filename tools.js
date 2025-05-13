@@ -124,4 +124,10 @@ export const tools = [
     open: null,
     create: "https://iliazeus.lol/puddle/carts/load.html",
   },
+  {
+    name: "html viewer",
+    types: [html],
+    open: "https://simply-violet.github.io/pondiverse/html-viewer.html?id=",
+    create: null
+  }
 ];
