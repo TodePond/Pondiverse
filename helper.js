@@ -5,15 +5,17 @@ export async function loadParams() {
     const styleParam = params.get("style");
     const styleList = styleParam ? styleParam.split(",") : [];
     if (styleList) {
+        let style = "";
         const styleElement = document.getElementById("user-style");
         for (const style of styleList) {
             const creation = await fetchPondiverseCreation(style);
             if (creation) {
-                styleElement.innerHTML += creation.data;
+                style += creation.data;
             } else {
                 console.error("Failed to fetch creation data");
             }
         }
+        styleElement.innerHTML = style;
     }
 
     // Add params to links
