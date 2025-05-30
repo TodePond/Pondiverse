@@ -42,6 +42,9 @@
   const article = document.querySelector("article");
   const footer = document.querySelector("footer");
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const toolParam = urlParams.get("tool");
+
   const CREATIONS_PER_PAGE = 12;
 
   async function fetchCreations() {
@@ -54,7 +57,7 @@
     } catch (e) {
       console.error(e);
     }
-    return creations.sort((a, b) => +(new Date(b.time)) - +(new Date(a.time)));
+    return creations.sort((a, b) => +new Date(b.time) - +new Date(a.time));
   }
 
   function replaceWithText(node, text, style = "") {
@@ -70,14 +73,6 @@
     header.innerHTML = "";
 
     for (const creation of head) {
-      const card = document.createElement("div");
-      card.style = `
-        border: 1px solid black;
-        padding: 16px;
-        padding-top: 0px;
-        border-radius: 8px
-      `;
-
       const exactTools = tools.filter((tool) => {
         return tool.types.includes(creation.type) && tool.open;
       });
@@ -90,13 +85,34 @@
         return tool.types.includes(creation.type) && tool.action;
       });
 
+      const compatibleTools = [...exactTools, ...wildcardTools, ...actionTools];
+      const filteredTools = toolParam
+        ? compatibleTools.filter((tool) => tool.name === toolParam)
+        : compatibleTools;
+
+      if (filteredTools.length === 0) {
+        continue;
+      }
+
+      const card = document.createElement("div");
+      card.style = `
+        border: 1px solid black;
+        padding: 16px;
+        padding-top: 0px;
+        border-radius: 8px
+      `;
+
       let imgURL = getPondiverseCreationImageUrl(creation);
       let img = document.createElement("img");
       img.src = imgURL;
       img.style = "max-width: 100%; background-color: black; max-height: 500px";
       img.onerror = () => {
         // Replace image with data
-        replaceWithText(img, creation.data, "max-height: 500px; overflow: scroll");
+        replaceWithText(
+          img,
+          creation.data,
+          "max-height: 500px; overflow: scroll"
+        );
       };
 
       card.innerHTML = `
@@ -106,10 +122,9 @@
 
       card.appendChild(img);
 
-      const compatibleTools = [...exactTools, ...wildcardTools, ...actionTools];
-      if (compatibleTools.length > 0) {
+      if (filteredTools.length > 0) {
         const ul = document.createElement("ul");
-        for (const tool of compatibleTools) {
+        for (const tool of filteredTools) {
           if (tool.action) {
             const button = document.createElement("button");
             button.innerText = tool.name;
@@ -119,7 +134,7 @@
               } else {
                 console.error(`Action ${tool.action} not found`);
               }
-            }
+            };
             ul.appendChild(button);
           } else {
             const li = document.createElement("li");
