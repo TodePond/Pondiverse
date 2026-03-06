@@ -18,6 +18,12 @@ export const tools = [
     create: "https://mags.omg.lol/simulator.php",
   },
   {
+    name: "ScriptGen",
+    types: ["s3g"],
+    open: "https://loglot.co.in/scriptGen/?id=",
+    create: "https://loglot.co.in/scriptGen/",
+  },
+  {
     name: "CodePond",
     types: ["CodePond"],
     open: "https://codepond.elouan.xyz/?creation=",
